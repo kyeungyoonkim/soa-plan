@@ -246,6 +246,9 @@
     }
     select:focus, input[type=time]:focus { outline: none; border-color: var(--accent); }
     .btn-row { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.35rem; }
+    .cloud-status { font-size: 0.82rem; margin-bottom: 0.55rem; padding: 0.55rem 0.7rem; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); }
+    .cloud-status.ok { border-color: var(--accent); color: var(--accent); }
+    .cloud-status.warn { border-color: var(--warn-border); color: var(--warn); }
     .btn-action {
       font: inherit; font-size: 0.78rem; font-weight: 600; padding: 0.5rem 0.85rem;
       border-radius: 9px; border: 1px solid var(--border); background: var(--surface2);
@@ -834,19 +837,26 @@
 
       <div class="card" style="margin-top:0.9rem">
         <div class="card-title">💾 데이터 백업 · 복원</div>
-        <p class="stat-sub" style="margin-bottom:0.65rem">체크·메모·시간표는 <strong>이 브라우저에만</strong> 저장됩니다. PC 바꾸거나 캐시 삭제 전에 백업하세요.</p>
+        <p class="stat-sub" style="margin-bottom:0.5rem">체크·메모·시간표는 브라우저에 자동 저장됩니다. Drive 연결 시 <strong>Google Drive 폴더 JSON</strong>에도 자동 백업됩니다.</p>
+        <div class="cloud-status" id="cloudSyncStatus">☁️ Google Drive 자동 저장: 연결 안 됨 (Chrome + Drive Desktop 권장)</div>
         <div class="btn-row">
-          <button class="btn-action primary" id="btnExportData">📥 백업 다운로드 (JSON)</button>
+          <button class="btn-action primary" id="btnConnectDrive">☁️ Drive 파일 연결</button>
+          <button class="btn-action" id="btnDisconnectDrive" hidden>연결 해제</button>
+          <button class="btn-action" id="btnRestoreDrive" hidden>Drive에서 불러오기</button>
+        </div>
+        <div class="btn-row" style="margin-top:0.45rem">
+          <button class="btn-action" id="btnExportData">📥 백업 다운로드 (JSON)</button>
           <label class="btn-action" style="cursor:pointer;margin:0">
             📤 백업 불러오기
             <input type="file" id="importDataFile" accept=".json,application/json" style="display:none" />
           </label>
           <button class="btn-action" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
         </div>
+        <p class="stat-sub" style="margin-top:0.55rem">Drive 연결: Google Drive for Desktop 설치 → 연결 시 Drive 폴더 안에 <code style="font-size:0.78rem">my-asa-plan-backup.json</code> 선택/생성</p>
       </div>
     </section>
 
-    <p class="footer-note">체크 · 메모 · 기록은 브라우저에 자동 저장 · PC마다 따로</p>
+    <p class="footer-note">브라우저 자동 저장 · Drive 연결 시 클라우드 JSON 동기화</p>
   </div>
   <div class="toast" id="toast">저장됨</div>
 
@@ -1290,8 +1300,221 @@
 
     function saveState(quiet) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      scheduleCloudSync();
       if (!quiet) toast("저장됨");
       render();
+    }
+
+    const DRIVE_HANDLE_DB = "soa-asa-drive";
+    const DRIVE_HANDLE_STORE = "handles";
+    const DRIVE_HANDLE_KEY = "backup-file";
+    let cloudFileHandle = null;
+    let cloudSyncTimer = null;
+    let cloudSyncing = false;
+
+    function cloudSyncSupported() {
+      return "showSaveFilePicker" in window && "indexedDB" in window;
+    }
+
+    function openHandleDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DRIVE_HANDLE_DB, 1);
+        req.onupgradeneeded = () => req.result.createObjectStore(DRIVE_HANDLE_STORE);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function storeFileHandle(handle) {
+      const db = await openHandleDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(DRIVE_HANDLE_STORE, "readwrite");
+        tx.objectStore(DRIVE_HANDLE_STORE).put(handle, DRIVE_HANDLE_KEY);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    async function loadStoredFileHandle() {
+      const db = await openHandleDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(DRIVE_HANDLE_STORE, "readonly");
+        const req = tx.objectStore(DRIVE_HANDLE_STORE).get(DRIVE_HANDLE_KEY);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function clearStoredFileHandle() {
+      const db = await openHandleDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(DRIVE_HANDLE_STORE, "readwrite");
+        tx.objectStore(DRIVE_HANDLE_STORE).delete(DRIVE_HANDLE_KEY);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    async function verifyFilePermission(handle, write) {
+      const opts = { mode: write ? "readwrite" : "read" };
+      if ((await handle.queryPermission(opts)) === "granted") return true;
+      if ((await handle.requestPermission(opts)) === "granted") return true;
+      return false;
+    }
+
+    function updateCloudSyncUI(mode, detail) {
+      const el = document.getElementById("cloudSyncStatus");
+      const btnConnect = document.getElementById("btnConnectDrive");
+      const btnDisconnect = document.getElementById("btnDisconnectDrive");
+      const btnRestore = document.getElementById("btnRestoreDrive");
+      if (!el) return;
+
+      el.className = "cloud-status";
+      if (mode === "unsupported") {
+        el.textContent = "☁️ Drive 자동 저장: Chrome에서만 지원 (Safari 불가)";
+        btnConnect.hidden = true;
+        btnDisconnect.hidden = true;
+        btnRestore.hidden = true;
+        return;
+      }
+      if (mode === "connected") {
+        el.classList.add("ok");
+        el.textContent = "☁️ Drive 자동 저장 중 · " + (detail || "연결됨");
+        btnConnect.textContent = "☁️ Drive 파일 변경";
+        btnConnect.hidden = false;
+        btnDisconnect.hidden = false;
+        btnRestore.hidden = false;
+        return;
+      }
+      if (mode === "permission") {
+        el.classList.add("warn");
+        el.textContent = "☁️ Drive 권한 필요 · 「Drive 파일 연결」 다시 클릭";
+        btnConnect.textContent = "☁️ Drive 권한 허용";
+        btnConnect.hidden = false;
+        btnDisconnect.hidden = false;
+        btnRestore.hidden = false;
+        return;
+      }
+      if (mode === "syncing") {
+        el.classList.add("ok");
+        el.textContent = "☁️ Drive 저장 중…";
+        return;
+      }
+      if (mode === "error") {
+        el.classList.add("warn");
+        el.textContent = "☁️ Drive 저장 실패 · 다시 연결해 주세요";
+        btnConnect.textContent = "☁️ Drive 파일 연결";
+        btnConnect.hidden = false;
+        btnDisconnect.hidden = true;
+        btnRestore.hidden = true;
+        return;
+      }
+      el.textContent = "☁️ Google Drive 자동 저장: 연결 안 됨 (Chrome + Drive Desktop 권장)";
+      btnConnect.textContent = "☁️ Drive 파일 연결";
+      btnConnect.hidden = false;
+      btnDisconnect.hidden = true;
+      btnRestore.hidden = true;
+    }
+
+    async function writeStateToCloudFile() {
+      if (!cloudFileHandle || !state || cloudSyncing) return;
+      cloudSyncing = true;
+      updateCloudSyncUI("syncing");
+      try {
+        if (!(await verifyFilePermission(cloudFileHandle, true))) {
+          updateCloudSyncUI("permission", cloudFileHandle.name);
+          return;
+        }
+        const writable = await cloudFileHandle.createWritable();
+        await writable.write(JSON.stringify(state, null, 2));
+        await writable.close();
+        updateCloudSyncUI("connected", cloudFileHandle.name);
+      } catch {
+        cloudFileHandle = null;
+        await clearStoredFileHandle();
+        updateCloudSyncUI("error");
+      } finally {
+        cloudSyncing = false;
+      }
+    }
+
+    function scheduleCloudSync() {
+      if (!cloudFileHandle) return;
+      clearTimeout(cloudSyncTimer);
+      cloudSyncTimer = setTimeout(() => writeStateToCloudFile(), 900);
+    }
+
+    async function connectCloudFile() {
+      if (!cloudSyncSupported()) {
+        toast("Chrome에서만 Drive 연결 가능");
+        return;
+      }
+      if (cloudFileHandle && (await verifyFilePermission(cloudFileHandle, true))) {
+        await writeStateToCloudFile();
+        updateCloudSyncUI("connected", cloudFileHandle.name);
+        toast("Drive 저장 완료");
+        return;
+      }
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: "my-asa-plan-backup.json",
+          types: [{ description: "JSON Backup", accept: { "application/json": [".json"] } }]
+        });
+        cloudFileHandle = handle;
+        await storeFileHandle(handle);
+        await writeStateToCloudFile();
+        toast("Drive 파일 연결됨");
+      } catch (e) {
+        if (e && e.name !== "AbortError") toast("Drive 연결 실패");
+      }
+    }
+
+    async function disconnectCloudFile() {
+      cloudFileHandle = null;
+      clearTimeout(cloudSyncTimer);
+      await clearStoredFileHandle();
+      updateCloudSyncUI("disconnected");
+      toast("Drive 연결 해제");
+    }
+
+    async function restoreFromCloudFile() {
+      if (!cloudFileHandle) { toast("Drive 파일 먼저 연결"); return; }
+      if (!(await verifyFilePermission(cloudFileHandle, false))) {
+        updateCloudSyncUI("permission", cloudFileHandle.name);
+        return;
+      }
+      if (!confirm("Drive 파일 내용으로 이 브라우저 데이터를 덮어쓸까요?")) return;
+      try {
+        const file = await cloudFileHandle.getFile();
+        const p = JSON.parse(await file.text());
+        applyBackupPayload(p);
+        toast("Drive에서 복원 완료");
+      } catch {
+        toast("Drive 파일 읽기 실패");
+      }
+    }
+
+    async function initCloudSync() {
+      if (!cloudSyncSupported()) {
+        updateCloudSyncUI("unsupported");
+        return;
+      }
+      try {
+        const handle = await loadStoredFileHandle();
+        if (!handle) {
+          updateCloudSyncUI("disconnected");
+          return;
+        }
+        cloudFileHandle = handle;
+        if (await verifyFilePermission(handle, true)) {
+          updateCloudSyncUI("connected", handle.name);
+          await writeStateToCloudFile();
+        } else {
+          updateCloudSyncUI("permission", handle.name);
+        }
+      } catch {
+        updateCloudSyncUI("disconnected");
+      }
     }
 
     function toast(msg) {
@@ -1438,6 +1661,22 @@
       return m ? `${h}h ${m}m` : `${h}h`;
     }
 
+    function applyBackupPayload(p) {
+      const reqChecked = p.reqChecked || {};
+      state = {
+        ...defaultState(), ...p,
+        reqChecked,
+        timelineChecked: p.timelineChecked || {},
+        templeChecked: p.templeChecked || {},
+        examStatus: migrateExamStatus(reqChecked, p.examStatus),
+        schedule: (p.schedule && p.schedule.length) ? p.schedule : applyFall2026Schedule()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      scheduleCloudSync();
+      render();
+      toast("백업 복원 완료");
+    }
+
     function exportBackup() {
       const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
       const a = document.createElement("a");
@@ -1452,18 +1691,7 @@
       const reader = new FileReader();
       reader.onload = e => {
         try {
-          const p = JSON.parse(e.target.result);
-          const reqChecked = p.reqChecked || {};
-          state = {
-            ...defaultState(), ...p,
-            reqChecked,
-            timelineChecked: p.timelineChecked || {},
-            templeChecked: p.templeChecked || {},
-            examStatus: migrateExamStatus(reqChecked, p.examStatus),
-            schedule: (p.schedule && p.schedule.length) ? p.schedule : applyFall2026Schedule()
-          };
-          saveState();
-          toast("백업 복원 완료");
+          applyBackupPayload(JSON.parse(e.target.result));
         } catch {
           toast("파일 형식 오류");
         }
@@ -2075,11 +2303,16 @@
       };
 
       document.getElementById("btnExportData").onclick = exportBackup;
+      document.getElementById("btnConnectDrive").onclick = connectCloudFile;
+      document.getElementById("btnDisconnectDrive").onclick = disconnectCloudFile;
+      document.getElementById("btnRestoreDrive").onclick = restoreFromCloudFile;
       document.getElementById("importDataFile").onchange = e => {
         const f = e.target.files[0];
         if (f) importBackup(f);
         e.target.value = "";
       };
+
+      initCloudSync();
 
       document.getElementById("btnExportIcs").onclick = downloadIcs;
 
