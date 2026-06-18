@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="warm-dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My ASA Plan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif&display=swap" rel="stylesheet" />
+  <style>
+    /* Warm Dark — default, low eye strain */
+    [data-theme="warm-dark"] {
+      --bg: #1c1a18;
+      --surface: #262320;
+      --surface2: #302c28;
+      --border: rgba(220,210,195,0.1);
+      --text: #ddd6cc;
+      --muted: #9a9288;
+      --accent: #7db892;
+      --accent-dim: rgba(125,184,146,0.15);
+      --accent2: #c9a962;
+      --accent2-dim: rgba(201,169,98,0.14);
+      --blue: #8eb4d4;
+      --purple: #b8a4d4;
+      --warn: #d4a574;
+      --warn-bg: rgba(212,165,116,0.1);
+      --warn-border: rgba(212,165,116,0.28);
+      --shadow: 0 8px 32px rgba(0,0,0,0.25);
+      --glow: rgba(125,184,146,0.08);
+    }
+    /* Warm Light — paper-like, easy on eyes */
+    [data-theme="warm-light"] {
+      --bg: #f3ede4;
+      --surface: #faf7f2;
+      --surface2: #efe9df;
+      --border: rgba(80,70,55,0.12);
+      --text: #3a342c;
+      --muted: #7a7268;
+      --accent: #4d8a65;
+      --accent-dim: rgba(77,138,101,0.12);
+      --accent2: #a07d2e;
+      --accent2-dim: rgba(160,125,46,0.12);
+      --blue: #5a85a8;
+      --purple: #8a72a8;
+      --warn: #b8860b;
+      --warn-bg: rgba(184,134,11,0.08);
+      --warn-border: rgba(184,134,11,0.25);
+      --shadow: 0 4px 20px rgba(60,50,30,0.08);
+      --glow: rgba(77,138,101,0.06);
+    }
+
+    :root { --radius: 14px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.55;
+      transition: background 0.3s, color 0.3s;
+    }
+    body::before {
+      content: "";
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, var(--glow), transparent);
+      pointer-events: none;
+    }
+    .app { position: relative; max-width: 1140px; margin: 0 auto; padding: 1.75rem 1.25rem 3.5rem; }
+    .top-bar { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .eyebrow { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.35rem; }
+    h1 { font-family: "Instrument Serif", Georgia, serif; font-size: clamp(1.85rem, 4.5vw, 2.5rem); font-weight: 400; line-height: 1.12; }
+    .subtitle { color: var(--muted); font-size: 0.9rem; max-width: 36rem; margin-top: 0.35rem; }
+    .theme-btns { display: flex; gap: 0.4rem; }
+    .theme-btn {
+      font: inherit; font-size: 0.75rem; font-weight: 500;
+      padding: 0.45rem 0.75rem; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--muted); cursor: pointer; transition: 0.2s;
+    }
+    .theme-btn:hover { color: var(--text); }
+    .theme-btn.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+
+    .nav { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-bottom: 1.25rem; padding: 0.28rem; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; width: fit-content; }
+    .nav button { font: inherit; font-size: 0.8rem; font-weight: 500; padding: 0.45rem 0.9rem; border: none; border-radius: 999px; background: transparent; color: var(--muted); cursor: pointer; transition: 0.2s; }
+    .nav button:hover { color: var(--text); }
+    .nav button.active { background: var(--accent-dim); color: var(--accent); }
+    .panel { display: none; animation: fade 0.25s ease; }
+    .panel.active { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    .grid { display: grid; gap: 0.9rem; }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.25rem; box-shadow: var(--shadow); }
+    .card-title { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+
+    /* Hero motivation */
+    .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-bottom: 0.9rem; }
+    @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } }
+    .hero-main { padding: 1.4rem 1.5rem; }
+    .hero-main .big-remaining {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: clamp(2.8rem, 7vw, 3.8rem);
+      line-height: 1;
+      color: var(--accent2);
+    }
+    .hero-main .big-done { font-size: 1rem; color: var(--accent); font-weight: 600; margin-top: 0.35rem; }
+    .hero-main .motivate {
+      margin-top: 0.85rem; padding: 0.75rem 0.9rem;
+      background: var(--accent-dim); border-radius: 10px;
+      font-size: 0.88rem; color: var(--text); border-left: 3px solid var(--accent);
+    }
+    .journey-bar { height: 10px; background: var(--surface2); border-radius: 999px; overflow: hidden; margin: 0.85rem 0 0.4rem; position: relative; }
+    .journey-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 999px; transition: width 0.5s; }
+    .journey-labels { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--muted); }
+
+    .stat-num { font-family: "Instrument Serif", Georgia, serif; font-size: 2.2rem; line-height: 1; color: var(--accent); }
+    .stat-sub { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    .progress-wrap { height: 6px; background: var(--surface2); border-radius: 999px; overflow: hidden; margin-top: 0.5rem; }
+    .progress-bar { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.4s; opacity: 0.85; }
+
+    /* D-day cards */
+    .dday-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.55rem; }
+    .dday-card {
+      padding: 0.75rem 0.85rem; border-radius: 11px;
+      background: var(--surface2); border: 1px solid var(--border);
+      text-align: center; transition: 0.2s;
+    }
+    .dday-card.urgent { border-color: var(--warn-border); background: var(--warn-bg); }
+    .dday-card.done { opacity: 0.5; }
+    .dday-card .d-num { font-family: "Instrument Serif", Georgia, serif; font-size: 1.6rem; color: var(--accent2); line-height: 1; }
+    .dday-card.urgent .d-num { color: var(--warn); }
+    .dday-card .d-label { font-size: 0.72rem; color: var(--muted); margin-top: 0.25rem; }
+    .dday-card .d-date { font-size: 0.65rem; color: var(--muted); margin-top: 0.1rem; }
+
+    .alert-box {
+      padding: 0.8rem 1rem; background: var(--warn-bg);
+      border: 1px solid var(--warn-border); border-radius: 11px;
+      font-size: 0.86rem; margin-bottom: 0.9rem; color: var(--text);
+    }
+
+    .badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 0.18rem 0.5rem; border-radius: 999px; }
+    .badge-now { background: var(--accent-dim); color: var(--accent); }
+    .badge-done { background: var(--surface2); color: var(--muted); }
+
+    .timeline { position: relative; padding-left: 1.4rem; }
+    .timeline::before { content: ""; position: absolute; left: 0.4rem; top: 0.4rem; bottom: 0.4rem; width: 2px; background: var(--border); }
+    .phase-block { position: relative; margin-bottom: 1.1rem; }
+    .phase-block::before {
+      content: ""; position: absolute; left: -1.15rem; top: 1rem;
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--surface2); border: 2px solid var(--muted);
+    }
+    .phase-block.current::before { background: var(--accent); border-color: var(--accent); }
+    .phase-block.done::before { background: var(--accent); border-color: var(--accent); opacity: 0.45; }
+    .phase-head { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.35rem; }
+    .phase-head h3 { font-family: "Instrument Serif", Georgia, serif; font-size: 1.25rem; font-weight: 400; }
+    .phase-period { font-size: 0.76rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .phase-progress { font-size: 0.72rem; color: var(--accent); margin-bottom: 0.45rem; }
+
+    .task-list { list-style: none; }
+    .task-list li {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      padding: 0.5rem 0.7rem; margin-bottom: 0.3rem;
+      background: var(--surface2); border-radius: 9px; border: 1px solid var(--border);
+      font-size: 0.86rem; cursor: pointer; transition: 0.15s;
+    }
+    .task-list li:hover { border-color: rgba(150,140,120,0.2); }
+    .task-list li.checked { opacity: 0.5; }
+    .task-list li.checked .task-text { text-decoration: line-through; }
+    .task-list li.highlight { border-color: var(--warn-border); background: var(--warn-bg); }
+    .task-list input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+    .task-meta { font-size: 0.7rem; color: var(--muted); margin-top: 0.1rem; }
+
+    .left-list { list-style: none; }
+    .left-list li {
+      padding: 0.55rem 0; border-bottom: 1px solid var(--border);
+      font-size: 0.84rem; display: flex; justify-content: space-between; gap: 0.5rem;
+    }
+    .left-list li:last-child { border-bottom: none; }
+    .left-list .when { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+
+    .check-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+    .check-table th { text-align: left; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding: 0.6rem 0.45rem; border-bottom: 1px solid var(--border); }
+    .check-table td { padding: 0.65rem 0.45rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .check-table tr.done td { opacity: 0.5; }
+    .check-table tr.exam-failed td { background: rgba(220, 80, 70, 0.08); }
+    .check-table tr.exam-failed td:first-child { opacity: 1; }
+    .check-table input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+    .exam-status-btns { display: flex; gap: 0.2rem; flex-wrap: wrap; min-width: 9rem; }
+    .exam-st {
+      font-size: 0.65rem; font-weight: 600; padding: 0.22rem 0.42rem; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--surface2); color: var(--muted); cursor: pointer;
+    }
+    .exam-st:hover { border-color: var(--accent); color: var(--text); }
+    .exam-st.active { color: var(--text); border-width: 1.5px; }
+    .exam-st.pass.active { background: rgba(80, 180, 120, 0.18); border-color: #5cb88a; color: #5cb88a; }
+    .exam-st.fail.active { background: rgba(220, 80, 70, 0.15); border-color: #dc5046; color: #dc5046; }
+    .exam-st.pending.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+    .exam-status-label { font-size: 0.72rem; color: var(--muted); margin-top: 0.15rem; }
+    .filter-row { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.85rem; }
+    .filter-btn { font: inherit; font-size: 0.72rem; padding: 0.35rem 0.7rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface2); color: var(--muted); cursor: pointer; }
+    .filter-btn.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+
+    .cat-exam { color: var(--accent2); }
+    .cat-vee { color: var(--blue); }
+    .cat-module { color: var(--purple); }
+    .cat-uec { color: var(--accent); }
+    .cat-career { color: #d4a088; }
+    .cat-admin { color: var(--muted); }
+    .dual-progress { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.5rem; }
+    @media (max-width: 520px) { .dual-progress { grid-template-columns: 1fr; } }
+    .mini-stat { padding: 0.65rem 0.75rem; background: var(--surface2); border-radius: 9px; border: 1px solid var(--border); }
+    .mini-stat .label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .mini-stat .val { font-family: "Instrument Serif", Georgia, serif; font-size: 1.35rem; color: var(--accent); margin-top: 0.15rem; }
+
+    textarea, input[type=text], input[type=number] {
+      width: 100%; font: inherit; font-size: 0.88rem; padding: 0.55rem 0.75rem;
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 9px;
+      color: var(--text); margin-bottom: 0.6rem;
+    }
+    textarea:focus, input:focus { outline: none; border-color: var(--accent); }
+    textarea { min-height: 70px; resize: vertical; }
+
+    .ring-wrap { display: flex; align-items: center; gap: 1rem; }
+    .ring { width: 76px; height: 76px; flex-shrink: 0; }
+    .ring circle { fill: none; stroke-width: 6; }
+    .ring .bg { stroke: var(--surface2); }
+    .ring .fg { stroke: var(--accent); stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 0.5s; }
+    .ring-text { font-family: "Instrument Serif", Georgia, serif; font-size: 1.2rem; fill: var(--text); }
+
+    .cat-bar-row { margin-bottom: 0.65rem; }
+    .cat-bar-head { display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 0.25rem; }
+    .cat-bar-head span:last-child { color: var(--muted); }
+
+    .toast { position: fixed; bottom: 1.25rem; right: 1.25rem; background: var(--surface); border: 1px solid var(--accent); color: var(--accent); padding: 0.55rem 0.9rem; border-radius: 9px; font-size: 0.82rem; opacity: 0; transform: translateY(6px); transition: 0.3s; pointer-events: none; z-index: 99; }
+    .toast.show { opacity: 1; transform: none; }
+    .footer-note { margin-top: 1.75rem; font-size: 0.72rem; color: var(--muted); text-align: center; }
+    .link-note { font-size: 0.8rem; color: var(--muted); padding: 0.75rem 0.9rem; background: var(--surface2); border-radius: 9px; border-left: 3px solid var(--purple); margin-top: 0.9rem; }
+
+    select, input[type=time] {
+      width: 100%; font: inherit; font-size: 0.88rem; padding: 0.55rem 0.75rem;
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 9px;
+      color: var(--text); margin-bottom: 0.6rem;
+    }
+    select:focus, input[type=time]:focus { outline: none; border-color: var(--accent); }
+    .btn-row { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-top: 0.35rem; }
+    .btn-action {
+      font: inherit; font-size: 0.78rem; font-weight: 600; padding: 0.5rem 0.85rem;
+      border-radius: 9px; border: 1px solid var(--border); background: var(--surface2);
+      color: var(--text); cursor: pointer; transition: 0.15s; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.35rem;
+    }
+    .btn-action:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-action.primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+    .info-box {
+      font-size: 0.82rem; color: var(--muted); padding: 0.8rem 0.95rem;
+      background: var(--surface2); border-radius: 10px; border: 1px solid var(--border);
+      margin-bottom: 0.85rem; line-height: 1.5;
+    }
+    .info-box strong { color: var(--text); }
+    .schedule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.45rem; }
+    .schedule-day { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 0.55rem; min-height: 90px; }
+    .schedule-day .day-name { font-size: 0.68rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; }
+    .schedule-day.today { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-dim); }
+    .class-chip {
+      font-size: 0.72rem; padding: 0.35rem 0.45rem; margin-bottom: 0.3rem;
+      background: var(--surface); border-radius: 7px; border-left: 2px solid var(--accent2);
+      cursor: pointer;
+    }
+    .class-chip .t { font-weight: 600; }
+    .class-chip .m { color: var(--muted); font-size: 0.65rem; margin-top: 0.1rem; }
+    .class-chip:hover { opacity: 0.85; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    @media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+    .quick-links { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .budget-row { display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; }
+    .budget-row:last-child { border-bottom: none; font-weight: 600; }
+    .gcal-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .gcal-list li:last-child { border-bottom: none; }
+    .guide-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-top: 0.5rem; }
+    .guide-table th { text-align: left; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding: 0.55rem 0.45rem; border-bottom: 1px solid var(--border); }
+    .guide-table td { padding: 0.6rem 0.45rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .guide-table tr:last-child td { border-bottom: none; }
+    .path-card { padding: 0.85rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.55rem; }
+    .path-card.recommended { border-color: var(--accent); background: var(--accent-dim); }
+    .path-card h4 { font-size: 0.92rem; margin-bottom: 0.25rem; }
+    .path-card p { font-size: 0.78rem; color: var(--muted); line-height: 1.45; }
+    .credit-pill { display: inline-block; font-size: 0.65rem; font-weight: 600; padding: 0.15rem 0.45rem; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); margin: 0.1rem 0.15rem 0.1rem 0; }
+    .hours-big { font-family: "Instrument Serif", Georgia, serif; font-size: 1.5rem; color: var(--accent2); }
+    .today-classes { font-size: 0.84rem; }
+    .today-classes li { padding: 0.35rem 0; color: var(--muted); }
+    .today-classes strong { color: var(--text); }
+    .contact-row { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; flex-wrap: wrap; }
+    .contact-row:last-child { border-bottom: none; }
+    .contact-row a { color: var(--accent); text-decoration: none; }
+    .contact-row a:hover { text-decoration: underline; }
+    .tip-list { font-size: 0.82rem; color: var(--muted); line-height: 1.55; margin: 0; padding-left: 1.1rem; }
+    .tip-list li { margin-bottom: 0.35rem; }
+    .deadline-soon { color: var(--accent2); font-weight: 600; }
+    .deadline-passed { opacity: 0.55; }
+    .rec-tier {
+      display: inline-block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.04em;
+      text-transform: uppercase; padding: 0.15rem 0.42rem; border-radius: 999px; margin-right: 0.35rem;
+    }
+    .rec-tier.best { background: rgba(80, 180, 120, 0.18); color: #5cb88a; border: 1px solid #5cb88a; }
+    .rec-tier.free { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent); }
+    .rec-tier.budget { background: rgba(200, 160, 80, 0.15); color: #c8a050; border: 1px solid #c8a050; }
+    .rec-tier.later { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+    .rec-links a { color: var(--accent); font-size: 0.78rem; margin-right: 0.5rem; }
+    @media print {
+      .nav, .theme-btns, .filter-row, .btn-action, .toast, .footer-note, .auth-gate { display: none !important; }
+      .panel { display: block !important; page-break-inside: avoid; }
+      body { background: #fff; color: #111; }
+    }
+
+    body.locked .app { display: none; }
+    .auth-gate {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.25rem; background: var(--bg);
+    }
+    .auth-gate[hidden] { display: none; }
+    .auth-card {
+      width: min(100%, 22rem);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.6rem 1.4rem; box-shadow: var(--shadow);
+    }
+    .auth-card h2 {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: 1.65rem; font-weight: 400; margin-bottom: 0.25rem;
+    }
+    .auth-sub { color: var(--muted); font-size: 0.88rem; margin-bottom: 1rem; }
+    .auth-card input[type="password"] {
+      width: 100%; font: inherit; font-size: 0.95rem;
+      padding: 0.65rem 0.8rem; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--surface2); color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+    .auth-card input[type="password"]:focus { outline: 2px solid var(--accent-dim); border-color: var(--accent); }
+    .auth-remember {
+      display: flex; align-items: center; gap: 0.45rem;
+      font-size: 0.82rem; color: var(--muted); margin-bottom: 0.9rem; cursor: pointer;
+    }
+    .auth-card button[type="submit"] {
+      width: 100%; font: inherit; font-size: 0.9rem; font-weight: 600;
+      padding: 0.7rem; border: none; border-radius: 10px;
+      background: var(--accent); color: #1a1a18; cursor: pointer;
+    }
+    .auth-card button[type="submit"]:hover { filter: brightness(1.05); }
+    .auth-error { color: var(--warn); font-size: 0.82rem; margin-top: 0.65rem; }
+  </style>
+</head>
+<body class="locked">
+  <div id="auth-gate" class="auth-gate">
+    <div class="auth-card">
+      <div class="eyebrow">Private</div>
+      <h2>My ASA Plan</h2>
+      <p class="auth-sub">비밀번호를 입력하세요</p>
+      <form id="authForm">
+        <input type="password" id="authPassword" placeholder="비밀번호" autocomplete="current-password" required />
+        <label class="auth-remember">
+          <input type="checkbox" id="authRemember" checked />
+          이 기기에서 기억하기
+        </label>
+        <button type="submit">입장</button>
+        <p id="authError" class="auth-error" hidden>비밀번호가 틀렸습니다.</p>
+      </form>
+    </div>
+  </div>
+  <div class="app">
+    <div class="top-bar">
+      <header>
+        <div class="eyebrow">Temple MS · ASA Pathway</div>
+        <h1>My ASA Plan</h1>
+        <p class="subtitle">2026 FM → Path C → Temple → 2028 ASA · P 9월 · VEE 2개 2026 여름</p>
+      </header>
+      <div class="theme-btns">
+        <button class="theme-btn active" data-theme="warm-dark">🌙 다크</button>
+        <button class="theme-btn" data-theme="warm-light">☀️ 라이트</button>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <button data-tab="home" class="active">대시보드</button>
+      <button data-tab="timeline">타임라인</button>
+      <button data-tab="checklist">체크리스트</button>
+      <button data-tab="focus">지금 집중</button>
+      <button data-tab="schedule">시간표 · 캘린더</button>
+      <button data-tab="guide">가이드</button>
+      <button data-tab="tools">메모 · 실용</button>
+    </nav>
+
+    <!-- HOME -->
+    <section class="panel active" id="panel-home">
+      <div class="alert-box" id="urgentAlert" style="display:none"></div>
+
+      <div class="hero">
+        <div class="card hero-main">
+          <div class="card-title">ASA까지</div>
+          <div class="big-remaining" id="remainingPct">—%</div>
+          <div style="font-size:0.88rem;color:var(--muted)">남았어요</div>
+          <div class="big-done" id="donePctLine">ASA 요건 0% · 0 / 17</div>
+          <div class="dual-progress">
+            <div class="mini-stat"><div class="label">ASA 공식 요건</div><div class="val" id="asaPctMini">0%</div></div>
+            <div class="mini-stat"><div class="label">전체 플랜 (커리어 포함)</div><div class="val" id="fullPctMini">0%</div></div>
+          </div>
+          <div class="journey-bar"><div class="journey-fill" id="journeyFill" style="width:0%"></div></div>
+          <div class="journey-labels"><span>2026 FM</span><span id="journeyMid">진행 중</span><span>2028 ASA 🎉</span></div>
+          <div class="motivate" id="motivateMsg">시작이 반이야. FM부터 집중!</div>
+        </div>
+        <div class="card">
+          <div class="card-title">다음 마일스톤</div>
+          <div class="stat-num" id="countdownDays" style="color:var(--accent2)">—</div>
+          <div class="stat-sub" id="countdownLabel">—</div>
+          <div class="progress-wrap"><div class="progress-bar" id="phaseBar" style="width:0%"></div></div>
+          <div class="stat-sub" style="margin-top:0.4rem">현재 구간 <strong id="currentPhaseName" style="color:var(--accent)">—</strong> · 타임라인 <span id="phasePct">0%</span></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:0.9rem">
+        <div class="card-title">D-Day</div>
+        <div class="dday-grid" id="ddayGrid"></div>
+      </div>
+
+      <div class="grid grid-2" style="margin-bottom:0.9rem">
+        <div class="card">
+          <div class="card-title">카테고리별 진행 (체크리스트)</div>
+          <div id="catBars"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Temple MS 학위</div>
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringTempleDash" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringTempleDashTxt">0/30</text></svg>
+            <div>
+              <div class="stat-sub">30 credits · Path C</div>
+              <div id="templeDashSub" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">30 cr · 100% 남음</div>
+              <div class="stat-sub" style="margin-top:0.35rem;cursor:pointer;color:var(--accent)" onclick="switchTab('checklist')">수강 과목 체크 →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-bottom:0.9rem">
+        <div class="card">
+          <div class="card-title">앞으로 할 것 (Top 5)</div>
+          <ul class="left-list" id="leftTodo"></ul>
+        </div>
+        <div class="card">
+          <div class="card-title">타임라인 (일정용)</div>
+          <div class="stat-sub">전체 타임라인 · <strong id="timelineDashPct" style="color:var(--accent)">0%</strong></div>
+          <div class="progress-wrap"><div class="progress-bar" id="timelineDashBar" style="width:0%"></div></div>
+          <div class="stat-sub" style="margin-top:0.4rem">체크해도 ASA %는 안 변함 · <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('timeline')">타임라인 →</span></div>
+        </div>
+      </div>
+
+      <div class="grid grid-4">
+        <div class="card">
+          <div class="card-title">시험</div>
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringExam" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringExamTxt">0/3</text></svg>
+            <div><div class="stat-sub">FM · P · PA</div><div id="examLeft" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">3개 남음</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">VEE</div>
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringVee" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringVeeTxt">0/3</text></svg>
+            <div><div class="stat-sub">Stats · Econ · Acct</div><div id="veeLeft" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">3개 남음</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">UEC</div>
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringUec" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringUecTxt">0/3</text></svg>
+            <div><div class="stat-sub">FAM · SRM · ASTAM</div><div id="uecLeft" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">100% 남음</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">모듈 & FAP</div>
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringMod" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringModTxt">0/8</text></svg>
+            <div><div class="stat-sub">PAF · ASF · FAP · ATPA · APC</div><div id="modLeft" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">8개 남음</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="link-note">💡 <strong>SRM → PA:</strong> AS 5108 후 Exam PA — 자연스럽게 연결되는 플랜</div>
+
+      <div class="grid grid-2" style="margin-top:0.9rem">
+        <div class="card">
+          <div class="card-title">오늘 수업 · 이번 주</div>
+          <ul class="today-classes" id="todayClasses"></ul>
+          <div class="stat-sub" style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border)">
+            주당 수업 <strong id="weeklyClassHrs" style="color:var(--accent)">—</strong> · 공부 목표와 합쳐서 주간 시간 관리
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">이번 주 공부 목표</div>
+          <div class="stat-num" id="studyGoalPct" style="font-size:1.8rem">0%</div>
+          <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">600</span>분</div>
+          <div class="progress-wrap"><div class="progress-bar" id="studyGoalBar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:0.9rem" id="examStudyGuideCard">
+        <div class="card-title">현재 시험 공부 가이드</div>
+        <div id="examStudyGuide"></div>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="panel" id="panel-timeline">
+      <div class="info-box" style="margin-bottom:0.9rem">📋 타임라인 체크는 <strong>일정·할 일 메모용</strong>입니다. ASA 진행률(%)에는 반영되지 않아요.</div>
+      <div class="card"><div class="card-title">타임라인 · <span id="timelineProgressLabel">0%</span> 완료</div><div class="timeline" id="timeline"></div></div>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section class="panel" id="panel-checklist">
+      <div class="info-box" style="margin-bottom:0.9rem">✅ 체크리스트: 시험은 <strong>미응시 / 합격 / 불합격</strong> · 합격만 ASA % 반영 · 나머지는 체크박스</div>
+      <div class="card">
+        <div class="card-title">ASA · SOA 플랜 체크리스트</div>
+        <div class="filter-row" id="filterRow">
+          <button class="filter-btn active" data-filter="all">전체</button>
+          <button class="filter-btn" data-filter="exam">시험</button>
+          <button class="filter-btn" data-filter="vee">VEE</button>
+          <button class="filter-btn" data-filter="uec">UEC</button>
+          <button class="filter-btn" data-filter="module">모듈</button>
+          <button class="filter-btn" data-filter="career">커리어</button>
+          <button class="filter-btn" data-filter="admin">행정</button>
+          <button class="filter-btn" data-filter="left">미완료만</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="check-table"><thead><tr><th>상태</th><th>요건</th><th>방법</th><th>시기</th></tr></thead><tbody id="checkBody"></tbody></table>
+        </div>
+      </div>
+      <div class="card" style="margin-top:0.9rem">
+        <div class="info-box" style="margin-bottom:0.75rem">🎓 학위 과목 체크는 <strong>Temple MS credit 진행률</strong>만 반영. ASA %와 별개.</div>
+        <div class="card-title">Temple MS 학위 · 수강 과목 (30 credits)</div>
+        <div class="ring-wrap" style="margin-bottom:0.85rem">
+          <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringTemple" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringTempleTxt">0/30</text></svg>
+          <div>
+            <div class="stat-sub">학위 credit 진행</div>
+            <div style="font-family:'Instrument Serif',Georgia,serif;font-size:1.5rem;color:var(--accent2);margin-top:0.15rem"><span id="templeRemainingPct">100</span>% 남음</div>
+            <div class="stat-sub"><span id="templeCreditsDone">0</span> / 30 cr 완료</div>
+          </div>
+        </div>
+        <div class="progress-wrap" style="margin-bottom:0.75rem"><div class="progress-bar" id="templeBar" style="width:0%"></div></div>
+        <ul class="task-list" id="templeCourseList"></ul>
+      </div>
+    </section>
+    <section class="panel" id="panel-focus">
+      <div class="info-box" style="margin-bottom:0.9rem">📋 아래 체크는 <strong>타임라인 일정용</strong> (ASA %와 별개)</div>
+      <div class="card"><div class="card-title" id="focusTitle">지금 집중</div><ul class="task-list" id="focusTasks"></ul></div>
+      <div class="card" style="margin-top:0.9rem"><div class="card-title">우선 확인</div><ul class="task-list" id="priorityTasks"></ul></div>
+    </section>
+
+    <!-- SCHEDULE -->
+    <section class="panel" id="panel-schedule">
+      <div class="info-box">
+        <strong>2026 Fall 등록 시간표</strong> — AS 5101·5001·5104 + HCM 5101(수 18:00 온라인). BA 5687 토요일 대면은 제외(학기 3회 중 1회만).
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title">학교 시간표 추가</div>
+          <input type="text" id="clsName" placeholder="수업명 (예: AS 5108)" />
+          <div class="form-row">
+            <div><label style="font-size:0.75rem;color:var(--muted)">요일</label>
+              <select id="clsDay">
+                <option value="1">월</option><option value="2">화</option><option value="3">수</option>
+                <option value="4">목</option><option value="5">금</option><option value="6">토</option>
+              </select></div>
+            <div><label style="font-size:0.75rem;color:var(--muted)">장소</label>
+              <input type="text" id="clsLoc" placeholder="Wachman 101" /></div>
+          </div>
+          <div class="form-row">
+            <div><label style="font-size:0.75rem;color:var(--muted)">시작</label><input type="time" id="clsStart" value="10:00" /></div>
+            <div><label style="font-size:0.75rem;color:var(--muted)">끝</label><input type="time" id="clsEnd" value="11:30" /></div>
+          </div>
+          <input type="text" id="clsSemester" placeholder="학기 (예: 2026 Fall)" value="2026 Fall" />
+          <button class="btn-action primary" id="btnAddClass">수업 추가</button>
+        </div>
+        <div class="card">
+          <div class="card-title">Google Calendar 연동</div>
+          <p class="stat-sub" style="margin-bottom:0.65rem">한 번에 넣기: ICS 다운로드 → Google Calendar → 설정 → Import</p>
+          <div class="btn-row">
+            <button class="btn-action primary" id="btnExportIcs">📥 ICS 내보내기 (마일스톤+수업)</button>
+          </div>
+          <p class="stat-sub" style="margin:0.75rem 0 0.5rem">마일스톤 하나씩 추가:</p>
+          <ul class="gcal-list" id="gcalLinks"></ul>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:0.9rem">
+        <div class="card-title">주간 시간표 · <span id="scheduleSemester">2026 Fall</span></div>
+        <div class="btn-row" style="margin-bottom:0.65rem">
+          <button class="btn-action primary" id="btnLoadFall2026">2026 Fall 등록 시간표 적용</button>
+        </div>
+        <div class="schedule-grid" id="scheduleGrid"></div>
+      </div>
+    </section>
+
+    <!-- GUIDE -->
+    <section class="panel" id="panel-guide">
+      <div class="card" style="margin-bottom:0.9rem">
+        <div class="card-title">시험별 권장 공부 시간</div>
+        <p class="stat-sub" style="margin-bottom:0.75rem">개인차 있음 · 아래는 일반적인 준비 시간 (문제풀이 포함)</p>
+        <table class="guide-table">
+          <thead><tr><th>시험</th><th>권장 시간</th><th>주 10h 기준</th><th>너 플랜</th><th>팁</th></tr></thead>
+          <tbody id="studyHoursTable"></tbody>
+        </table>
+        <div class="link-note" style="margin-top:0.85rem;margin-bottom:0">📌 <strong>지금:</strong> FM D-day 기준 남은 시간 ÷ 권장 시간 = 하루/주 목표를 역산해보세요. <strong>메모 · 실용</strong> 탭에서 주간 목표(분) 설정 가능.</div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title">Temple MS Actuarial Science · 학위 요건</div>
+          <p class="stat-sub" style="margin-bottom:0.65rem">총 <strong style="color:var(--accent)">30 credits</strong> · 2026-2027 Graduate Bulletin 기준</p>
+          <div class="path-card">
+            <h4>Core (15 cr)</h4>
+            <p>
+              <span class="credit-pill">AS 5101 Theory of Interest (3)</span>
+              <span class="credit-pill">AS 5102 Long-Term Modeling (3)</span>
+              <span class="credit-pill">AS 5104 Short-Term Modeling (3)</span>
+              <span class="credit-pill">AS 5108 Actuarial Analytics (3)</span>
+              <span class="credit-pill">RMI 5051 Managing Risk (3)</span>
+              <span class="credit-pill">BA 5687 Professional Dev (0)</span>
+            </p>
+          </div>
+          <div class="path-card">
+            <h4>Selectives (9 cr)</h4>
+            <p><strong>1개:</strong> RMI 5101 Human Capital Risk <em>or</em> RMI 5104 Property & Liability<br/>
+            <strong>2개:</strong> AS 5103, AS 5114, AS 5118, AS 5190 중 선택</p>
+          </div>
+          <div class="path-card">
+            <h4>Electives (6 cr)</h4>
+            <p>승인된 elective 2과목 (3 cr each). <strong>AS 5001</strong>은 P 준비용 elective — Path C Fall Y1에 Academic Director 권고로 수강.</p>
+          </div>
+          <p class="stat-sub" style="margin-top:0.5rem">Academic Director: <strong>Dr. Tianxiang Shi</strong> · tshi@temple.edu · FoxMS@temple.edu</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">수업 ↔ SOA 연결</div>
+          <table class="guide-table">
+            <thead><tr><th>Temple 과목</th><th>SOA</th><th>비고</th></tr></thead>
+            <tbody>
+              <tr><td>AS 5101</td><td class="cat-exam">Exam FM</td><td>FM 합격 시 elective 대체 가능 (Path B)</td></tr>
+              <tr><td>AS 5102 + 5104</td><td class="cat-uec">FAM UEC</td><td>Long + Short Term Modeling</td></tr>
+              <tr><td>AS 5108</td><td class="cat-uec">SRM UEC</td><td>→ PA 기반</td></tr>
+              <tr><td>AS 5114</td><td class="cat-uec">ASTAM UEC</td><td>Advanced Short-Term</td></tr>
+              <tr><td>AS 5001</td><td class="cat-exam">Exam P prep</td><td><strong>Elective credit</strong> · UEC 아님 · Path C Fall Y1</td></tr>
+            </tbody>
+          </table>
+          <div class="path-card recommended" style="margin-top:0.75rem">
+            <h4>🎯 너에게 해당: Path C</h4>
+            <p>입학 시 <strong>SOA 시험 미합격</strong> 기준 (PDF 권장 경로).<br/>
+            PDF Path C (참고): Fall Y1 — AS 5001 + elective / Spring — 5101·5104<br/>
+            <strong>너 2026 Fall 실제:</strong> 5101, 5001, 5104, HCM 5101 (12 cr)</p>
+          </div>
+          <p class="stat-sub" style="margin-top:0.5rem">FM·P 합격 후에도 <strong>FoxMS@temple.edu</strong>에 Path 조정 문의. FAM UEC(5102+5104)는 Academic Director와 일정 확인.</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:0.9rem">
+        <div class="card-title">Temple 진행 예시 (Path C + 너 ASA 플랜)</div>
+        <table class="guide-table">
+          <thead><tr><th>시기</th><th>Temple (Path C)</th><th>SOA / ASA 플랜</th></tr></thead>
+          <tbody>
+            <tr><td>2026 여름</td><td>— (입학 전)</td><td><strong>VEE Econ + Acct</strong> · FM 재응시(필요시) · P 9월 준비</td></tr>
+            <tr><td>Fall Y1 (2026)</td><td>8/24 입학 · AS 5101, 5001, 5104, HCM 5101 (12 cr)</td><td><strong>Exam P 9월</strong> · FM UEC(5101) · FAM 일부(5104)</td></tr>
+            <tr><td>Spring Y1 (2027)</td><td>AS 5102, RMI 5051, selective 등</td><td>ASF, FAP 3-4, CPT PT · FAM UEC(5102+5104) 완성</td></tr>
+            <tr><td>Fall Y2 (2027)</td><td>AS 5108 + AS 5114(selective) 등</td><td>SRM·ASTAM UEC, Exam PA, FAP final, 졸업</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:0.9rem">
+        <div class="card">
+          <div class="card-title">시험 등록 · 마감 (SOA 확인 필수)</div>
+          <table class="guide-table" id="examDeadlinesTable"></table>
+          <p class="stat-sub" style="margin-top:0.5rem">마감은 매년 바뀜 · <a href="https://www.soa.org/education/exam-req/" target="_blank" rel="noopener" style="color:var(--accent)">SOA Exam Dates</a>에서 최종 확인</p>
+        </div>
+        <div class="card">
+          <div class="card-title">UEC 성적 요건 (Temple)</div>
+          <table class="guide-table">
+            <thead><tr><th>과목</th><th>UEC</th><th>최소 성적</th></tr></thead>
+            <tbody>
+              <tr><td>AS 5101</td><td>FM</td><td><strong>B-</strong> 이상 (Advisor 확인)</td></tr>
+              <tr><td>AS 5102 + 5104</td><td>FAM</td><td><strong>B-</strong> 이상 · 5101 선수</td></tr>
+              <tr><td>AS 5108</td><td>SRM</td><td><strong>B-</strong> 이상</td></tr>
+              <tr><td>AS 5114</td><td>ASTAM</td><td><strong>B-</strong> 이상 · 5104 선수</td></tr>
+            </tbody>
+          </table>
+          <p class="stat-sub" style="margin-top:0.5rem">성적 나오면 SOA Candidate Central에 UEC 자동/수동 반영 확인</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:0.9rem">
+        <div class="card-title">🎯 플랜별 학습자료 추천 (Path C · Temple)</div>
+        <div class="info-box" style="margin-bottom:0.75rem">
+          Temple MS 학생 → CA checkout에서 <strong>Student Pricing</strong> 선택 후 증명 업로드 (졸업 18개월 이내도 가능).
+          FM·P는 <strong>TIA 무료</strong>로 시작하고, 문제풀이는 CA Adapt 추가가 가성비 좋음.
+        </div>
+        <table class="guide-table" id="studyRecTable"></table>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:0.9rem">
+        <div class="card">
+          <div class="card-title">VEE 온라인 수강처 (2026 여름용)</div>
+          <table class="guide-table">
+            <thead><tr><th>VEE</th><th>추천 플랫폼</th><th>비고</th></tr></thead>
+            <tbody>
+              <tr><td>Economics</td><td><a href="https://www.coachingactuaries.com/vee" target="_blank" rel="noopener" style="color:var(--accent)">Coaching Actuaries</a> · <a href="https://www.actexlearning.com/" target="_blank" rel="noopener" style="color:var(--accent)">ACTEX</a></td><td>SOA $92/과목 · CA 학생 할인</td></tr>
+              <tr><td>Accounting & Finance</td><td><a href="https://www.coachingactuaries.com/vee" target="_blank" rel="noopener" style="color:var(--accent)">Coaching Actuaries</a> · ACTEX</td><td>2026 여름 2개 병행</td></tr>
+              <tr><td>Math Statistics</td><td>Purdue 학점 → Temple 면제</td><td>입학 직후 FoxMS에 확인</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title">공부 플랫폼 · 교재 (2026)</div>
+          <table class="guide-table" id="studyProvidersTable"></table>
+          <p class="stat-sub" style="margin-top:0.5rem"><strong>FM·P 추천 조합:</strong> TIA 무료 + CA Adapt · 또는 CA Learn+Practice ($618, 학생 할인 시 ~$216)</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:0.9rem">
+        <div class="card-title">필수 준비물 · 공부 팁</div>
+        <ul class="tip-list">
+          <li><strong>계산기:</strong> TI BA II Plus (~$50) — FM 필수 · Amazon/학교 서점</li>
+          <li><strong>Adapt 목표:</strong> earned level 6+ (FM·P) · calibration exam 먼저</li>
+          <li><strong>VEE 여름:</strong> Econ+Acct 하루 2–3h · Stats는 Purdue 면제 확인</li>
+          <li><strong>재응시:</strong> Prometric 변경 $70 · SOA 시험비 전액 재납</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top:0.9rem">
+        <div class="card-title">SOA ASA 비용 요약 (2026 공식 · UEC 경로)</div>
+        <div class="grid grid-2">
+          <div id="soaFeesSummary"></div>
+          <div>
+            <p class="stat-sub" style="margin-bottom:0.5rem"><strong>학습 자료 (SOA 외, 참고):</strong></p>
+            <ul class="tip-list">
+              <li>CA Adapt only: <strong>$195</strong>/시험 (180일)</li>
+              <li>CA Learn + Practice: <strong>$618</strong>/시험 · 학생 ~65% off</li>
+              <li>TIA P·FM: <strong>$0</strong></li>
+              <li>BA II Plus 계산기: ~$50</li>
+            </ul>
+            <p class="stat-sub" style="margin-top:0.5rem"><a href="https://www.soa.org/education/exam-req/syllabus-study-materials/exam-and-module-fees/" target="_blank" rel="noopener" style="color:var(--accent)">SOA 공식 요금표 →</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOOLS -->
+    <section class="panel" id="panel-tools">
+      <div class="grid grid-3" style="margin-bottom:0.9rem">
+        <div class="card">
+          <div class="card-title">빠른 링크</div>
+          <div class="quick-links">
+            <a class="btn-action" href="https://www.soa.org/education/exam-req/" target="_blank" rel="noopener">SOA Exams</a>
+            <a class="btn-action" href="https://candidate.soa.org/" target="_blank" rel="noopener">Candidate Central</a>
+            <a class="btn-action" href="https://www.soa.org/education/general-info/vee/" target="_blank" rel="noopener">VEE</a>
+            <a class="btn-action" href="https://www.soa.org/education/general-info/fap/" target="_blank" rel="noopener">FAP</a>
+            <a class="btn-action" href="https://www.coachingactuaries.com/" target="_blank" rel="noopener">Coaching Actuaries</a>
+            <a class="btn-action" href="https://www.theinfiniteactuary.com/" target="_blank" rel="noopener">TIA</a>
+            <a class="btn-action" href="https://www.actexlearning.com/" target="_blank" rel="noopener">ACTEX</a>
+            <a class="btn-action" href="https://www.studymanuals.com/" target="_blank" rel="noopener">ASM</a>
+            <a class="btn-action" href="https://canvas.temple.edu/" target="_blank" rel="noopener">Temple Canvas</a>
+            <a class="btn-action" href="https://www.fox.temple.edu/academics/departments/risk-insurance-health-management" target="_blank" rel="noopener">Temple Fox</a>
+            <a class="btn-action" href="https://calendar.google.com/" target="_blank" rel="noopener">Google Cal</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">SOA ASA 비용 (2026 공식)</div>
+          <div id="budgetRows"></div>
+          <input type="number" id="budgetSpent" placeholder="지금까지 SOA·교재에 쓴 금액 ($)" min="0" style="margin-top:0.5rem;margin-bottom:0.3rem" />
+          <div class="stat-sub">남은 예산: <strong id="budgetLeft" style="color:var(--accent)">—</strong> · <span id="budgetTotalLabel">—</span></div>
+          <div class="stat-sub" style="margin-top:0.25rem;font-size:0.75rem">재응시·학습자료(CA/TIA)는 별도 · Stats VEE 면제 시 −$92</div>
+        </div>
+        <div class="card">
+          <div class="card-title">주간 공부 목표 (분)</div>
+          <input type="number" id="studyGoalInput" min="60" max="3000" value="600" />
+          <div class="stat-sub">기본 600분 = 10시간/주</div>
+        </div>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-title">이번 주 메모</div>
+          <textarea id="weeklyMemo" placeholder="이번 주 목표, 할 일, 느낀 점..."></textarea>
+          <div class="stat-sub">자동 저장</div>
+        </div>
+        <div class="card">
+          <div class="card-title">행정 체크 (자주 빠지는 것)</div>
+          <ul class="task-list" id="adminTasks"></ul>
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-top:0.9rem">
+        <div class="card">
+          <div class="card-title">오늘 공부 기록</div>
+          <input type="number" id="studyMin" placeholder="공부 시간 (분)" min="0" max="600" />
+          <input type="text" id="studyTopic" placeholder="오늘 한 내용 (예: FM annuity)" />
+          <button class="filter-btn active" id="btnLogStudy" style="margin-top:0.2rem">기록 추가</button>
+          <ul class="left-list" id="studyLogs" style="margin-top:0.75rem"></ul>
+          <div class="stat-sub" style="margin-top:0.5rem">이번 주 합계: <strong id="weekStudyTotal" style="color:var(--accent)">0</strong>분</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Temple / SOA 확인 메모</div>
+          <textarea id="adminMemo" placeholder="VEE 면제 결과, UEC 성적 요건, CPT 담당자 연락처..."></textarea>
+          <div class="stat-sub">자동 저장</div>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:0.9rem">
+        <div class="card">
+          <div class="card-title">📇 연락처 · 필수 링크</div>
+          <div id="contactList"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">🌏 국제학생 · CPT / OPT</div>
+          <ul class="tip-list">
+            <li><strong>온캠퍼스 잡:</strong> 입학 즉시 Handshake·Temple Careers — CPT 전 part-time 가능</li>
+            <li><strong>CPT:</strong> ISSS + Academic Advisor + 고용주 offer letter · 학기 중 PT / 여름 FT</li>
+            <li><strong>SSN:</strong> on-campus job offer 받으면 신청 (인턴/CPT 전에 필요할 수 있음)</li>
+            <li><strong>VEE Stats:</strong> Purdue transcript → FoxMS@temple.edu 면제 확인 (입학 직후)</li>
+            <li><strong>OPT:</strong> 졸업 전 ISSS에 일정 문의 (MS 1년 + STEM extension 가능 여부 확인)</li>
+          </ul>
+          <div class="quick-links" style="margin-top:0.65rem">
+            <a class="btn-action" href="https://educationabroad.temple.edu/isss" target="_blank" rel="noopener">Temple ISSS</a>
+            <a class="btn-action" href="https://fox.temple.edu/admissions/graduate-admissions/contact" target="_blank" rel="noopener">Fox MS</a>
+            <a class="btn-action" href="https://careers.temple.edu/" target="_blank" rel="noopener">Temple Careers</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:0.9rem">
+        <div class="card-title">💾 데이터 백업 · 복원</div>
+        <p class="stat-sub" style="margin-bottom:0.65rem">체크·메모·시간표는 <strong>이 브라우저에만</strong> 저장됩니다. PC 바꾸거나 캐시 삭제 전에 백업하세요.</p>
+        <div class="btn-row">
+          <button class="btn-action primary" id="btnExportData">📥 백업 다운로드 (JSON)</button>
+          <label class="btn-action" style="cursor:pointer;margin:0">
+            📤 백업 불러오기
+            <input type="file" id="importDataFile" accept=".json,application/json" style="display:none" />
+          </label>
+          <button class="btn-action" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">체크 · 메모 · 기록은 브라우저에 자동 저장 · PC마다 따로</p>
+  </div>
+  <div class="toast" id="toast">저장됨</div>
+
+  <script>
+    // 비밀번호 변경: 터미널에서 `echo -n "새비밀번호" | shasum -a 256` 실행 후 아래 해시 교체
+    const PASSWORD_HASH = "e7a4dcd89000f0eb1602dd86cae04452c47c500c5ca71bcaa5e59c2c894cd086"; // default: asa2026
+    const AUTH_KEY = "soa-asa-auth-v1";
+
+    async function sha256(text) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    function isAuthed() {
+      return sessionStorage.getItem(AUTH_KEY) === "1" || localStorage.getItem(AUTH_KEY) === "1";
+    }
+
+    function setAuthed(remember) {
+      sessionStorage.setItem(AUTH_KEY, "1");
+      if (remember) localStorage.setItem(AUTH_KEY, "1");
+    }
+
+    function unlockApp() {
+      document.body.classList.remove("locked");
+      document.getElementById("auth-gate").hidden = true;
+    }
+
+    const STORAGE_KEY = "soa-asa-plan-v6";
+    const TEMPLE_TOTAL_CREDITS = 30;
+
+    const TEMPLE_COURSES = [
+      { id:"tc-5001", name:"AS 5001 Actuarial Probability", credits:3, group:"Elective (1 of 2) · 2026 Fall", soa:"Exam P prep · UEC 아님" },
+      { id:"tc-5101", name:"AS 5101 Theory of Interest", credits:3, group:"Core · 2026 Fall", soa:"FM UEC" },
+      { id:"tc-5102", name:"AS 5102 Long-Term Actuarial Modeling", credits:3, group:"Core", soa:"FAM UEC" },
+      { id:"tc-5104", name:"AS 5104 Short-Term Actuarial Modeling", credits:3, group:"Core · 2026 Fall", soa:"FAM UEC" },
+      { id:"tc-5108", name:"AS 5108 Actuarial Analytics", credits:3, group:"Core", soa:"SRM UEC" },
+      { id:"tc-rmi5051", name:"RMI 5051 Managing Risk", credits:3, group:"Core", soa:"—" },
+      { id:"tc-ba5687", name:"BA 5687 MS Professional Development", credits:0, group:"Core (0 cr · 대부분 온라인)", soa:"0 cr" },
+      { id:"tc-sel-rmi", name:"Selective: RMI 5101 or RMI 5104", credits:3, group:"Selective (1 of)", soa:"—" },
+      { id:"tc-sel-1", name:"Selective: AS 5103 / 5114 / 5118 / 5190", credits:3, group:"Selective (1 of 2)", soa:"5114=ASTAM" },
+      { id:"tc-sel-2", name:"Selective: AS 5103 / 5114 / 5118 / 5190", credits:3, group:"Selective (2 of 2)", soa:"—" },
+      { id:"tc-hcm5101", name:"HCM 5101 Health Systems Organization", credits:3, group:"Elective (2 of 2) · 2026 Fall", soa:"Non-Fox elective" }
+    ];
+
+    // 2026 Fall 등록 시간표 (BA 5687 토요일 제외 — 학기 3회 중 1회만 대면)
+    const DEFAULT_FALL_2026_SCHEDULE = [
+      { name:"AS 5101 Theory of Interest", day:1, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
+      { name:"AS 5101 Theory of Interest", day:3, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
+      { name:"AS 5001 Actuarial Probability", day:1, start:"11:00", end:"12:20", location:"", semester:"2026 Fall" },
+      { name:"AS 5001 Actuarial Probability", day:3, start:"11:00", end:"12:20", location:"", semester:"2026 Fall" },
+      { name:"AS 5104 Short-Term Modeling", day:2, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
+      { name:"AS 5104 Short-Term Modeling", day:4, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
+      { name:"HCM 5101 Health Systems", day:3, start:"18:00", end:"20:30", location:"온라인", semester:"2026 Fall" }
+    ];
+    const CIRC = 2 * Math.PI * 30;
+    const JOURNEY_START = "2026-01-01";
+    const JOURNEY_END = "2028-03-01";
+
+    const PHASES = [
+      { id:"pre", name:"입학 전", period:"지금 ~ 2026년 6월", start:"2025-01-01", end:"2026-06-30", tasks:[
+        { id:"fm-jun20", text:"6/20 Exam FM 응시 🎯", meta:"최우선 · Path C 시작", highlight:true },
+        { id:"fm-retake", text:"떨어지면 8월 재응시", meta:"Plan B" }
+      ]},
+      { id:"summer26", name:"2026 여름", period:"2026년 7월 ~ 8월", start:"2026-07-01", end:"2026-08-31", tasks:[
+        { id:"vee-econ", text:"VEE Economics 완료", meta:"온라인 · 이번 여름", highlight:true },
+        { id:"vee-acct", text:"VEE Accounting & Finance 완료", meta:"온라인 · 이번 여름", highlight:true },
+        { id:"prep-p", text:"Exam P 9월 대비 본격 공부", meta:"9월 시험 🎯", highlight:true },
+        { id:"oncampus-job", text:"온캠퍼스 잡 지원 준비", meta:"8/24 입학 전" }
+      ]},
+      { id:"sem1", name:"1학기 (Fall Y1 · Path C)", period:"2026년 8/24 ~ 12월", start:"2026-08-24", end:"2026-12-31", tasks:[
+        { id:"as-5001", text:"AS 5001 Actuarial Probability", meta:"Elective · P prep (UEC 아님)", highlight:true },
+        { id:"oncampus-job", text:"온캠퍼스 잡 바로 지원", meta:"입학 즉시" },
+        { id:"vee-stats-check", text:"VEE Math Statistics — Purdue 학점 Temple 면제 확인", meta:"입학 직후!", highlight:true },
+        { id:"exam-p", text:"9월 Exam P 응시 합격", meta:"시험 🎯", highlight:true },
+        { id:"intern-fall", text:"가을 계리사 인턴 지원", meta:"커리어" },
+        { id:"paf", text:"PAF Module", meta:"모듈" }
+      ]},
+      { id:"winter", name:"겨울방학", period:"2026년 12월 ~ 2027년 1월", start:"2026-12-01", end:"2027-01-31", tasks:[
+        { id:"intern-confirm", text:"인턴 확정", meta:"커리어" },
+        { id:"fap-12", text:"FAP Module 1 & 2", meta:"FAP" },
+        { id:"winter-rest", text:"휴식", meta:"컨디션" }
+      ]},
+      { id:"sem2", name:"2학기 (Spring Y1 · Path C)", period:"2027년 1월 ~ 5월", start:"2027-01-01", end:"2027-05-31", tasks:[
+        { id:"as-5101", text:"AS 5101 Theory of Interest", meta:"Path C Spring Y1" },
+        { id:"as-5104", text:"AS 5104 Short-Term Modeling", meta:"Path C · FAM 일부" },
+        { id:"as-5102-5104", text:"AS 5102 추가 → FAM UEC 완성", meta:"Advisor와 일정 확인", highlight:true },
+        { id:"as-5108", text:"AS 5108 → SRM UEC", meta:"Fall Y2 또는 조기", highlight:true },
+        { id:"cpt-pt", text:"CPT 파트타임 인턴", meta:"커리어" },
+        { id:"asf", text:"ASF Module", meta:"모듈" },
+        { id:"fap-34", text:"FAP Module 3 & 4", meta:"FAP" }
+      ]},
+      { id:"summer", name:"여름방학", period:"2027년 6월 ~ 8월", start:"2027-06-01", end:"2027-08-31", tasks:[
+        { id:"cpt-ft", text:"CPT 풀타임 인턴 🎯", meta:"커리어", highlight:true },
+        { id:"fap-5", text:"FAP Module 5", meta:"FAP" },
+        { id:"atpa", text:"ATPA Assessment", meta:"Assessment" }
+      ]},
+      { id:"sem3", name:"3학기", period:"2027년 8월 ~ 12월", start:"2027-08-01", end:"2027-12-31", tasks:[
+        { id:"as-5114", text:"AS 5114 → ASTAM UEC", meta:"UEC" },
+        { id:"exam-pa", text:"10월 Exam PA 합격", meta:"SRM 기반", highlight:true },
+        { id:"fap-final", text:"FAP 최종 평가", meta:"FAP" },
+        { id:"graduate", text:"졸업 🎓", meta:"2027.12" }
+      ]},
+      { id:"post", name:"졸업 직후", period:"2028년 초", start:"2028-01-01", end:"2028-12-31", tasks:[
+        { id:"apc", text:"APC 참석", meta:"마지막" },
+        { id:"asa", text:"ASA 완성 🎉", meta:"목표", highlight:true }
+      ]}
+    ];
+
+    const REQUIREMENTS = [
+      { id:"fm-jun20", cat:"exam", name:"Exam FM", method:"6/20 응시 → 불합격 시 8월 재응시", when:"지금", order:0 },
+      { id:"exam-p", cat:"exam", name:"Exam P", method:"9월 응시", when:"1학기", order:4 },
+      { id:"exam-pa", cat:"exam", name:"Exam PA", method:"10월 (SRM 기반)", when:"3학기", order:11 },
+      { id:"vee-stats-check", cat:"vee", name:"VEE Math Statistics", method:"Purdue 학점 Temple 면제 확인", when:"1학기", order:1 },
+      { id:"vee-econ", cat:"vee", name:"VEE Economics", method:"2026 여름 온라인", when:"2026 여름", order:2 },
+      { id:"vee-acct", cat:"vee", name:"VEE Accounting & Finance", method:"2026 여름 온라인", when:"2026 여름", order:3 },
+      { id:"as-5102-5104", cat:"uec", name:"Exam FAM", method:"AS 5102 & 5104 UEC", when:"2학기", order:7 },
+      { id:"as-5108", cat:"uec", name:"Exam SRM", method:"AS 5108 UEC", when:"2학기", order:6 },
+      { id:"as-5114", cat:"uec", name:"Exam ASTAM", method:"AS 5114 UEC", when:"3학기", order:10 },
+      { id:"paf", cat:"module", name:"PAF Module", method:"e-Learning", when:"1학기", order:5 },
+      { id:"asf", cat:"module", name:"ASF Module", method:"e-Learning", when:"2학기", order:8 },
+      { id:"fap-12", cat:"module", name:"FAP 1-2", method:"e-Learning", when:"겨울", order:12 },
+      { id:"fap-34", cat:"module", name:"FAP 3-4", method:"e-Learning", when:"2학기", order:13 },
+      { id:"fap-5", cat:"module", name:"FAP 5", method:"e-Learning", when:"여름", order:14 },
+      { id:"fap-final", cat:"module", name:"FAP 최종 평가", method:"e-Learning", when:"3학기", order:15 },
+      { id:"atpa", cat:"module", name:"ATPA Assessment", method:"SOA", when:"여름", order:9 },
+      { id:"apc", cat:"module", name:"APC", method:"Professionalism", when:"졸업 후", order:16 },
+      { id:"oncampus-job", cat:"career", name:"온캠퍼스 잡", method:"입학 즉시 지원", when:"1학기", order:20 },
+      { id:"intern-fall", cat:"career", name:"가을 인턴 지원", method:"계리사 인턴 채용", when:"1학기", order:21 },
+      { id:"intern-confirm", cat:"career", name:"인턴 확정", method:"겨울방학 전", when:"겨울", order:22 },
+      { id:"cpt-pt", cat:"career", name:"CPT 파트타임", method:"2학기 인턴", when:"2학기", order:23 },
+      { id:"cpt-ft", cat:"career", name:"CPT 풀타임", method:"여름 인턴", when:"여름", order:24 },
+      { id:"graduate", cat:"career", name:"졸업", method:"Temple MS 완료", when:"2027.12", order:25 },
+      { id:"asa", cat:"career", name:"ASA 완성", method:"모든 요건 + APC", when:"2028", order:26 },
+      { id:"soa-join", cat:"admin", name:"SOA Candidate 등록", method:"soa.org 가입", when:"FM 전후", order:30 },
+      { id:"fm-register", cat:"admin", name:"FM 시험 등록", method:"SOA registration deadline 확인", when:"지금", order:31 },
+      { id:"fm-transcript", cat:"admin", name:"FM 합격 transcript", method:"SOA에 성적 제출", when:"합격 후", order:32 },
+      { id:"p-transcript", cat:"admin", name:"P 합격 transcript", method:"SOA에 성적 제출", when:"합격 후", order:33 },
+      { id:"vee-submit", cat:"admin", name:"VEE 학점 SOA 제출", method:"VEE 3개 완료 후 각각", when:"완료 시", order:34 },
+      { id:"uec-grade", cat:"admin", name:"UEC 성적 요건 확인", method:"Temple AS과목 B 이상 등", when:"수강 전", order:35 },
+      { id:"cpt-paperwork", cat:"admin", name:"CPT 서류", method:"국제학생실 + 고용주", when:"인턴 전", order:36 },
+      { id:"pa-transcript", cat:"admin", name:"PA 합격 transcript", method:"SOA에 성적 제출", when:"합격 후", order:37 }
+    ];
+
+    const DDAYS = [
+      { date:"2026-06-20", label:"Exam FM", taskId:"fm-jun20" },
+      { date:"2026-08-24", label:"Temple 입학", taskId:"oncampus-job" },
+      { date:"2026-09-15", label:"Exam P", taskId:"exam-p" },
+      { date:"2027-06-01", label:"CPT FT", taskId:"cpt-ft" },
+      { date:"2027-10-15", label:"Exam PA", taskId:"exam-pa" },
+      { date:"2027-12-15", label:"졸업", taskId:"graduate" },
+      { date:"2028-03-01", label:"ASA 🎉", taskId:"asa" }
+    ];
+
+    const MILESTONES = DDAYS;
+    const CAT_CLS = { exam:"cat-exam", vee:"cat-vee", module:"cat-module", uec:"cat-uec", career:"cat-career", admin:"cat-admin" };
+    const EXAM_IDS = ["fm-jun20","exam-p","exam-pa"];
+    const VEE_IDS = ["vee-stats-check","vee-econ","vee-acct"];
+    const MOD_IDS = ["paf","asf","fap-12","fap-34","fap-5","fap-final","atpa","apc"];
+    const UEC_IDS = ["as-5102-5104","as-5108","as-5114"];
+    const CAREER_IDS = ["oncampus-job","intern-fall","intern-confirm","cpt-pt","cpt-ft","graduate","asa"];
+    const ADMIN_IDS = ["soa-join","fm-register","fm-transcript","p-transcript","vee-submit","uec-grade","cpt-paperwork","pa-transcript"];
+    const ASA_IDS = [...EXAM_IDS, ...VEE_IDS, ...UEC_IDS, ...MOD_IDS];
+
+    const DAY_NAMES = ["일","월","화","수","목","금","토"];
+    const DAY_ORDER = [1,2,3,4,5,6,0];
+    const SOA_FEES = {
+      source: "SOA 공식 · 2025.12.16",
+      sourceUrl: "https://www.soa.org/education/exam-req/syllabus-study-materials/exam-and-module-fees/",
+      exams: [
+        { name: "Exam FM", fee: 275 },
+        { name: "Exam P", fee: 275 },
+        { name: "Exam PA", fee: 1234 }
+      ],
+      vee: [
+        { name: "VEE Economics", fee: 92 },
+        { name: "VEE Accounting & Finance", fee: 92 },
+        { name: "VEE Math Statistics", fee: 92, optional: "Purdue 면제 가능" }
+      ],
+      modules: [
+        { name: "PAF Module", fee: 224 },
+        { name: "ASF Module", fee: 224 },
+        { name: "FAP Modules + EMAs", fee: 551 },
+        { name: "FAP Final Assessment", fee: 1316 },
+        { name: "ATPA Assessment", fee: 1255 },
+        { name: "APC (Virtual)", fee: 658 }
+      ],
+      uecNote: "FAM·SRM·ASTAM → Temple UEC (SOA 시험비 $0)"
+    };
+
+    const STUDY_PROVIDERS = [
+      {
+        name: "Coaching Actuaries (CA)",
+        url: "https://www.coachingactuaries.com/",
+        fmUrl: "https://www.coachingactuaries.com/exam-fm/pricing",
+        pUrl: "https://www.coachingactuaries.com/exam-p/pricing",
+        veeUrl: "https://www.coachingactuaries.com/vee",
+        exams: "FM · P · PA · VEE",
+        pricing: "Adapt $195 · Learn Complete + Practice $618 (180일, Pass Guarantee)",
+        note: "Temple 학생/졸업 18개월 이내 최대 65% 할인"
+      },
+      {
+        name: "The Infinite Actuary (TIA)",
+        url: "https://www.theinfiniteactuary.com/",
+        exams: "FM · P (무료) · PA",
+        pricing: "P·FM 전체 코스 **무료** (영상·문제·formula sheet)",
+        note: "PA·상위 시험은 유료 · ASM Manual 연동"
+      },
+      {
+        name: "ACTEX",
+        url: "https://www.actexlearning.com/",
+        exams: "FM · P · VEE · Manual",
+        pricing: "Manual $140–230 · VEE online",
+        note: "SOA 승인 VEE · ASM sister brand"
+      },
+      {
+        name: "ASM (Actuarial Study Materials)",
+        url: "https://www.studymanuals.com/",
+        exams: "FM · P · PA",
+        pricing: "Study manual 전자/纸质",
+        note: "TIA와 함께 쓰는 경우 많음"
+      },
+      {
+        name: "Mahler",
+        url: "https://www.theinfiniteactuary.com/mahler/",
+        exams: "PA · upper exams",
+        pricing: "PA 등 고급 시험 특화",
+        note: "PA 전 Mahler + CA Adapt 조합 흔함"
+      }
+    ];
+
+    const STUDY_RECOMMENDATIONS = [
+      {
+        when: "지금 · Exam FM (6/20)",
+        tier: "best", tierLabel: "1순위",
+        pick: "TIA FM (무료) + CA Adapt",
+        cost: "~$245",
+        costDetail: "Adapt $195 + BA II Plus ~$50",
+        plan: "① TIA 영상으로 syllabus 전체 ② Adapt earned level 6+ 목표 ③ 계산기(BG/N/CLR 등) 매일 30분",
+        links: [
+          { text: "TIA FM", url: "https://www.theinfiniteactuary.com/exam-fm/" },
+          { text: "CA Adapt FM", url: "https://www.coachingactuaries.com/exam-fm/pricing" }
+        ],
+        alt: "올인원: CA Learn+Practice — 학생 할인 ~$216 (영상+Adapt+Pass Guarantee)"
+      },
+      {
+        when: "지금 · Exam FM",
+        tier: "free", tierLabel: "무료만",
+        pick: "TIA FM + SOA 공식 sample questions",
+        cost: "$0",
+        costDetail: "SOA sample: Candidate Central",
+        plan: "예산 최소화 시 TIA만으로도 충분. 다만 Adapt 없으면 시험형 연습량 직접 확보 필요",
+        links: [
+          { text: "TIA FM", url: "https://www.theinfiniteactuary.com/exam-fm/" },
+          { text: "SOA FM sample", url: "https://www.soa.org/education/exam-req/edu-exam-fm-detail/" }
+        ],
+        alt: null
+      },
+      {
+        when: "2026 여름 · VEE 2개",
+        tier: "best", tierLabel: "1순위",
+        pick: "Coaching Actuaries VEE (Econ + Acct/Fin)",
+        cost: "~$130–200",
+        costDetail: "학생 65% off · SOA 제출 $92×2 별도",
+        plan: "7–8월 Econ·Acct 병행 · 하루 2–3h · 완료 후 Candidate Central VEE 제출",
+        links: [
+          { text: "CA VEE", url: "https://www.coachingactuaries.com/vee" },
+          { text: "ACTEX VEE", url: "https://www.actexlearning.com/search?q=VEE" }
+        ],
+        alt: "ACTEX VEE — CA와 비슷한 가격대, 승인 과정 동일"
+      },
+      {
+        when: "여름~Fall · Exam P (9월)",
+        tier: "best", tierLabel: "1순위",
+        pick: "TIA P (무료) + CA Adapt + AS 5001",
+        cost: "~$195",
+        costDetail: "Adapt only · 5001은 tuition 포함",
+        plan: "① 7월부터 TIA P 본격 ② Adapt EL 6+ ③ Fall AS 5001 수업으로 복습 · 350h 목표",
+        links: [
+          { text: "TIA P", url: "https://www.theinfiniteactuary.com/exam-p/" },
+          { text: "CA Adapt P", url: "https://www.coachingactuaries.com/exam-p/pricing" }
+        ],
+        alt: "CA Learn+Practice P — 학생 ~$216, 여름에 FM·P Adapt 번들 검토"
+      },
+      {
+        when: "Fall 2026 · Temple",
+        tier: "budget", tierLabel: "수업=자료",
+        pick: "AS 5101 / 5001 / 5104 교재 + office hour",
+        cost: "$0 추가",
+        costDetail: "학위 tuition에 포함",
+        plan: "5101→FM UEC · 5001→P 보조 · 5104→FAM UEC 일부. Canvas·교수 office hour 적극 활용",
+        links: [
+          { text: "Temple Canvas", url: "https://canvas.temple.edu/" }
+        ],
+        alt: "UEC 과목 B- 이상 필수 — 시험 대신 성적이 SOA 요건"
+      },
+      {
+        when: "2027 · Exam PA",
+        tier: "later", tierLabel: "나중",
+        pick: "AS 5108(SRM) 수업 + CA PA + Mahler",
+        cost: "~$500+",
+        costDetail: "SRM UEC 먼저 · PA는 5108 후",
+        plan: "5108에서 R/Python·predictive modeling 기반 쌓기 → SOA PA sample projects → Adapt/Mahler",
+        links: [
+          { text: "CA PA", url: "https://www.coachingactuaries.com/exam-pa/pricing" },
+          { text: "Mahler PA", url: "https://www.theinfiniteactuary.com/mahler/" },
+          { text: "SOA PA", url: "https://www.soa.org/education/exam-req/edu-exam-pa-detail/" }
+        ],
+        alt: "P→PA 직행 비추 — SRM(5108) 먼저가 Temple·SOA 플랜"
+      },
+      {
+        when: "학기별 · 모듈",
+        tier: "later", tierLabel: "SOA",
+        pick: "PAF → ASF → FAP (SOA e-Learning)",
+        cost: "SOA 요금 포함",
+        costDetail: "별도 교재 거의 없음",
+        plan: "Fall Y1 PAF · Spring ASF · 겨울~여름 FAP 1–5 · ATPA · APC. Candidate Central에서 enrollment",
+        links: [
+          { text: "SOA FAP", url: "https://www.soa.org/education/general-info/fap/" },
+          { text: "Candidate Central", url: "https://candidate.soa.org/" }
+        ],
+        alt: null
+      }
+    ];
+
+    function getBudgetTotal() {
+      const all = [...SOA_FEES.exams, ...SOA_FEES.vee, ...SOA_FEES.modules];
+      return all.reduce((s, x) => s + x.fee, 0);
+    }
+
+    const EXAM_DEADLINES = [
+      { exam:"Exam FM", examDate:"2026-06-20", regDeadline:"2026-04-15", note:"6/20 응시 · 등록 마감 SOA 확인" },
+      { exam:"Exam FM (재응시)", examDate:"2026-08-15", regDeadline:"2026-06-15", note:"불합격 시 Plan B" },
+      { exam:"Exam P", examDate:"2026-09-15", regDeadline:"2026-07-15", note:"9월 window · 여름 VEE 병행" },
+      { exam:"Exam PA", examDate:"2027-10-15", regDeadline:"2027-08-15", note:"AS 5108(SRM) 후" }
+    ];
+
+    const CONTACTS = [
+      { role:"Actuarial Academic Director", name:"Dr. Tianxiang Shi", email:"tshi@temple.edu" },
+      { role:"Fox MS Programs", email:"FoxMS@temple.edu", note:"Path·VEE·UEC 문의" },
+      { role:"SOA Candidate Central", url:"https://candidate.soa.org/", note:"transcript·VEE·모듈" },
+      { role:"Temple ISSS", url:"https://educationabroad.temple.edu/isss", note:"CPT·OPT·SSN" },
+      { role:"Temple Careers", url:"https://careers.temple.edu/", note:"온캠·인턴" }
+    ];
+
+    const STUDY_HOURS = [
+      { exam:"Exam FM", min:200, max:300, typical:250, plan:"6/20 응시", tips:"TIA FM(무료)→CA Adapt. BA II Plus 필수. EL 6+ 목표." },
+      { exam:"Exam P", min:300, max:400, typical:350, plan:"9월 · 여름 시작", tips:"TIA P + Adapt $195. AS 5001(Fall) 병행." },
+      { exam:"Exam PA", min:400, max:600, typical:500, plan:"5108(SRM) 후", tips:"CA PA + Mahler. R/Python는 5108에서." },
+      { exam:"UEC (FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"별도 SOA 시험 없음. 수업 성적(B- 이상 등) 요건 확인." },
+      { exam:"PAF / ASF / FAP", min:20, max:40, typical:30, plan:"학기별 e-Learning", tips:"모듈당 대략 20~40시간. deadline 미리 확인." }
+    ];
+
+    let state;
+    let checklistFilter = "all";
+
+    function defaultState() {
+      return {
+        reqChecked:{}, timelineChecked:{}, templeChecked:{}, examStatus:{},
+        theme:"warm-dark", weeklyMemo:"", adminMemo:"",
+        studyLogs:[], checklistFilter:"all", schedule:[],
+        weeklyStudyGoal:600, budgetSpent:0
+      };
+    }
+
+    function migrateExamStatus(reqChecked, existing) {
+      const es = { ...(existing || {}) };
+      EXAM_IDS.forEach(id => {
+        if (es[id]) return;
+        if (reqChecked && reqChecked[id]) es[id] = "passed";
+        else es[id] = "pending";
+      });
+      return es;
+    }
+
+    function applyFall2026Schedule() {
+      return DEFAULT_FALL_2026_SCHEDULE.map(c => ({ ...c }));
+    }
+
+    function withDefaultSchedule(st) {
+      if ((st.schedule || []).length === 0) {
+        return { ...st, schedule: applyFall2026Schedule() };
+      }
+      return st;
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        const v5 = localStorage.getItem("soa-asa-plan-v5");
+        const v4 = localStorage.getItem("soa-asa-plan-v4");
+        const v3 = localStorage.getItem("soa-asa-plan-v3");
+        const base = defaultState();
+        if (raw) {
+          const p = JSON.parse(raw);
+          const reqChecked = p.reqChecked || {};
+          return withDefaultSchedule({
+            ...base, ...p,
+            reqChecked,
+            timelineChecked: p.timelineChecked || {},
+            templeChecked: p.templeChecked || {},
+            examStatus: migrateExamStatus(reqChecked, p.examStatus)
+          });
+        }
+        if (v5) {
+          const p = JSON.parse(v5);
+          const reqChecked = p.reqChecked || {};
+          return withDefaultSchedule({
+            ...base, ...p,
+            reqChecked,
+            timelineChecked: p.timelineChecked || {},
+            templeChecked: p.templeChecked || {},
+            examStatus: migrateExamStatus(reqChecked, p.examStatus),
+            schedule: p.schedule || []
+          });
+        }
+        if (v4) {
+          const p = JSON.parse(v4);
+          const reqChecked = p.checked || {};
+          return withDefaultSchedule({
+            ...base, ...p,
+            reqChecked,
+            timelineChecked: {},
+            templeChecked: {},
+            examStatus: migrateExamStatus(reqChecked),
+            schedule: p.schedule || []
+          });
+        }
+        if (v3) {
+          const p = JSON.parse(v3);
+          const reqChecked = p.checked || {};
+          return withDefaultSchedule({
+            ...base,
+            reqChecked,
+            examStatus: migrateExamStatus(reqChecked),
+            schedule: p.schedule || []
+          });
+        }
+        return withDefaultSchedule({ ...base, examStatus: migrateExamStatus({}) });
+      } catch { return withDefaultSchedule({ ...defaultState(), examStatus: migrateExamStatus({}) }); }
+    }
+
+    function saveState(quiet) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      if (!quiet) toast("저장됨");
+      render();
+    }
+
+    function toast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      setTimeout(() => el.classList.remove("show"), 1400);
+    }
+
+    function switchTab(name) {
+      document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
+      document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === "panel-" + name));
+    }
+    window.switchTab = switchTab;
+
+    function isReqChecked(id) { return !!state.reqChecked[id]; }
+    function isTimelineChecked(id) { return !!state.timelineChecked[id]; }
+    function isTempleChecked(id) { return !!state.templeChecked[id]; }
+    function isExamReq(id) { return EXAM_IDS.includes(id); }
+    function getExamStatus(id) { return state.examStatus[id] || "pending"; }
+    function isReqDone(id) {
+      if (isExamReq(id)) return getExamStatus(id) === "passed";
+      return isReqChecked(id);
+    }
+    function setExamStatus(id, status) {
+      if (!isExamReq(id)) return;
+      state.examStatus[id] = status;
+      delete state.reqChecked[id];
+      saveState();
+    }
+    function toggleReq(id) { state.reqChecked[id] = !state.reqChecked[id]; saveState(); }
+    function toggleTimeline(id) { state.timelineChecked[id] = !state.timelineChecked[id]; saveState(true); }
+    function toggleTemple(id) { state.templeChecked[id] = !state.templeChecked[id]; saveState(); }
+
+    function countProgress(ids, isFn) {
+      const done = ids.filter(isFn).length;
+      return { done, total: ids.length, pct: ids.length ? Math.round(done/ids.length*100) : 0, left: ids.length - done };
+    }
+
+    function getReqProgress(ids) { return countProgress(ids, id => isReqDone(id)); }
+    function getTimelineProgress(ids) { return countProgress(ids, id => isTimelineChecked(id)); }
+
+    function getTempleCreditProgress() {
+      const doneCr = TEMPLE_COURSES.filter(c => isTempleChecked(c.id)).reduce((s,c) => s + c.credits, 0);
+      const pct = Math.round(doneCr / TEMPLE_TOTAL_CREDITS * 100);
+      return { doneCr, total: TEMPLE_TOTAL_CREDITS, pct, remainingPct: 100 - pct, leftCr: TEMPLE_TOTAL_CREDITS - doneCr };
+    }
+
+    function getCurrentPhase() {
+      const today = new Date().toISOString().slice(0,10);
+      for (const p of PHASES) if (today >= p.start && today <= p.end) return p;
+      return today < PHASES[0].start ? PHASES[0] : PHASES[PHASES.length-1];
+    }
+
+    function daysUntil(dateStr) {
+      return Math.ceil((new Date(dateStr+"T00:00:00") - new Date(new Date().toDateString())) / 86400000);
+    }
+
+    function fmtDday(d) {
+      if (d > 0) return "D-" + d;
+      if (d === 0) return "D-Day";
+      return "D+" + Math.abs(d);
+    }
+
+    function allReqIds() { return REQUIREMENTS.map(r => r.id); }
+    function asaReqIds() { return ASA_IDS; }
+
+    function getProgress(ids) { return getReqProgress(ids); }
+
+    function getAllTimelineIds() {
+      const ids = new Set();
+      PHASES.forEach(p => p.tasks.forEach(t => ids.add(t.id)));
+      return [...ids];
+    }
+
+    function getPhaseProgress(phase) {
+      return getTimelineProgress(phase.tasks.map(t => t.id));
+    }
+
+    function getNextMilestone() {
+      const today = new Date().toISOString().slice(0,10);
+      for (const m of MILESTONES) if (m.date >= today && !isReqDone(m.taskId)) return m;
+      return MILESTONES[MILESTONES.length-1];
+    }
+
+    function bindTaskList(container, mode) {
+      const toggleFn = mode === "timeline" ? toggleTimeline : mode === "temple" ? toggleTemple : toggleReq;
+     
+      container.querySelectorAll("li[data-id]").forEach(li => {
+        li.onclick = e => { if (e.target.tagName !== "INPUT") toggleFn(li.dataset.id); };
+        li.querySelector("input").onclick = e => { e.stopPropagation(); toggleFn(li.dataset.id); };
+      });
+    }
+
+    function timelineTaskLi(t) {
+      return `<li class="${isTimelineChecked(t.id)?"checked":""}${t.highlight?" highlight":""}" data-id="${t.id}">
+        <input type="checkbox" ${isTimelineChecked(t.id)?"checked":""}/>
+        <div><div class="task-text">${t.text}</div>${t.meta?`<div class="task-meta">${t.meta}</div>`:""}</div></li>`;
+    }
+
+    function setRing(id, pct, txt) {
+      document.getElementById(id).style.strokeDashoffset = CIRC - (CIRC * pct / 100);
+      document.getElementById(id + "Txt").textContent = txt;
+    }
+
+    function getMotivate(pct, remaining) {
+      if (pct >= 100) return "🎉 ASA 완성! 정말 수고했어.";
+      if (pct >= 80) return "거의 다 왔어! 마지막 스퍼트만.";
+      if (pct >= 50) return "절반 넘었어. 이 속도면 충분해.";
+      if (pct >= 25) return "기반이 쌓이고 있어. 꾸준히 가자.";
+      if (remaining <= 5) return "시작이 반이야. FM이 1순위!";
+      return "한 걸음씩. 오늘도 조금만.";
+    }
+
+    function getJourneyPct() {
+      const start = new Date(JOURNEY_START+"T00:00:00").getTime();
+      const end = new Date(JOURNEY_END+"T00:00:00").getTime();
+      const now = Date.now();
+      return Math.max(0, Math.min(100, Math.round((now - start) / (end - start) * 100)));
+    }
+
+    function getWeekStudyMinutes() {
+      const weekStart = getWeekStart();
+      return (state.studyLogs || []).filter(l => new Date(l.date + "T00:00:00") >= weekStart).reduce((s, l) => s + (+l.minutes || 0), 0);
+    }
+
+    function getWeeklyClassMinutes() {
+      const seen = new Set();
+      let total = 0;
+      (state.schedule || []).forEach(c => {
+        const key = c.name + "|" + c.start + "|" + c.end;
+        if (seen.has(key)) return;
+        seen.add(key);
+        const [sh, sm] = c.start.split(":").map(Number);
+        const [eh, em] = c.end.split(":").map(Number);
+        total += (eh * 60 + em) - (sh * 60 + sm);
+      });
+      return total;
+    }
+
+    function fmtHoursMinutes(mins) {
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      return m ? `${h}h ${m}m` : `${h}h`;
+    }
+
+    function exportBackup() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "my-asa-plan-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+      toast("백업 파일 다운로드됨");
+    }
+
+    function importBackup(file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const p = JSON.parse(e.target.result);
+          const reqChecked = p.reqChecked || {};
+          state = {
+            ...defaultState(), ...p,
+            reqChecked,
+            timelineChecked: p.timelineChecked || {},
+            templeChecked: p.templeChecked || {},
+            examStatus: migrateExamStatus(reqChecked, p.examStatus),
+            schedule: (p.schedule && p.schedule.length) ? p.schedule : applyFall2026Schedule()
+          };
+          saveState();
+          toast("백업 복원 완료");
+        } catch {
+          toast("파일 형식 오류");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function renderExamDeadlines() {
+      const el = document.getElementById("examDeadlinesTable");
+      if (!el) return;
+      el.innerHTML = `<thead><tr><th>시험</th><th>시험일</th><th>등록 마감 (예상)</th><th>비고</th></tr></thead><tbody>` +
+        EXAM_DEADLINES.map(d => {
+          const regDays = daysUntil(d.regDeadline);
+          const cls = regDays < 0 ? "deadline-passed" : regDays <= 21 ? "deadline-soon" : "";
+          const regLabel = regDays < 0 ? "지남" : regDays <= 30 ? fmtDday(regDays) + " · " + d.regDeadline : d.regDeadline;
+          return `<tr class="${cls}"><td><strong>${d.exam}</strong></td><td>${d.examDate}</td><td>${regLabel}</td><td style="color:var(--muted);font-size:0.78rem">${d.note}</td></tr>`;
+        }).join("") + "</tbody>";
+    }
+
+    function renderContacts() {
+      const el = document.getElementById("contactList");
+      if (!el) return;
+      el.innerHTML = CONTACTS.map(c => `
+        <div class="contact-row">
+          <span><strong>${c.role}</strong>${c.name ? " · " + c.name : ""}<br/>
+          <span style="color:var(--muted);font-size:0.75rem">${c.note || ""}</span></span>
+          <span>${c.email ? `<a href="mailto:${c.email}">${c.email}</a>` : c.url ? `<a href="${c.url}" target="_blank" rel="noopener">열기 →</a>` : ""}</span>
+        </div>`).join("");
+    }
+
+    function renderWeeklyLoad() {
+      const el = document.getElementById("weeklyClassHrs");
+      if (!el) return;
+      const classMin = getWeeklyClassMinutes();
+      const studyGoal = state.weeklyStudyGoal || 600;
+      el.textContent = fmtHoursMinutes(classMin) + " 수업 + " + fmtHoursMinutes(studyGoal) + " 공부 ≈ " + fmtHoursMinutes(classMin + studyGoal);
+    }
+
+    function renderDashboard() {
+      const asa = getProgress(asaReqIds());
+      const full = getProgress(allReqIds());
+      const remaining = 100 - asa.pct;
+
+      document.getElementById("remainingPct").textContent = remaining + "%";
+      document.getElementById("donePctLine").textContent = `ASA 공식 요건 ${asa.pct}% · ${asa.done} / ${asa.total}`;
+      document.getElementById("asaPctMini").textContent = asa.pct + "%";
+      document.getElementById("fullPctMini").textContent = full.pct + "%";
+      document.getElementById("journeyFill").style.width = asa.pct + "%";
+      document.getElementById("journeyMid").textContent = asa.pct + "% 완료";
+      document.getElementById("motivateMsg").textContent = getMotivate(asa.pct, asa.left);
+
+      const phase = getCurrentPhase();
+      const pp = getPhaseProgress(phase);
+      document.getElementById("currentPhaseName").textContent = phase.name;
+      document.getElementById("phasePct").textContent = pp.pct + "%";
+      document.getElementById("phaseBar").style.width = pp.pct + "%";
+
+      const tlAll = getTimelineProgress(getAllTimelineIds());
+      document.getElementById("timelineDashPct").textContent = tlAll.pct + "%";
+      document.getElementById("timelineDashBar").style.width = tlAll.pct + "%";
+
+      const next = getNextMilestone();
+      const days = daysUntil(next.date);
+      document.getElementById("countdownDays").textContent = fmtDday(days);
+      document.getElementById("countdownLabel").textContent = next.label + " · " + next.date;
+
+      // D-day grid
+      document.getElementById("ddayGrid").innerHTML = DDAYS.map(d => {
+        const dd = daysUntil(d.date);
+        const examSt = isExamReq(d.taskId) ? getExamStatus(d.taskId) : null;
+        const done = isReqDone(d.taskId);
+        const failed = examSt === "failed";
+        const urgent = !done && !failed && dd >= 0 && dd <= 30;
+        const dNum = done ? "✓" : failed ? "재응시" : fmtDday(dd);
+        return `<div class="dday-card${urgent?" urgent":""}${done?" done":""}${failed?" urgent":""}">
+          <div class="d-num">${dNum}</div>
+          <div class="d-label">${d.label}${failed ? " · 불합격" : ""}</div>
+          <div class="d-date">${d.date}</div></div>`;
+      }).join("");
+
+      // Category bars
+      const cats = [
+        { label:"시험 (FM·P·PA)", ids: EXAM_IDS, cls:"cat-exam" },
+        { label:"VEE", ids: VEE_IDS, cls:"cat-vee" },
+        { label:"UEC (FAM·SRM·ASTAM)", ids: UEC_IDS, cls:"cat-uec" },
+        { label:"모듈 & FAP", ids: MOD_IDS, cls:"cat-module" },
+        { label:"커리어", ids: CAREER_IDS, cls:"cat-career" },
+        { label:"행정", ids: ADMIN_IDS, cls:"cat-admin" }
+      ];
+      document.getElementById("catBars").innerHTML = cats.map(c => {
+        const p = getProgress(c.ids);
+        return `<div class="cat-bar-row"><div class="cat-bar-head"><span class="${c.cls}">${c.label}</span><span>${p.done}/${p.total} · ${p.left}개 남음</span></div><div class="progress-wrap"><div class="progress-bar" style="width:${p.pct}%"></div></div></div>`;
+      }).join("");
+
+      // Rings
+      const ep = getProgress(EXAM_IDS), vp = getProgress(VEE_IDS), up = getProgress(UEC_IDS), mp = getProgress(MOD_IDS);
+      setRing("ringExam", ep.pct, ep.done+"/"+ep.total);
+      setRing("ringVee", vp.pct, vp.done+"/"+vp.total);
+      setRing("ringUec", up.pct, up.done+"/"+up.total);
+      setRing("ringMod", mp.pct, mp.done+"/"+mp.total);
+      document.getElementById("examLeft").textContent = ep.left + "개 남음 · " + (100-ep.pct) + "%";
+      document.getElementById("veeLeft").textContent = vp.left + "개 남음 · " + (100-vp.pct) + "%";
+      document.getElementById("uecLeft").textContent = up.left + "개 남음 · " + (100-up.pct) + "%";
+      document.getElementById("modLeft").textContent = mp.left + "개 남음 · " + (100-mp.pct) + "%";
+
+      // Left todo
+      const leftItems = REQUIREMENTS.filter(r => !isReqDone(r.id)).sort((a,b) => a.order - b.order).slice(0,5);
+      document.getElementById("leftTodo").innerHTML = leftItems.length
+        ? leftItems.map(r => {
+            const st = r.cat === "exam" ? getExamStatus(r.id) : null;
+            const tag = st === "failed" ? " · 불합격" : "";
+            return `<li><span>${r.name}${tag}</span><span class="when">${r.when}</span></li>`;
+          }).join("")
+        : "<li><span style='color:var(--accent)'>🎉 전부 완료!</span></li>";
+
+      // Alert
+      const alert = document.getElementById("urgentAlert");
+      const fmDays = daysUntil("2026-06-20");
+      const fmSt = getExamStatus("fm-jun20");
+      if (fmSt === "failed") {
+        alert.style.display = "block";
+        alert.innerHTML = `⚠️ <strong>Exam FM 불합격</strong> — 8월 재응시 준비. 합격하면 체크리스트에서 <strong>합격</strong>으로 변경하세요.`;
+      } else if (fmSt !== "passed" && fmDays >= 0 && fmDays <= 45) {
+        alert.style.display = "block";
+        alert.innerHTML = `🎯 <strong>Exam FM ${fmtDday(fmDays)}</strong> — ASA까지 ${remaining}% 남음. Path C: FM → 여름 VEE 2개 → P 9월.`;
+      } else if ((!isReqChecked("vee-econ") || !isReqChecked("vee-acct")) && (phase.id === "summer26" || phase.id === "pre")) {
+        alert.style.display = "block";
+        alert.innerHTML = `☀️ <strong>2026 여름:</strong> VEE Economics + Accounting/Finance 온라인 완료 · 동시에 Exam P(9월) 본격 준비.`;
+      } else if (!isReqChecked("vee-stats-check") && phase.id === "sem1") {
+        alert.style.display = "block";
+        alert.innerHTML = `⚠️ <strong>VEE Math Statistics</strong> — Temple 담당자에게 Purdue 학점 면제 확인!`;
+      } else {
+        alert.style.display = "none";
+      }
+    }
+
+    function renderTimeline() {
+      const cur = getCurrentPhase();
+      const tlAll = getTimelineProgress(getAllTimelineIds());
+      document.getElementById("timelineProgressLabel").textContent = tlAll.pct + "%";
+      document.getElementById("timeline").innerHTML = PHASES.map(p => {
+        const pp = getTimelineProgress(p.tasks.map(t => t.id));
+        const allDone = pp.pct === 100;
+        return `<div class="phase-block ${p.id===cur.id?"current":""}${allDone?" done":""}">
+          <div class="phase-head"><h3>${p.name}</h3>${p.id===cur.id?'<span class="badge badge-now">NOW</span>':""}${allDone?'<span class="badge badge-done">DONE</span>':""}</div>
+          <div class="phase-period">${p.period}</div>
+          <div class="phase-progress">타임라인 ${pp.done}/${pp.total} · ${100-pp.pct}% 남음</div>
+          <ul class="task-list">${p.tasks.map(timelineTaskLi).join("")}</ul></div>`;
+      }).join("");
+      bindTaskList(document.getElementById("timeline"), "timeline");
+    }
+
+    function examStatusCell(id) {
+      const st = getExamStatus(id);
+      const labels = { pending:"아직 안 봄", passed:"ASA 요건 충족", failed:"재응시 필요" };
+      return `<td class="exam-status-cell"><div class="exam-status-btns" data-id="${id}">
+        <button type="button" class="exam-st pending ${st==="pending"?"active":""}" data-status="pending">미응시</button>
+        <button type="button" class="exam-st pass ${st==="passed"?"active":""}" data-status="passed">합격</button>
+        <button type="button" class="exam-st fail ${st==="failed"?"active":""}" data-status="failed">불합격</button>
+      </div><div class="exam-status-label">${labels[st]}</div></td>`;
+    }
+
+    function checklistRowClass(r) {
+      if (r.cat === "exam") {
+        const st = getExamStatus(r.id);
+        if (st === "passed") return "done exam-passed";
+        if (st === "failed") return "exam-failed";
+        return "";
+      }
+      return isReqChecked(r.id) ? "done" : "";
+    }
+
+    function renderChecklist() {
+      let items = [...REQUIREMENTS];
+      if (checklistFilter === "left") items = items.filter(r => !isReqDone(r.id));
+      else if (checklistFilter !== "all") items = items.filter(r => r.cat === checklistFilter);
+
+      document.getElementById("checkBody").innerHTML = items.map(r => `
+        <tr class="${checklistRowClass(r)}" data-id="${r.id}" data-cat="${r.cat}">
+          ${r.cat === "exam" ? examStatusCell(r.id) : `<td><input type="checkbox" ${isReqChecked(r.id)?"checked":""}/></td>`}
+          <td class="${CAT_CLS[r.cat]}"><strong>${r.name}</strong></td>
+          <td>${r.method}</td><td>${r.when}</td></tr>`).join("");
+
+      document.getElementById("checkBody").querySelectorAll("tr[data-cat]:not([data-cat='exam'])").forEach(tr => {
+        tr.onclick = e => { if (e.target.tagName !== "INPUT") toggleReq(tr.dataset.id); };
+        const cb = tr.querySelector("input");
+        if (cb) cb.onclick = e => { e.stopPropagation(); toggleReq(tr.dataset.id); };
+      });
+
+      document.getElementById("checkBody").querySelectorAll(".exam-status-btns button").forEach(btn => {
+        btn.onclick = e => {
+          e.stopPropagation();
+          setExamStatus(btn.closest(".exam-status-btns").dataset.id, btn.dataset.status);
+        };
+      });
+
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        if (btn.id === "btnLogStudy") return;
+        btn.classList.toggle("active", btn.dataset.filter === checklistFilter);
+        btn.onclick = () => { checklistFilter = btn.dataset.filter; state.checklistFilter = checklistFilter; renderChecklist(); };
+      });
+    }
+
+    function renderFocus() {
+      const phase = getCurrentPhase();
+      document.getElementById("focusTitle").textContent = `지금 집중 · ${phase.name} (${phase.period})`;
+      document.getElementById("focusTasks").innerHTML = phase.tasks.map(timelineTaskLi).join("");
+      bindTaskList(document.getElementById("focusTasks"), "timeline");
+
+      const pri = [
+        { id:"fm-jun20", text:"6/20 Exam FM 준비", meta:fmtDday(daysUntil("2026-06-20")), highlight:true },
+        { id:"vee-econ", text:"VEE Economics — 2026 여름", meta:"온라인", highlight:true },
+        { id:"vee-acct", text:"VEE Acct & Finance — 2026 여름", meta:"온라인", highlight:true },
+        { id:"prep-p", text:"Exam P 9월 대비 공부 시작", meta:fmtDday(daysUntil("2026-09-15")), highlight:true },
+        { id:"vee-stats-check", text:"VEE Stats — Temple 면제 확인", meta:"입학 직후" }
+      ];
+      document.getElementById("priorityTasks").innerHTML = pri.map(timelineTaskLi).join("");
+      bindTaskList(document.getElementById("priorityTasks"), "timeline");
+    }
+
+    function renderTemple() {
+      const tp = getTempleCreditProgress();
+      setRing("ringTemple", tp.pct, tp.doneCr + "/" + tp.total);
+      const ringDash = document.getElementById("ringTempleDash");
+      if (ringDash) setRing("ringTempleDash", tp.pct, tp.doneCr + "/" + tp.total);
+      document.getElementById("templeRemainingPct").textContent = tp.remainingPct;
+      document.getElementById("templeCreditsDone").textContent = tp.doneCr;
+      document.getElementById("templeBar").style.width = tp.pct + "%";
+      const dashSub = document.getElementById("templeDashSub");
+      if (dashSub) dashSub.textContent = tp.leftCr + " cr · " + tp.remainingPct + "% 남음";
+
+      document.getElementById("templeCourseList").innerHTML = TEMPLE_COURSES.map(c => `
+        <li class="${isTempleChecked(c.id)?"checked":""}" data-id="${c.id}">
+          <input type="checkbox" ${isTempleChecked(c.id)?"checked":""}/>
+          <div>
+            <div class="task-text">${c.name} <span style="color:var(--muted);font-size:0.75rem">(${c.credits} cr)</span></div>
+            <div class="task-meta">${c.group}${c.soa && c.soa !== "—" ? " · SOA: " + c.soa : ""}</div>
+          </div>
+        </li>`).join("");
+      bindTaskList(document.getElementById("templeCourseList"), "temple");
+    }
+
+    function getWeekStart() {
+      const d = new Date();
+      d.setDate(d.getDate() - ((d.getDay()+6)%7));
+      d.setHours(0,0,0,0);
+      return d;
+    }
+
+    function pad(n) { return String(n).padStart(2,"0"); }
+
+    function toIcsDate(dateStr) {
+      return dateStr.replace(/-/g, "") + "T090000";
+    }
+
+    function toIcsDateEnd(dateStr) {
+      return dateStr.replace(/-/g, "") + "T170000";
+    }
+
+    function googleCalUrl(title, dateStr, details) {
+      const d = dateStr.replace(/-/g, "");
+      const end = (() => {
+        const dt = new Date(dateStr + "T00:00:00");
+        dt.setDate(dt.getDate() + 1);
+        return dt.getFullYear() + pad(dt.getMonth()+1) + pad(dt.getDate());
+      })();
+      const params = new URLSearchParams({
+        action: "TEMPLATE",
+        text: title,
+        dates: d + "/" + end,
+        details: details || "My ASA Plan"
+      });
+      return "https://calendar.google.com/calendar/render?" + params.toString();
+    }
+
+    function buildIcsContent() {
+      const lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//My ASA Plan//KO",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "X-WR-CALNAME:My ASA Plan"
+      ];
+      DDAYS.forEach(m => {
+        lines.push("BEGIN:VEVENT");
+        lines.push("UID:" + m.taskId + "@asa-plan");
+        lines.push("DTSTAMP:" + toIcsDate(new Date().toISOString().slice(0,10)));
+        lines.push("DTSTART;VALUE=DATE:" + m.date.replace(/-/g, ""));
+        lines.push("DTEND;VALUE=DATE:" + (() => {
+          const dt = new Date(m.date + "T00:00:00"); dt.setDate(dt.getDate()+1);
+          return dt.getFullYear() + pad(dt.getMonth()+1) + pad(dt.getDate());
+        })());
+        lines.push("SUMMARY:" + m.label);
+        lines.push("DESCRIPTION:ASA Plan milestone");
+        lines.push("END:VEVENT");
+      });
+      (state.schedule || []).forEach((c, i) => {
+        const dayMap = ["SU","MO","TU","WE","TH","FR","SA"];
+        const until = "20281231T235959Z";
+        const start = c.start.replace(":", "") + "00";
+        const end = c.end.replace(":", "") + "00";
+        lines.push("BEGIN:VEVENT");
+        lines.push("UID:class-" + i + "@asa-plan");
+        lines.push("DTSTAMP:" + toIcsDate(new Date().toISOString().slice(0,10)));
+        lines.push("DTSTART:" + "20260801T" + start);
+        lines.push("DTEND:" + "20260801T" + end);
+        lines.push("RRULE:FREQ=WEEKLY;BYDAY=" + dayMap[c.day] + ";UNTIL=" + until);
+        lines.push("SUMMARY:" + c.name);
+        lines.push("LOCATION:" + (c.location || ""));
+        lines.push("DESCRIPTION:" + (c.semester || ""));
+        lines.push("END:VEVENT");
+      });
+      lines.push("END:VCALENDAR");
+      return lines.join("\r\n");
+    }
+
+    function downloadIcs() {
+      const blob = new Blob([buildIcsContent()], { type: "text/calendar;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "my-asa-plan.ics";
+      a.click();
+      URL.revokeObjectURL(a.href);
+      toast("ICS 다운로드됨 → Google Calendar에서 Import");
+    }
+
+    function renderExamStudyGuide() {
+      const el = document.getElementById("examStudyGuide");
+      const logged = getWeekStudyMinutes();
+      const goal = state.weeklyStudyGoal || 600;
+
+      if (getExamStatus("fm-jun20") === "failed") {
+        el.innerHTML = `<div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:baseline">
+          <div><span class="hours-big">8월</span> <span class="stat-sub">FM 재응시 · Plan B</span></div>
+          <div class="stat-sub">6/20 불합격 → 추가 공부 후 재응시. 합격하면 체크리스트 <strong style="color:var(--accent)">합격</strong> 선택.</div>
+        </div>
+        <p class="stat-sub" style="margin-top:0.5rem">권장: 250h 기준 부족한 파트 집중 · CA 계산기 연습 유지.</p>`;
+      } else if (getExamStatus("fm-jun20") !== "passed") {
+        const days = Math.max(1, daysUntil("2026-06-20"));
+        const weeks = Math.max(1, Math.ceil(days / 7));
+        const need = 250;
+        const perWeek = Math.ceil(need / weeks);
+        const perDay = Math.ceil(perWeek / 5);
+        el.innerHTML = `<div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:baseline">
+          <div><span class="hours-big">${need}h</span> <span class="stat-sub">FM 권장 총량</span></div>
+          <div class="stat-sub">D-${days} · 남은 ${weeks}주 → <strong style="color:var(--accent)">주 ${perWeek}h</strong> (하루 ~${perDay}h, 주5일)</div>
+        </div>
+        <p class="stat-sub" style="margin-top:0.5rem">추천: TIA FM(무료) + CA Adapt $195 · EL 6+ · <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('guide')">학습자료 상세 →</span></p>`;
+      } else if (getExamStatus("exam-p") === "failed") {
+        el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 다음 창 준비</span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. 합격 시 체크리스트 업데이트.</p>`;
+      } else if (getExamStatus("exam-p") !== "passed") {
+        const days = Math.max(1, daysUntil("2026-09-15"));
+        const weeks = Math.max(1, Math.ceil(days / 7));
+        el.innerHTML = `<div><span class="hours-big">350h</span> <span class="stat-sub">Exam P 권장 · <strong>9월</strong> 응시</span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">D-${days} · 남은 ${weeks}주 → 여름에 VEE 2개 + P 병행. Path C: Fall에 AS 5001 (elective).</p>`;
+      } else if (getExamStatus("exam-pa") === "failed") {
+        el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108) 기반 복습</span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;
+      } else if (getExamStatus("exam-pa") !== "passed") {
+        el.innerHTML = `<div><span class="hours-big">500h</span> <span class="stat-sub">Exam PA 권장 · AS 5108(SRM) 후</span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">3학기 10월 목표. SRM UEC 완료 후 PA가 자연스럽게 연결.</p>`;
+      } else {
+        el.innerHTML = `<p class="stat-sub">시험 3개 완료 🎉 UEC·모듈·FAP에 집중. <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('guide')">Temple 학위 요건 보기</span></p>`;
+      }
+    }
+
+    function renderGuide() {
+      document.getElementById("studyHoursTable").innerHTML = STUDY_HOURS.map(s => {
+        const range = s.typical ? `${s.min}–${s.max}h (보통 ~${s.typical}h)` : "수업으로 대체";
+        const weeks = s.typical ? `약 ${Math.ceil(s.typical/10)}주` : "—";
+        return `<tr><td><strong>${s.exam}</strong></td><td>${range}</td><td>${weeks}</td><td>${s.plan}</td><td style="color:var(--muted);font-size:0.8rem">${s.tips}</td></tr>`;
+      }).join("");
+    }
+
+    function renderSchedule() {
+      const grid = document.getElementById("scheduleGrid");
+      const today = new Date().getDay();
+      grid.innerHTML = DAY_ORDER.map((d) => {
+        const classes = (state.schedule || []).filter(c => c.day === d)
+          .sort((a, b) => a.start.localeCompare(b.start));
+        return `<div class="schedule-day${d === today ? " today" : ""}">
+          <div class="day-name">${DAY_NAMES[d]}</div>
+          ${classes.length ? classes.map((c, idx) => {
+            const realIdx = state.schedule.indexOf(c);
+            return `<div class="class-chip" data-idx="${realIdx}" title="클릭하면 삭제">
+              <div class="t">${c.name}</div>
+              <div class="m">${c.start}-${c.end}${c.location ? " · " + c.location : ""}</div>
+            </div>`;
+          }).join("") : `<div style="font-size:0.7rem;color:var(--muted)">—</div>`}
+        </div>`;
+      }).join("");
+
+      grid.querySelectorAll(".class-chip").forEach(chip => {
+        chip.onclick = () => {
+          if (confirm("이 수업을 삭제할까요?")) {
+            state.schedule.splice(+chip.dataset.idx, 1);
+            saveState();
+          }
+        };
+      });
+
+      const sems = [...new Set((state.schedule||[]).map(c => c.semester).filter(Boolean))];
+      document.getElementById("scheduleSemester").textContent = sems[0] || "학기 미설정";
+
+      document.getElementById("gcalLinks").innerHTML = DDAYS.map(m =>
+        `<li><span>${m.label} <span style="color:var(--muted);font-size:0.75rem">${m.date}</span></span>
+        <a class="btn-action" href="${googleCalUrl(m.label, m.date, "ASA Plan")}" target="_blank" rel="noopener">+ Google</a></li>`
+      ).join("");
+
+      // Today classes on dashboard
+      const todayClasses = (state.schedule || []).filter(c => c.day === today)
+        .sort((a, b) => a.start.localeCompare(b.start));
+      document.getElementById("todayClasses").innerHTML = todayClasses.length
+        ? todayClasses.map(c => `<li><strong>${c.start}-${c.end}</strong> ${c.name}${c.location ? " @ " + c.location : ""}</li>`).join("")
+        : "<li>오늘 등록된 수업 없음 · <span style='cursor:pointer;color:var(--accent)' onclick=\"switchTab('schedule')\">시간표 추가</span></li>";
+    }
+
+    function renderStudyGoal() {
+      const goal = state.weeklyStudyGoal || 600;
+      const done = getWeekStudyMinutes();
+      const pct = Math.min(100, Math.round(done / goal * 100));
+      document.getElementById("studyGoalMin").textContent = goal;
+      document.getElementById("studyWeekMin").textContent = done;
+      document.getElementById("studyGoalPct").textContent = pct + "%";
+      document.getElementById("studyGoalBar").style.width = pct + "%";
+      if (document.getElementById("studyGoalInput")) {
+        document.getElementById("studyGoalInput").value = goal;
+      }
+    }
+
+    function renderStudyRecommendations() {
+      const tbl = document.getElementById("studyRecTable");
+      if (!tbl) return;
+      const tierCls = { best: "best", free: "free", budget: "budget", later: "later" };
+      tbl.innerHTML = `<thead><tr><th>시기</th><th>추천</th><th>예상 비용</th><th>공부 순서</th></tr></thead><tbody>` +
+        STUDY_RECOMMENDATIONS.map(r => `<tr>
+          <td style="white-space:nowrap"><span class="rec-tier ${tierCls[r.tier]}">${r.tierLabel}</span><br/><span style="font-size:0.78rem;color:var(--muted)">${r.when}</span></td>
+          <td><strong>${r.pick}</strong>
+            <div class="rec-links" style="margin-top:0.35rem">${r.links.map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.text} →</a>`).join("")}</div>
+            ${r.alt ? `<div style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem">대안: ${r.alt}</div>` : ""}
+          </td>
+          <td><strong style="color:var(--accent2)">${r.cost}</strong><br/><span style="font-size:0.72rem;color:var(--muted)">${r.costDetail}</span></td>
+          <td style="font-size:0.78rem;color:var(--muted);line-height:1.45">${r.plan}</td>
+        </tr>`).join("") + "</tbody>";
+    }
+
+    function renderStudyProviders() {
+      renderStudyRecommendations();
+      const tbl = document.getElementById("studyProvidersTable");
+      if (tbl) {
+        tbl.innerHTML = `<thead><tr><th>플랫폼</th><th>시험</th><th>가격 (2026)</th><th>비고</th></tr></thead><tbody>` +
+          STUDY_PROVIDERS.map(p => `<tr>
+            <td><a href="${p.url}" target="_blank" rel="noopener" style="color:var(--accent)"><strong>${p.name}</strong></a></td>
+            <td>${p.exams}</td>
+            <td>${p.pricing.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")}</td>
+            <td style="color:var(--muted);font-size:0.78rem">${p.note}</td>
+          </tr>`).join("") + "</tbody>";
+      }
+      const sum = document.getElementById("soaFeesSummary");
+      if (sum) {
+        const fmt = n => "$" + n.toLocaleString();
+        const examT = SOA_FEES.exams.reduce((s, x) => s + x.fee, 0);
+        const veeT = SOA_FEES.vee.reduce((s, x) => s + x.fee, 0);
+        const modT = SOA_FEES.modules.reduce((s, x) => s + x.fee, 0);
+        const total = getBudgetTotal();
+        sum.innerHTML = `
+          <table class="guide-table">
+            <tbody>
+              <tr><td colspan="2" style="font-weight:600;color:var(--muted);font-size:0.75rem">시험 3개</td></tr>
+              ${SOA_FEES.exams.map(x => `<tr><td>${x.name}</td><td>${fmt(x.fee)}</td></tr>`).join("")}
+              <tr><td colspan="2" style="font-weight:600;color:var(--muted);font-size:0.75rem;padding-top:0.5rem">VEE (SOA 제출 $92/과목)</td></tr>
+              ${SOA_FEES.vee.map(x => `<tr><td>${x.name}${x.optional ? " <span style='color:var(--accent2);font-size:0.75rem'>(" + x.optional + ")</span>" : ""}</td><td>${fmt(x.fee)}</td></tr>`).join("")}
+              <tr><td colspan="2" style="font-weight:600;color:var(--muted);font-size:0.75rem;padding-top:0.5rem">모듈 · FAP · APC</td></tr>
+              ${SOA_FEES.modules.map(x => `<tr><td>${x.name}</td><td>${fmt(x.fee)}</td></tr>`).join("")}
+              <tr style="font-weight:700"><td>ASA SOA 합계</td><td style="color:var(--accent2)">${fmt(total)}</td></tr>
+              <tr><td colspan="2" style="font-size:0.75rem;color:var(--muted);padding-top:0.35rem">${SOA_FEES.uecNote}</td></tr>
+            </tbody>
+          </table>`;
+      }
+    }
+
+    function renderBudget() {
+      const spent = state.budgetSpent || 0;
+      const total = getBudgetTotal();
+      const left = Math.max(0, total - spent);
+      const fmt = n => "$" + n.toLocaleString();
+      const el = document.getElementById("budgetRows");
+      if (el) {
+        const row = (name, fee, extra) => `<div class="budget-row"><span>${name}${extra || ""}</span><span>${fmt(fee)}</span></div>`;
+        el.innerHTML =
+          row("Exam FM", 275) + row("Exam P", 275) + row("Exam PA", 1234) +
+          `<div class="stat-sub" style="margin:0.35rem 0 0.2rem;font-size:0.72rem;color:var(--muted)">VEE · 모듈 · FAP · APC</div>` +
+          row("VEE ×3", 276, " <span style='font-size:0.72rem;color:var(--accent2)'>(Stats 면제 −$92)</span>") +
+          row("PAF + ASF + FAP + ATPA + APC", 4228) +
+          `<div class="budget-row"><span><strong>ASA SOA 합계</strong></span><span style="color:var(--accent2)"><strong>${fmt(total)}</strong></span></div>`;
+      }
+      if (document.getElementById("budgetSpent")) {
+        document.getElementById("budgetSpent").value = spent || "";
+        document.getElementById("budgetLeft").textContent = fmt(left);
+        const lbl = document.getElementById("budgetTotalLabel");
+        if (lbl) lbl.textContent = "전체 " + fmt(total);
+      }
+    }
+
+    function renderTools() {
+      document.getElementById("weeklyMemo").value = state.weeklyMemo || "";
+      document.getElementById("adminMemo").value = state.adminMemo || "";
+
+      const adminItems = REQUIREMENTS.filter(r => r.cat === "admin");
+      document.getElementById("adminTasks").innerHTML = adminItems.map(r => `
+        <li class="${isReqChecked(r.id)?"checked":""}" data-id="${r.id}">
+          <input type="checkbox" ${isReqChecked(r.id)?"checked":""}/>
+          <div><div class="task-text">${r.name}</div><div class="task-meta">${r.method} · ${r.when}</div></div>
+        </li>`).join("");
+      bindTaskList(document.getElementById("adminTasks"), "req");
+
+      const weekStart = getWeekStart();
+      const logs = (state.studyLogs || []).slice().reverse().slice(0,8);
+      document.getElementById("studyLogs").innerHTML = logs.length
+        ? logs.map((l,i) => `<li><span>${l.date} · ${l.minutes}분 · ${l.topic||"-"}</span></li>`).join("")
+        : "<li><span style='color:var(--muted)'>기록 없음</span></li>";
+      const weekTotal = getWeekStudyMinutes();
+      document.getElementById("weekStudyTotal").textContent = weekTotal;
+      renderBudget();
+    }
+
+    function render() {
+      document.documentElement.setAttribute("data-theme", state.theme || "warm-dark");
+      document.querySelectorAll(".theme-btn").forEach(b => b.classList.toggle("active", b.dataset.theme === (state.theme||"warm-dark")));
+      checklistFilter = state.checklistFilter || "all";
+      renderDashboard();
+      renderTimeline();
+      renderChecklist();
+      renderTemple();
+      renderFocus();
+      renderGuide();
+      renderSchedule();
+      renderStudyGoal();
+      renderTools();
+      renderExamStudyGuide();
+      renderExamDeadlines();
+      renderContacts();
+      renderWeeklyLoad();
+      renderStudyProviders();
+    }
+
+    function initApp() {
+      state = loadState();
+      checklistFilter = state.checklistFilter || "all";
+
+      document.getElementById("nav").addEventListener("click", e => {
+        if (e.target.tagName === "BUTTON" && e.target.dataset.tab) switchTab(e.target.dataset.tab);
+      });
+
+      document.querySelectorAll(".theme-btn").forEach(btn => {
+        btn.onclick = () => {
+          state.theme = btn.dataset.theme;
+          document.documentElement.setAttribute("data-theme", state.theme);
+          document.querySelectorAll(".theme-btn").forEach(b => b.classList.toggle("active", b.dataset.theme === state.theme));
+          saveState(true);
+        };
+      });
+
+      document.getElementById("weeklyMemo").addEventListener("input", e => {
+        state.weeklyMemo = e.target.value;
+        saveState(true);
+      });
+
+      document.getElementById("adminMemo").addEventListener("input", e => {
+        state.adminMemo = e.target.value;
+        saveState(true);
+      });
+
+      document.getElementById("btnLogStudy").onclick = () => {
+        const minutes = +document.getElementById("studyMin").value || 0;
+        const topic = document.getElementById("studyTopic").value.trim();
+        if (!minutes && !topic) { toast("시간 또는 내용 입력"); return; }
+        if (!state.studyLogs) state.studyLogs = [];
+        state.studyLogs.push({ date: new Date().toISOString().slice(0,10), minutes, topic });
+        document.getElementById("studyMin").value = "";
+        document.getElementById("studyTopic").value = "";
+        saveState();
+      };
+
+      document.getElementById("btnAddClass").onclick = () => {
+        const name = document.getElementById("clsName").value.trim();
+        if (!name) { toast("수업명 입력"); return; }
+        if (!state.schedule) state.schedule = [];
+        state.schedule.push({
+          name,
+          day: +document.getElementById("clsDay").value,
+          start: document.getElementById("clsStart").value || "10:00",
+          end: document.getElementById("clsEnd").value || "11:30",
+          location: document.getElementById("clsLoc").value.trim(),
+          semester: document.getElementById("clsSemester").value.trim() || "2026 Fall"
+        });
+        document.getElementById("clsName").value = "";
+        document.getElementById("clsLoc").value = "";
+        saveState();
+      };
+
+      document.getElementById("btnLoadFall2026").onclick = () => {
+        if (state.schedule && state.schedule.length && !confirm("기존 시간표를 2026 Fall 등록 시간표로 교체할까요?")) return;
+        state.schedule = applyFall2026Schedule();
+        saveState();
+        toast("2026 Fall 시간표 적용됨");
+      };
+
+      document.getElementById("btnExportData").onclick = exportBackup;
+      document.getElementById("importDataFile").onchange = e => {
+        const f = e.target.files[0];
+        if (f) importBackup(f);
+        e.target.value = "";
+      };
+
+      document.getElementById("btnExportIcs").onclick = downloadIcs;
+
+      document.getElementById("studyGoalInput").addEventListener("change", e => {
+        state.weeklyStudyGoal = Math.max(60, +e.target.value || 600);
+        saveState(true);
+      });
+
+      document.getElementById("budgetSpent").addEventListener("input", e => {
+        state.budgetSpent = Math.max(0, +e.target.value || 0);
+        saveState(true);
+      });
+
+      render();
+    }
+
+    document.getElementById("authForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const pw = document.getElementById("authPassword").value;
+      const err = document.getElementById("authError");
+      if (await sha256(pw) === PASSWORD_HASH) {
+        setAuthed(document.getElementById("authRemember").checked);
+        unlockApp();
+        initApp();
+        err.hidden = true;
+      } else {
+        err.hidden = false;
+        document.getElementById("authPassword").value = "";
+        document.getElementById("authPassword").focus();
+      }
+    });
+
+    if (isAuthed()) {
+      unlockApp();
+      initApp();
+    }
+  </script>
+</body>
+</html>
