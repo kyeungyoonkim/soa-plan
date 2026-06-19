@@ -1970,7 +1970,8 @@
     }
 
     let pomoInterval = null;
-    let pomoSecondsLeft = 0;
+    let pomoEndAt = null;
+    let pomoRemainingSec = 0;
     let pomoMode = "work";
     let pomoRunning = false;
     let flashFlipped = false;
@@ -1991,44 +1992,66 @@
       return `${m}:${String(s).padStart(2, "0")}`;
     }
 
+    function getPomoRemainingSec() {
+      if (pomoRunning && pomoEndAt) {
+        return Math.max(0, Math.ceil((pomoEndAt - Date.now()) / 1000));
+      }
+      return pomoRemainingSec || 0;
+    }
+
+    function stopPomoTicker() {
+      clearInterval(pomoInterval);
+      pomoInterval = null;
+    }
+
+    function startPomoTicker() {
+      stopPomoTicker();
+      updatePomoFromClock();
+      pomoInterval = setInterval(updatePomoFromClock, 250);
+    }
+
+    function setPomoUi(left) {
+      document.getElementById("pomoDisplay").textContent = formatPomo(left);
+      document.getElementById("pomoModeLabel").textContent = pomoMode === "work" ? "집중" : "휴식";
+      document.getElementById("btnPomoStart").hidden = pomoRunning;
+      document.getElementById("btnPomoPause").hidden = !pomoRunning;
+    }
+
+    function advancePomoPhase() {
+      if (pomoMode === "work") {
+        completePomoWork();
+        pomoMode = "break";
+        pomoRemainingSec = (state.pomodoro.breakMin || 5) * 60;
+        toast("집중 완료 · 휴식 시작");
+      } else {
+        pomoMode = "work";
+        pomoRemainingSec = (state.pomodoro.workMin || 25) * 60;
+        toast("휴식 완료");
+      }
+      pomoEndAt = null;
+      pomoRunning = false;
+      stopPomoTicker();
+      setPomoUi(pomoRemainingSec);
+    }
+
+    function updatePomoFromClock() {
+      const left = getPomoRemainingSec();
+      if (pomoRunning && left <= 0) {
+        advancePomoPhase();
+        return;
+      }
+      setPomoUi(left);
+    }
+
     function resetPomoDisplay() {
       ensurePomodoro();
       const work = +(state.pomodoro.workMin || 25);
-      pomoSecondsLeft = work * 60;
+      pomoRemainingSec = work * 60;
       pomoMode = "work";
       pomoRunning = false;
-      clearInterval(pomoInterval);
-      pomoInterval = null;
-      document.getElementById("pomoDisplay").textContent = formatPomo(pomoSecondsLeft);
-      document.getElementById("pomoModeLabel").textContent = "집중";
-      document.getElementById("btnPomoStart").hidden = false;
-      document.getElementById("btnPomoPause").hidden = true;
-    }
-
-    function tickPomodoro() {
-      if (pomoSecondsLeft <= 0) {
-        clearInterval(pomoInterval);
-        pomoInterval = null;
-        pomoRunning = false;
-        document.getElementById("btnPomoStart").hidden = false;
-        document.getElementById("btnPomoPause").hidden = true;
-        if (pomoMode === "work") {
-          completePomoWork();
-          pomoMode = "break";
-          pomoSecondsLeft = (state.pomodoro.breakMin || 5) * 60;
-          document.getElementById("pomoModeLabel").textContent = "휴식";
-          toast("집중 완료 · 휴식 시작");
-        } else {
-          pomoMode = "work";
-          pomoSecondsLeft = (state.pomodoro.workMin || 25) * 60;
-          document.getElementById("pomoModeLabel").textContent = "집중";
-          toast("휴식 완료");
-        }
-        document.getElementById("pomoDisplay").textContent = formatPomo(pomoSecondsLeft);
-        return;
-      }
-      pomoSecondsLeft--;
-      document.getElementById("pomoDisplay").textContent = formatPomo(pomoSecondsLeft);
+      pomoEndAt = null;
+      stopPomoTicker();
+      setPomoUi(pomoRemainingSec);
     }
 
     function completePomoWork() {
@@ -2074,7 +2097,8 @@
 
     function renderPomodoro() {
       renderPomodoroStats();
-      if (!pomoRunning && pomoSecondsLeft === 0) resetPomoDisplay();
+      if (!pomoRunning && !pomoEndAt && pomoRemainingSec === 0) resetPomoDisplay();
+      else if (pomoRunning) updatePomoFromClock();
     }
 
     function renderFlashcards() {
@@ -2127,19 +2151,20 @@
       document.getElementById("btnPomoStart").onclick = () => {
         ensurePomodoro();
         if (!pomoRunning) {
-          if (pomoSecondsLeft === 0) resetPomoDisplay();
+          if (pomoRemainingSec === 0 && !pomoEndAt) resetPomoDisplay();
+          const left = getPomoRemainingSec() || pomoRemainingSec;
+          pomoEndAt = Date.now() + left * 1000;
           pomoRunning = true;
-          document.getElementById("btnPomoStart").hidden = true;
-          document.getElementById("btnPomoPause").hidden = false;
-          pomoInterval = setInterval(tickPomodoro, 1000);
+          startPomoTicker();
         }
       };
       document.getElementById("btnPomoPause").onclick = () => {
+        if (!pomoRunning) return;
+        pomoRemainingSec = getPomoRemainingSec();
+        pomoEndAt = null;
         pomoRunning = false;
-        clearInterval(pomoInterval);
-        pomoInterval = null;
-        document.getElementById("btnPomoStart").hidden = false;
-        document.getElementById("btnPomoPause").hidden = true;
+        stopPomoTicker();
+        setPomoUi(pomoRemainingSec);
       };
       document.getElementById("btnPomoReset").onclick = () => resetPomoDisplay();
       document.getElementById("pomoWorkMin").onchange = e => {
@@ -2210,6 +2235,10 @@
         flashFlipped = false;
         saveState(true);
       };
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible" && pomoRunning) updatePomoFromClock();
+      });
     }
 
     function renderFocus() {
