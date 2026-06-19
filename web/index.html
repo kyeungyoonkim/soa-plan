@@ -249,6 +249,23 @@
     .cloud-status { font-size: 0.82rem; margin-bottom: 0.55rem; padding: 0.55rem 0.7rem; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); }
     .cloud-status.ok { border-color: var(--accent); color: var(--accent); }
     .cloud-status.warn { border-color: var(--warn-border); color: var(--warn); }
+
+    .pomo-wrap { text-align: center; padding: 0.5rem 0; }
+    .pomo-time { font-family: "Instrument Serif", Georgia, serif; font-size: 3.2rem; line-height: 1; color: var(--accent2); }
+    .pomo-mode { font-size: 0.82rem; color: var(--muted); margin: 0.35rem 0 0.85rem; }
+    .pomo-stats { font-size: 0.78rem; color: var(--muted); margin-top: 0.65rem; }
+
+    .flash-study {
+      min-height: 8rem; padding: 1.1rem 1rem; border-radius: 12px;
+      background: var(--surface2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      cursor: pointer; font-size: 0.95rem; line-height: 1.5; margin-bottom: 0.75rem;
+    }
+    .flash-study.back { color: var(--accent); }
+    .flash-meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.55rem; }
+    .flash-card-list { max-height: 10rem; overflow-y: auto; margin-top: 0.65rem; }
+    .flash-card-item { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+    .flash-card-item button { font: inherit; font-size: 0.72rem; border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 6px; padding: 0.15rem 0.4rem; cursor: pointer; }
     .btn-action {
       font: inherit; font-size: 0.78rem; font-weight: 600; padding: 0.5rem 0.85rem;
       border-radius: 9px; border: 1px solid var(--border); background: var(--surface2);
@@ -380,8 +397,8 @@
         <p class="subtitle">2026 FM → Path C → Temple → 2028 ASA · P 9월 · VEE 2개 2026 여름</p>
       </header>
       <div class="theme-btns">
-        <button class="theme-btn active" data-theme="warm-dark">🌙 다크</button>
-        <button class="theme-btn" data-theme="warm-light">☀️ 라이트</button>
+        <button class="theme-btn active" data-theme="warm-dark">다크</button>
+        <button class="theme-btn" data-theme="warm-light">라이트</button>
       </div>
     </div>
 
@@ -393,6 +410,7 @@
       <button data-tab="schedule">시간표 · 캘린더</button>
       <button data-tab="guide">가이드</button>
       <button data-tab="tools">메모 · 실용</button>
+      <button data-tab="backup">백업</button>
     </nav>
 
     <!-- HOME -->
@@ -410,13 +428,8 @@
             <div class="mini-stat"><div class="label">전체 플랜 (커리어 포함)</div><div class="val" id="fullPctMini">0%</div></div>
           </div>
           <div class="journey-bar"><div class="journey-fill" id="journeyFill" style="width:0%"></div></div>
-          <div class="journey-labels"><span>2026 FM</span><span id="journeyMid">진행 중</span><span>2028 ASA 🎉</span></div>
+          <div class="journey-labels"><span>2026 FM</span><span id="journeyMid">진행 중</span><span>2028 ASA</span></div>
           <div class="motivate" id="motivateMsg">시작이 반이야. FM부터 집중!</div>
-        </div>
-        <div class="card">
-          <div class="card-title">💾 백업 · Drive</div>
-          <p class="stat-sub" style="margin-bottom:0.55rem">체크·메모는 자동 저장. Google Drive 연동은 Chrome에서 설정.</p>
-          <button class="btn-action primary" type="button" onclick="openBackupSection()">☁️ Drive 백업 설정 열기</button>
         </div>
         <div class="card">
           <div class="card-title">다음 마일스톤</div>
@@ -492,7 +505,7 @@
           </div>
         </div>
       </div>
-      <div class="link-note">💡 <strong>SRM → PA:</strong> AS 5108 후 Exam PA — 자연스럽게 연결되는 플랜</div>
+      <div class="link-note"><strong>SRM → PA:</strong> AS 5108 후 Exam PA — 자연스럽게 연결되는 플랜</div>
 
       <div class="grid grid-2" style="margin-top:0.9rem">
         <div class="card">
@@ -518,13 +531,13 @@
 
     <!-- TIMELINE -->
     <section class="panel" id="panel-timeline">
-      <div class="info-box" style="margin-bottom:0.9rem">📋 타임라인 체크는 <strong>일정·할 일 메모용</strong>입니다. ASA 진행률(%)에는 반영되지 않아요.</div>
+      <div class="info-box" style="margin-bottom:0.9rem">타임라인 체크는 <strong>일정·할 일 메모용</strong>입니다. ASA 진행률(%)에는 반영되지 않아요.</div>
       <div class="card"><div class="card-title">타임라인 · <span id="timelineProgressLabel">0%</span> 완료</div><div class="timeline" id="timeline"></div></div>
     </section>
 
     <!-- CHECKLIST -->
     <section class="panel" id="panel-checklist">
-      <div class="info-box" style="margin-bottom:0.9rem">✅ 체크리스트: 시험은 <strong>미응시 / 합격 / 불합격</strong> · 합격만 ASA % 반영 · 나머지는 체크박스</div>
+      <div class="info-box" style="margin-bottom:0.9rem">체크리스트: 시험은 <strong>미응시 / 합격 / 불합격</strong> · 합격만 ASA % 반영 · 나머지는 체크박스</div>
       <div class="card">
         <div class="card-title">ASA · SOA 플랜 체크리스트</div>
         <div class="filter-row" id="filterRow">
@@ -542,7 +555,7 @@
         </div>
       </div>
       <div class="card" style="margin-top:0.9rem">
-        <div class="info-box" style="margin-bottom:0.75rem">🎓 학위 과목 체크는 <strong>Temple MS credit 진행률</strong>만 반영. ASA %와 별개.</div>
+        <div class="info-box" style="margin-bottom:0.75rem">학위 과목 체크는 <strong>Temple MS credit 진행률</strong>만 반영. ASA %와 별개.</div>
         <div class="card-title">Temple MS 학위 · 수강 과목 (30 credits)</div>
         <div class="ring-wrap" style="margin-bottom:0.85rem">
           <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringTemple" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringTempleTxt">0/30</text></svg>
@@ -557,7 +570,48 @@
       </div>
     </section>
     <section class="panel" id="panel-focus">
-      <div class="info-box" style="margin-bottom:0.9rem">📋 아래 체크는 <strong>타임라인 일정용</strong> (ASA %와 별개)</div>
+      <div class="grid grid-2" style="margin-bottom:0.9rem">
+        <div class="card">
+          <div class="card-title">Pomodoro</div>
+          <div class="pomo-wrap">
+            <div class="pomo-time" id="pomoDisplay">25:00</div>
+            <div class="pomo-mode" id="pomoModeLabel">집중</div>
+            <div class="btn-row" style="justify-content:center">
+              <button class="btn-action primary" id="btnPomoStart">시작</button>
+              <button class="btn-action" id="btnPomoPause" hidden>일시정지</button>
+              <button class="btn-action" id="btnPomoReset">리셋</button>
+            </div>
+            <input type="text" id="pomoTopic" placeholder="집중 주제 (예: FM annuity)" style="margin-top:0.65rem" />
+            <div class="pomo-stats">오늘 <strong id="pomoTodayCount" style="color:var(--accent)">0</strong>회 · 이번 주 <strong id="pomoWeekCount" style="color:var(--accent)">0</strong>회</div>
+            <div class="form-row" style="margin-top:0.55rem">
+              <div><label style="font-size:0.75rem;color:var(--muted)">집중(분)</label><input type="number" id="pomoWorkMin" min="5" max="90" value="25" /></div>
+              <div><label style="font-size:0.75rem;color:var(--muted)">휴식(분)</label><input type="number" id="pomoBreakMin" min="1" max="30" value="5" /></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Flashcard</div>
+          <div class="form-row">
+            <div style="flex:1"><label style="font-size:0.75rem;color:var(--muted)">덱</label><select id="flashDeckSelect"></select></div>
+            <div style="flex:1"><label style="font-size:0.75rem;color:var(--muted)">새 덱</label><input type="text" id="flashNewDeck" placeholder="Exam FM" /></div>
+          </div>
+          <button class="btn-action" id="btnFlashAddDeck" style="margin-top:0.35rem">덱 추가</button>
+          <div class="flash-meta" id="flashMeta">카드 0장</div>
+          <div class="flash-study" id="flashCard">덱을 선택하거나 카드를 추가하세요</div>
+          <div class="btn-row" id="flashStudyBtns" hidden>
+            <button class="btn-action" id="btnFlashPrev">이전</button>
+            <button class="btn-action primary" id="btnFlashFlip">뒤집기</button>
+            <button class="btn-action" id="btnFlashNext">다음</button>
+          </div>
+          <div class="form-row" style="margin-top:0.55rem">
+            <div><input type="text" id="flashFront" placeholder="앞 (질문/개념)" /></div>
+            <div><input type="text" id="flashBack" placeholder="뒤 (답/공식)" /></div>
+          </div>
+          <button class="btn-action primary" id="btnFlashAddCard" style="margin-top:0.35rem">카드 추가</button>
+          <div class="flash-card-list" id="flashCardList"></div>
+        </div>
+      </div>
+      <div class="info-box" style="margin-bottom:0.9rem">아래 체크는 <strong>타임라인 일정용</strong> (ASA %와 별개)</div>
       <div class="card"><div class="card-title" id="focusTitle">지금 집중</div><ul class="task-list" id="focusTasks"></ul></div>
       <div class="card" style="margin-top:0.9rem"><div class="card-title">우선 확인</div><ul class="task-list" id="priorityTasks"></ul></div>
     </section>
@@ -592,7 +646,7 @@
           <div class="card-title">Google Calendar 연동</div>
           <p class="stat-sub" style="margin-bottom:0.65rem">한 번에 넣기: ICS 다운로드 → Google Calendar → 설정 → Import</p>
           <div class="btn-row">
-            <button class="btn-action primary" id="btnExportIcs">📥 ICS 내보내기 (마일스톤+수업)</button>
+            <button class="btn-action primary" id="btnExportIcs"> ICS 내보내기 (마일스톤+수업)</button>
           </div>
           <p class="stat-sub" style="margin:0.75rem 0 0.5rem">마일스톤 하나씩 추가:</p>
           <ul class="gcal-list" id="gcalLinks"></ul>
@@ -617,7 +671,7 @@
           <thead><tr><th>시험</th><th>권장 시간</th><th>주 10h 기준</th><th>너 플랜</th><th>팁</th></tr></thead>
           <tbody id="studyHoursTable"></tbody>
         </table>
-        <div class="link-note" style="margin-top:0.85rem;margin-bottom:0">📌 <strong>지금:</strong> FM D-day 기준 남은 시간 ÷ 권장 시간 = 하루/주 목표를 역산해보세요. <strong>메모 · 실용</strong> 탭에서 주간 목표(분) 설정 가능.</div>
+        <div class="link-note" style="margin-top:0.85rem;margin-bottom:0"><strong>지금:</strong> FM D-day 기준 남은 시간 ÷ 권장 시간 = 하루/주 목표를 역산해보세요. <strong>메모 · 실용</strong> 탭에서 주간 목표(분) 설정 가능.</div>
       </div>
 
       <div class="grid grid-2">
@@ -660,7 +714,7 @@
             </tbody>
           </table>
           <div class="path-card recommended" style="margin-top:0.75rem">
-            <h4>🎯 너에게 해당: Path C</h4>
+            <h4>너에게 해당: Path C</h4>
             <p>입학 시 <strong>SOA 시험 미합격</strong> 기준 (PDF 권장 경로).<br/>
             PDF Path C (참고): Fall Y1 — AS 5001 + elective / Spring — 5101·5104<br/>
             <strong>너 2026 Fall 실제:</strong> 5101, 5001, 5104, HCM 5101 (12 cr)</p>
@@ -704,7 +758,7 @@
       </div>
 
       <div class="card" style="margin-top:0.9rem">
-        <div class="card-title">🎯 플랜별 학습자료 추천 (Path C · Temple)</div>
+        <div class="card-title">플랜별 학습자료 추천 (Path C · Temple)</div>
         <div class="info-box" style="margin-bottom:0.75rem">
           Temple MS 학생 → CA checkout에서 <strong>Student Pricing</strong> 선택 후 증명 업로드 (졸업 18개월 이내도 가능).
           FM·P는 <strong>TIA 무료</strong>로 시작하고, 문제풀이는 CA Adapt 추가가 가성비 좋음.
@@ -820,11 +874,11 @@
 
       <div class="grid grid-2" style="margin-top:0.9rem">
         <div class="card">
-          <div class="card-title">📇 연락처 · 필수 링크</div>
+          <div class="card-title">연락처 · 필수 링크</div>
           <div id="contactList"></div>
         </div>
         <div class="card">
-          <div class="card-title">🌏 국제학생 · CPT / OPT</div>
+          <div class="card-title">국제학생 · CPT / OPT</div>
           <ul class="tip-list">
             <li><strong>온캠퍼스 잡:</strong> 입학 즉시 Handshake·Temple Careers — CPT 전 part-time 가능</li>
             <li><strong>CPT:</strong> ISSS + Academic Advisor + 고용주 offer letter · 학기 중 PT / 여름 FT</li>
@@ -840,24 +894,28 @@
         </div>
       </div>
 
-      <div class="card" style="margin-top:0.9rem" id="backupSection">
-        <div class="card-title">💾 데이터 백업 · 복원</div>
-        <p class="stat-sub" style="margin-bottom:0.5rem">체크·메모·시간표는 브라우저에 자동 저장됩니다. Drive 연결 시 <strong>Google Drive 폴더 JSON</strong>에도 자동 백업됩니다.</p>
-        <div class="cloud-status" id="cloudSyncStatus">☁️ Google Drive 자동 저장: 연결 안 됨 (Chrome + Drive Desktop 권장)</div>
+    </section>
+
+    <!-- BACKUP -->
+    <section class="panel" id="panel-backup">
+      <div class="card" id="backupSection">
+        <div class="card-title">데이터 백업 · 복원</div>
+        <p class="stat-sub" style="margin-bottom:0.5rem">체크·메모·시간표·플래시카드는 브라우저에 자동 저장됩니다. Drive 연결 시 <strong>Google Drive 폴더 JSON</strong>에도 자동 백업됩니다.</p>
+        <div class="cloud-status" id="cloudSyncStatus">Google Drive 자동 저장: 연결 안 됨 (Chrome + Drive Desktop 권장)</div>
         <div class="btn-row">
-          <button class="btn-action primary" id="btnConnectDrive">☁️ Drive 파일 연결</button>
+          <button class="btn-action primary" id="btnConnectDrive">Drive 파일 연결</button>
           <button class="btn-action" id="btnDisconnectDrive" hidden>연결 해제</button>
           <button class="btn-action" id="btnRestoreDrive" hidden>Drive에서 불러오기</button>
         </div>
         <div class="btn-row" style="margin-top:0.45rem">
-          <button class="btn-action" id="btnExportData">📥 백업 다운로드 (JSON)</button>
+          <button class="btn-action" id="btnExportData">백업 다운로드 (JSON)</button>
           <label class="btn-action" style="cursor:pointer;margin:0">
-            📤 백업 불러오기
+            백업 불러오기
             <input type="file" id="importDataFile" accept=".json,application/json" style="display:none" />
           </label>
-          <button class="btn-action" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
+          <button class="btn-action" onclick="window.print()">인쇄 / PDF 저장</button>
         </div>
-        <p class="stat-sub" style="margin-top:0.55rem">Drive 연결: Google Drive for Desktop 설치 → 연결 시 Drive 폴더 안에 <code style="font-size:0.78rem">my-asa-plan-backup.json</code> 선택/생성</p>
+        <p class="stat-sub" style="margin-top:0.55rem">Drive 연결: Google Drive for Desktop 설치 후 Drive 폴더 안에 <code style="font-size:0.78rem">my-asa-plan-backup.json</code> 선택/생성</p>
       </div>
     </section>
 
@@ -922,20 +980,20 @@
 
     const PHASES = [
       { id:"pre", name:"입학 전", period:"지금 ~ 2026년 6월", start:"2025-01-01", end:"2026-06-30", tasks:[
-        { id:"fm-jun20", text:"6/20 Exam FM 응시 🎯", meta:"최우선 · Path C 시작", highlight:true },
+        { id:"fm-jun20", text:"6/20 Exam FM 응시", meta:"최우선 · Path C 시작", highlight:true },
         { id:"fm-retake", text:"떨어지면 8월 재응시", meta:"Plan B" }
       ]},
       { id:"summer26", name:"2026 여름", period:"2026년 7월 ~ 8월", start:"2026-07-01", end:"2026-08-31", tasks:[
         { id:"vee-econ", text:"VEE Economics 완료", meta:"온라인 · 이번 여름", highlight:true },
         { id:"vee-acct", text:"VEE Accounting & Finance 완료", meta:"온라인 · 이번 여름", highlight:true },
-        { id:"prep-p", text:"Exam P 9월 대비 본격 공부", meta:"9월 시험 🎯", highlight:true },
+        { id:"prep-p", text:"Exam P 9월 대비 본격 공부", meta:"9월 시험", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 지원 준비", meta:"8/24 입학 전" }
       ]},
       { id:"sem1", name:"1학기 (Fall Y1 · Path C)", period:"2026년 8/24 ~ 12/15", start:"2026-08-24", end:"2026-12-15", tasks:[
         { id:"as-5001", text:"AS 5001 Actuarial Probability", meta:"Elective · P prep (UEC 아님)", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 바로 지원", meta:"입학 즉시" },
         { id:"vee-stats-check", text:"VEE Math Statistics — Purdue 학점 Temple 면제 확인", meta:"입학 직후!", highlight:true },
-        { id:"exam-p", text:"9월 Exam P 응시 합격", meta:"시험 🎯", highlight:true },
+        { id:"exam-p", text:"9월 Exam P 응시 합격", meta:"시험", highlight:true },
         { id:"intern-fall", text:"가을 계리사 인턴 지원", meta:"커리어" },
         { id:"paf", text:"PAF Module", meta:"모듈" }
       ]},
@@ -954,7 +1012,7 @@
         { id:"fap-34", text:"FAP Module 3 & 4", meta:"FAP" }
       ]},
       { id:"summer", name:"여름방학", period:"2027년 6월 ~ 8월", start:"2027-06-01", end:"2027-08-31", tasks:[
-        { id:"cpt-ft", text:"CPT 풀타임 인턴 🎯", meta:"커리어", highlight:true },
+        { id:"cpt-ft", text:"CPT 풀타임 인턴", meta:"커리어", highlight:true },
         { id:"fap-5", text:"FAP Module 5", meta:"FAP" },
         { id:"atpa", text:"ATPA Assessment", meta:"Assessment" }
       ]},
@@ -962,11 +1020,11 @@
         { id:"as-5114", text:"AS 5114 → ASTAM UEC", meta:"UEC" },
         { id:"exam-pa", text:"10월 Exam PA 합격", meta:"SRM 기반", highlight:true },
         { id:"fap-final", text:"FAP 최종 평가", meta:"FAP" },
-        { id:"graduate", text:"졸업 🎓", meta:"2027.12" }
+        { id:"graduate", text:"졸업", meta:"2027.12" }
       ]},
       { id:"post", name:"졸업 직후", period:"2028년 초", start:"2028-01-01", end:"2028-12-31", tasks:[
         { id:"apc", text:"APC 참석", meta:"마지막" },
-        { id:"asa", text:"ASA 완성 🎉", meta:"목표", highlight:true }
+        { id:"asa", text:"ASA 완성", meta:"목표", highlight:true }
       ]}
     ];
 
@@ -1012,7 +1070,7 @@
       { date:"2027-06-01", label:"CPT FT", taskId:"cpt-ft" },
       { date:"2027-10-15", label:"Exam PA", taskId:"exam-pa" },
       { date:"2027-12-15", label:"졸업", taskId:"graduate" },
-      { date:"2028-03-01", label:"ASA 🎉", taskId:"asa" }
+      { date:"2028-03-01", label:"ASA", taskId:"asa" }
     ];
 
     const MILESTONES = DDAYS;
@@ -1222,9 +1280,13 @@
         reqChecked:{}, timelineChecked:{}, templeChecked:{}, examStatus:{},
         theme:"warm-dark", weeklyMemo:"", adminMemo:"",
         studyLogs:[], checklistFilter:"all", schedule:[],
-        weeklyStudyGoal:600, budgetSpent:0
+        weeklyStudyGoal:600, budgetSpent:0,
+        flashDecks:[], flashActiveDeckId:null, flashStudyIndex:0,
+        pomodoro:{ workMin:25, breakMin:5, todayCount:0, lastDate:"", topic:"" }
       };
     }
+
+    function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
 
     function migrateExamStatus(reqChecked, existing) {
       const es = { ...(existing || {}) };
@@ -1377,8 +1439,8 @@
       el.className = "cloud-status";
       if (mode === "unsupported") {
         el.classList.add("warn");
-        el.textContent = "☁️ Drive 자동 저장: Chrome에서만 가능 (Safari·Firefox 불가)";
-        btnConnect.textContent = "☁️ Drive 파일 연결 (Chrome)";
+        el.textContent = "Drive 자동 저장: Chrome에서만 가능 (Safari·Firefox 불가)";
+        btnConnect.textContent = "Drive 파일 연결 (Chrome)";
         btnConnect.hidden = false;
         btnDisconnect.hidden = true;
         btnRestore.hidden = true;
@@ -1386,8 +1448,8 @@
       }
       if (mode === "connected") {
         el.classList.add("ok");
-        el.textContent = "☁️ Drive 자동 저장 중 · " + (detail || "연결됨");
-        btnConnect.textContent = "☁️ Drive 파일 변경";
+        el.textContent = "Drive 자동 저장 중 · " + (detail || "연결됨");
+        btnConnect.textContent = "Drive 파일 변경";
         btnConnect.hidden = false;
         btnDisconnect.hidden = false;
         btnRestore.hidden = false;
@@ -1395,8 +1457,8 @@
       }
       if (mode === "permission") {
         el.classList.add("warn");
-        el.textContent = "☁️ Drive 권한 필요 · 「Drive 파일 연결」 다시 클릭";
-        btnConnect.textContent = "☁️ Drive 권한 허용";
+        el.textContent = "Drive 권한 필요 · 「Drive 파일 연결」 다시 클릭";
+        btnConnect.textContent = "Drive 권한 허용";
         btnConnect.hidden = false;
         btnDisconnect.hidden = false;
         btnRestore.hidden = false;
@@ -1404,20 +1466,20 @@
       }
       if (mode === "syncing") {
         el.classList.add("ok");
-        el.textContent = "☁️ Drive 저장 중…";
+        el.textContent = "Drive 저장 중…";
         return;
       }
       if (mode === "error") {
         el.classList.add("warn");
-        el.textContent = "☁️ Drive 저장 실패 · 다시 연결해 주세요";
-        btnConnect.textContent = "☁️ Drive 파일 연결";
+        el.textContent = "Drive 저장 실패 · 다시 연결해 주세요";
+        btnConnect.textContent = "Drive 파일 연결";
         btnConnect.hidden = false;
         btnDisconnect.hidden = true;
         btnRestore.hidden = true;
         return;
       }
-      el.textContent = "☁️ Google Drive 자동 저장: 연결 안 됨 (Chrome + Drive Desktop 권장)";
-      btnConnect.textContent = "☁️ Drive 파일 연결";
+      el.textContent = "Google Drive 자동 저장: 연결 안 됨 (Chrome + Drive Desktop 권장)";
+      btnConnect.textContent = "Drive 파일 연결";
       btnConnect.hidden = false;
       btnDisconnect.hidden = true;
       btnRestore.hidden = true;
@@ -1538,11 +1600,7 @@
     window.switchTab = switchTab;
 
     function openBackupSection() {
-      switchTab("tools");
-      setTimeout(() => {
-        const el = document.getElementById("backupSection");
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 80);
+      switchTab("backup");
     }
     window.openBackupSection = openBackupSection;
 
@@ -1637,7 +1695,7 @@
     }
 
     function getMotivate(pct, remaining) {
-      if (pct >= 100) return "🎉 ASA 완성! 정말 수고했어.";
+      if (pct >= 100) return "ASA 완성! 정말 수고했어.";
       if (pct >= 80) return "거의 다 왔어! 마지막 스퍼트만.";
       if (pct >= 50) return "절반 넘었어. 이 속도면 충분해.";
       if (pct >= 25) return "기반이 쌓이고 있어. 꾸준히 가자.";
@@ -1781,7 +1839,7 @@
         const done = isReqDone(d.taskId);
         const failed = examSt === "failed";
         const urgent = !done && !failed && dd >= 0 && dd <= 30;
-        const dNum = done ? "✓" : failed ? "재응시" : fmtDday(dd);
+        const dNum = done ? "" : failed ? "재응시" : fmtDday(dd);
         return `<div class="dday-card${urgent?" urgent":""}${done?" done":""}${failed?" urgent":""}">
           <div class="d-num">${dNum}</div>
           <div class="d-label">${d.label}${failed ? " · 불합격" : ""}</div>
@@ -1821,7 +1879,7 @@
             const tag = st === "failed" ? " · 불합격" : "";
             return `<li><span>${r.name}${tag}</span><span class="when">${r.when}</span></li>`;
           }).join("")
-        : "<li><span style='color:var(--accent)'>🎉 전부 완료!</span></li>";
+        : "<li><span style='color:var(--accent)'>전부 완료!</span></li>";
 
       // Alert
       const alert = document.getElementById("urgentAlert");
@@ -1829,16 +1887,16 @@
       const fmSt = getExamStatus("fm-jun20");
       if (fmSt === "failed") {
         alert.style.display = "block";
-        alert.innerHTML = `⚠️ <strong>Exam FM 불합격</strong> — 8월 재응시 준비. 합격하면 체크리스트에서 <strong>합격</strong>으로 변경하세요.`;
+        alert.innerHTML = `<strong>Exam FM 불합격</strong> — 8월 재응시 준비. 합격하면 체크리스트에서 <strong>합격</strong>으로 변경하세요.`;
       } else if (fmSt !== "passed" && fmDays >= 0 && fmDays <= 45) {
         alert.style.display = "block";
-        alert.innerHTML = `🎯 <strong>Exam FM ${fmtDday(fmDays)}</strong> — ASA까지 ${remaining}% 남음. Path C: FM → 여름 VEE 2개 → P 9월.`;
+        alert.innerHTML = `<strong>Exam FM ${fmtDday(fmDays)}</strong> — ASA까지 ${remaining}% 남음. Path C: FM → 여름 VEE 2개 → P 9월.`;
       } else if ((!isReqChecked("vee-econ") || !isReqChecked("vee-acct")) && (phase.id === "summer26" || phase.id === "pre")) {
         alert.style.display = "block";
-        alert.innerHTML = `☀️ <strong>2026 여름:</strong> VEE Economics + Accounting/Finance 온라인 완료 · 동시에 Exam P(9월) 본격 준비.`;
+        alert.innerHTML = `<strong>2026 여름:</strong> VEE Economics + Accounting/Finance 온라인 완료 · 동시에 Exam P(9월) 본격 준비.`;
       } else if (!isReqChecked("vee-stats-check") && phase.id === "sem1") {
         alert.style.display = "block";
-        alert.innerHTML = `⚠️ <strong>VEE Math Statistics</strong> — Temple 담당자에게 Purdue 학점 면제 확인!`;
+        alert.innerHTML = `<strong>VEE Math Statistics</strong> — Temple 담당자에게 Purdue 학점 면제 확인!`;
       } else {
         alert.style.display = "none";
       }
@@ -1911,6 +1969,249 @@
       });
     }
 
+    let pomoInterval = null;
+    let pomoSecondsLeft = 0;
+    let pomoMode = "work";
+    let pomoRunning = false;
+    let flashFlipped = false;
+
+    function ensurePomodoro() {
+      if (!state.pomodoro) state.pomodoro = { workMin:25, breakMin:5, todayCount:0, lastDate:"", topic:"" };
+      if (!state.flashDecks) state.flashDecks = [];
+    }
+
+    function getActiveFlashDeck() {
+      ensurePomodoro();
+      return (state.flashDecks || []).find(d => d.id === state.flashActiveDeckId) || null;
+    }
+
+    function formatPomo(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m}:${String(s).padStart(2, "0")}`;
+    }
+
+    function resetPomoDisplay() {
+      ensurePomodoro();
+      const work = +(state.pomodoro.workMin || 25);
+      pomoSecondsLeft = work * 60;
+      pomoMode = "work";
+      pomoRunning = false;
+      clearInterval(pomoInterval);
+      pomoInterval = null;
+      document.getElementById("pomoDisplay").textContent = formatPomo(pomoSecondsLeft);
+      document.getElementById("pomoModeLabel").textContent = "집중";
+      document.getElementById("btnPomoStart").hidden = false;
+      document.getElementById("btnPomoPause").hidden = true;
+    }
+
+    function tickPomodoro() {
+      if (pomoSecondsLeft <= 0) {
+        clearInterval(pomoInterval);
+        pomoInterval = null;
+        pomoRunning = false;
+        document.getElementById("btnPomoStart").hidden = false;
+        document.getElementById("btnPomoPause").hidden = true;
+        if (pomoMode === "work") {
+          completePomoWork();
+          pomoMode = "break";
+          pomoSecondsLeft = (state.pomodoro.breakMin || 5) * 60;
+          document.getElementById("pomoModeLabel").textContent = "휴식";
+          toast("집중 완료 · 휴식 시작");
+        } else {
+          pomoMode = "work";
+          pomoSecondsLeft = (state.pomodoro.workMin || 25) * 60;
+          document.getElementById("pomoModeLabel").textContent = "집중";
+          toast("휴식 완료");
+        }
+        document.getElementById("pomoDisplay").textContent = formatPomo(pomoSecondsLeft);
+        return;
+      }
+      pomoSecondsLeft--;
+      document.getElementById("pomoDisplay").textContent = formatPomo(pomoSecondsLeft);
+    }
+
+    function completePomoWork() {
+      ensurePomodoro();
+      const today = new Date().toISOString().slice(0, 10);
+      if (state.pomodoro.lastDate !== today) state.pomodoro.todayCount = 0;
+      state.pomodoro.todayCount = (state.pomodoro.todayCount || 0) + 1;
+      state.pomodoro.lastDate = today;
+      const workMin = +(state.pomodoro.workMin || 25);
+      const topic = (document.getElementById("pomoTopic")?.value || state.pomodoro.topic || "").trim();
+      state.pomodoro.topic = topic;
+      if (!state.studyLogs) state.studyLogs = [];
+      state.studyLogs.push({
+        date: today,
+        minutes: workMin,
+        topic: topic ? `Pomodoro: ${topic}` : "Pomodoro 집중"
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      scheduleCloudSync();
+      renderPomodoroStats();
+      renderStudyGoal();
+    }
+
+    function renderPomodoroStats() {
+      ensurePomodoro();
+      const today = new Date().toISOString().slice(0, 10);
+      if (state.pomodoro.lastDate !== today) state.pomodoro.todayCount = 0;
+      document.getElementById("pomoTodayCount").textContent = state.pomodoro.todayCount || 0;
+      const weekStart = getWeekStart();
+      const weekCount = (state.studyLogs || []).filter(l => {
+        if (!(l.topic || "").includes("Pomodoro")) return false;
+        const d = new Date(l.date + "T00:00:00");
+        return d >= weekStart;
+      }).length;
+      document.getElementById("pomoWeekCount").textContent = weekCount;
+      const workEl = document.getElementById("pomoWorkMin");
+      const breakEl = document.getElementById("pomoBreakMin");
+      const topicEl = document.getElementById("pomoTopic");
+      if (workEl && document.activeElement !== workEl) workEl.value = state.pomodoro.workMin || 25;
+      if (breakEl && document.activeElement !== breakEl) breakEl.value = state.pomodoro.breakMin || 5;
+      if (topicEl && document.activeElement !== topicEl) topicEl.value = state.pomodoro.topic || "";
+    }
+
+    function renderPomodoro() {
+      renderPomodoroStats();
+      if (!pomoRunning && pomoSecondsLeft === 0) resetPomoDisplay();
+    }
+
+    function renderFlashcards() {
+      ensurePomodoro();
+      const decks = state.flashDecks || [];
+      const sel = document.getElementById("flashDeckSelect");
+      sel.innerHTML = decks.length
+        ? decks.map(d => `<option value="${d.id}" ${d.id === state.flashActiveDeckId ? "selected" : ""}>${d.name}</option>`).join("")
+        : `<option value="">덱 없음</option>`;
+      if (!state.flashActiveDeckId && decks[0]) state.flashActiveDeckId = decks[0].id;
+      const deck = getActiveFlashDeck();
+      const cards = deck ? deck.cards || [] : [];
+      if (state.flashStudyIndex >= cards.length) state.flashStudyIndex = 0;
+      document.getElementById("flashMeta").textContent = deck
+        ? `${deck.name} · 카드 ${cards.length}장 · ${state.flashStudyIndex + 1}/${cards.length || 1}`
+        : "카드 0장";
+      const studyEl = document.getElementById("flashCard");
+      const btns = document.getElementById("flashStudyBtns");
+      if (!deck || !cards.length) {
+        studyEl.textContent = "덱을 선택하거나 카드를 추가하세요";
+        studyEl.classList.remove("back");
+        btns.hidden = true;
+      } else {
+        btns.hidden = false;
+        const card = cards[state.flashStudyIndex];
+        studyEl.textContent = flashFlipped ? card.back : card.front;
+        studyEl.classList.toggle("back", flashFlipped);
+      }
+      document.getElementById("flashCardList").innerHTML = deck
+        ? cards.map((c, i) => `
+          <div class="flash-card-item">
+            <span>${c.front} → ${c.back}</span>
+            <button type="button" data-flash-del="${c.id}">삭제</button>
+          </div>`).join("")
+        : "";
+      document.getElementById("flashCardList").querySelectorAll("[data-flash-del]").forEach(btn => {
+        btn.onclick = () => {
+          deck.cards = deck.cards.filter(c => c.id !== btn.dataset.flashDel);
+          if (state.flashStudyIndex >= deck.cards.length) state.flashStudyIndex = Math.max(0, deck.cards.length - 1);
+          flashFlipped = false;
+          saveState(true);
+        };
+      });
+    }
+
+    function bindFocusTools() {
+      if (bindFocusTools.done) return;
+      bindFocusTools.done = true;
+
+      document.getElementById("btnPomoStart").onclick = () => {
+        ensurePomodoro();
+        if (!pomoRunning) {
+          if (pomoSecondsLeft === 0) resetPomoDisplay();
+          pomoRunning = true;
+          document.getElementById("btnPomoStart").hidden = true;
+          document.getElementById("btnPomoPause").hidden = false;
+          pomoInterval = setInterval(tickPomodoro, 1000);
+        }
+      };
+      document.getElementById("btnPomoPause").onclick = () => {
+        pomoRunning = false;
+        clearInterval(pomoInterval);
+        pomoInterval = null;
+        document.getElementById("btnPomoStart").hidden = false;
+        document.getElementById("btnPomoPause").hidden = true;
+      };
+      document.getElementById("btnPomoReset").onclick = () => resetPomoDisplay();
+      document.getElementById("pomoWorkMin").onchange = e => {
+        state.pomodoro.workMin = Math.max(5, +e.target.value || 25);
+        if (!pomoRunning) resetPomoDisplay();
+        saveState(true);
+      };
+      document.getElementById("pomoBreakMin").onchange = e => {
+        state.pomodoro.breakMin = Math.max(1, +e.target.value || 5);
+        saveState(true);
+      };
+      document.getElementById("pomoTopic").oninput = e => {
+        state.pomodoro.topic = e.target.value;
+        saveState(true);
+      };
+
+      document.getElementById("btnFlashAddDeck").onclick = () => {
+        const name = document.getElementById("flashNewDeck").value.trim();
+        if (!name) { toast("덱 이름 입력"); return; }
+        ensurePomodoro();
+        const deck = { id: uid(), name, cards: [] };
+        state.flashDecks.push(deck);
+        state.flashActiveDeckId = deck.id;
+        state.flashStudyIndex = 0;
+        flashFlipped = false;
+        document.getElementById("flashNewDeck").value = "";
+        saveState();
+      };
+      document.getElementById("flashDeckSelect").onchange = e => {
+        state.flashActiveDeckId = e.target.value || null;
+        state.flashStudyIndex = 0;
+        flashFlipped = false;
+        saveState(true);
+      };
+      document.getElementById("btnFlashAddCard").onclick = () => {
+        const deck = getActiveFlashDeck();
+        if (!deck) { toast("덱 먼저 추가"); return; }
+        const front = document.getElementById("flashFront").value.trim();
+        const back = document.getElementById("flashBack").value.trim();
+        if (!front || !back) { toast("앞·뒤 모두 입력"); return; }
+        if (!deck.cards) deck.cards = [];
+        deck.cards.push({ id: uid(), front, back });
+        document.getElementById("flashFront").value = "";
+        document.getElementById("flashBack").value = "";
+        saveState();
+      };
+      document.getElementById("flashCard").onclick = () => {
+        const deck = getActiveFlashDeck();
+        if (!deck || !deck.cards?.length) return;
+        flashFlipped = !flashFlipped;
+        renderFlashcards();
+      };
+      document.getElementById("btnFlashFlip").onclick = () => {
+        flashFlipped = !flashFlipped;
+        renderFlashcards();
+      };
+      document.getElementById("btnFlashPrev").onclick = () => {
+        const deck = getActiveFlashDeck();
+        if (!deck?.cards?.length) return;
+        state.flashStudyIndex = (state.flashStudyIndex - 1 + deck.cards.length) % deck.cards.length;
+        flashFlipped = false;
+        saveState(true);
+      };
+      document.getElementById("btnFlashNext").onclick = () => {
+        const deck = getActiveFlashDeck();
+        if (!deck?.cards?.length) return;
+        state.flashStudyIndex = (state.flashStudyIndex + 1) % deck.cards.length;
+        flashFlipped = false;
+        saveState(true);
+      };
+    }
+
     function renderFocus() {
       const phase = getCurrentPhase();
       document.getElementById("focusTitle").textContent = `지금 집중 · ${phase.name} (${phase.period})`;
@@ -1926,6 +2227,9 @@
       ];
       document.getElementById("priorityTasks").innerHTML = pri.map(timelineTaskLi).join("");
       bindTaskList(document.getElementById("priorityTasks"), "timeline");
+      bindFocusTools();
+      renderPomodoro();
+      renderFlashcards();
     }
 
     function renderTemple() {
@@ -2072,7 +2376,7 @@
         el.innerHTML = `<div><span class="hours-big">500h</span> <span class="stat-sub">Exam PA 권장 · AS 5108(SRM) 후</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">3학기 10월 목표. SRM UEC 완료 후 PA가 자연스럽게 연결.</p>`;
       } else {
-        el.innerHTML = `<p class="stat-sub">시험 3개 완료 🎉 UEC·모듈·FAP에 집중. <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('guide')">Temple 학위 요건 보기</span></p>`;
+        el.innerHTML = `<p class="stat-sub">시험 3개 완료. UEC·모듈·FAP에 집중. <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('guide')">Temple 학위 요건 보기</span></p>`;
       }
     }
 
