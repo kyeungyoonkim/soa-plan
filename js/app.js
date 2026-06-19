@@ -32,12 +32,27 @@ let state;
       }));
     }
 
+    function mergeDefaultDeckContent(decks) {
+      const out = Array.isArray(decks) ? decks.map(d => ({ ...d, cards: [...(d.cards || [])] })) : [];
+      DEFAULT_FLASH_DECKS.forEach(def => {
+        const idx = out.findIndex(d => d.id === def.id);
+        const fresh = { id: def.id, name: def.name, cards: def.cards.map(c => ({ ...c })) };
+        if (idx >= 0) out[idx] = fresh;
+        else out.push(fresh);
+      });
+      return out.length ? out : cloneDefaultFlashDecks();
+    }
+
     function resolveFlashFields(p) {
       const hasDecks = p && p.flashDecks && p.flashDecks.length > 0;
+      const needsUpgrade = !p || p.flashDeckVersion !== FLASH_DECK_VERSION;
+      let flashDecks = hasDecks ? p.flashDecks : cloneDefaultFlashDecks();
+      if (needsUpgrade) flashDecks = mergeDefaultDeckContent(flashDecks);
       return {
-        flashDecks: hasDecks ? p.flashDecks : cloneDefaultFlashDecks(),
-        flashActiveDeckId: (p && p.flashActiveDeckId) || (hasDecks ? null : DEFAULT_FLASH_DECKS[0].id),
-        flashStudyIndex: (p && p.flashStudyIndex) || 0
+        flashDecks,
+        flashActiveDeckId: (p && p.flashActiveDeckId) || DEFAULT_FLASH_DECKS[0].id,
+        flashStudyIndex: (p && p.flashStudyIndex) || 0,
+        flashDeckVersion: FLASH_DECK_VERSION
       };
     }
 
@@ -51,6 +66,7 @@ let state;
         flashDecks: flash.flashDecks,
         flashActiveDeckId: flash.flashActiveDeckId,
         flashStudyIndex: flash.flashStudyIndex,
+        flashDeckVersion: flash.flashDeckVersion,
         pomodoro:{ workMin:25, breakMin:5, todayCount:0, lastDate:"", topic:"" },
         careerPipeline:[]
       };
@@ -629,7 +645,8 @@ let state;
         templeChecked: p.templeChecked || {},
         examStatus: migrateExamStatus(reqChecked, p.examStatus),
         schedule: (p.schedule && p.schedule.length) ? p.schedule : applyFall2026Schedule(),
-        ...resolveFlashFields(p)
+        ...resolveFlashFields(p),
+        flashDeckVersion: FLASH_DECK_VERSION
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       scheduleCloudSync();
@@ -872,6 +889,41 @@ let state;
       return (state.flashDecks || []).find(d => d.id === state.flashActiveDeckId) || null;
     }
 
+    function escapeHtml(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderFlashHtml(text) {
+      if (!text) return "";
+      if (typeof katex === "undefined") {
+        return escapeHtml(text).replace(/ · /g, "<br>· ");
+      }
+      const parts = String(text).split(/(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$)/g);
+      return parts.map(part => {
+        if (part.startsWith("$$") && part.endsWith("$$")) {
+          const tex = part.slice(2, -2).trim();
+          try {
+            return katex.renderToString(tex, { displayMode: true, throwOnError: false });
+          } catch {
+            return escapeHtml(part);
+          }
+        }
+        if (part.startsWith("$") && part.endsWith("$") && part.length > 2) {
+          const tex = part.slice(1, -1).trim();
+          try {
+            return katex.renderToString(tex, { displayMode: false, throwOnError: false });
+          } catch {
+            return escapeHtml(part);
+          }
+        }
+        return escapeHtml(part).replace(/ · /g, "<br>· ");
+      }).join("");
+    }
+
     function formatPomo(sec) {
       const m = Math.floor(sec / 60);
       const s = sec % 60;
@@ -1004,19 +1056,20 @@ let state;
       const studyEl = document.getElementById("flashCard");
       const btns = document.getElementById("flashStudyBtns");
       if (!deck || !cards.length) {
-        studyEl.textContent = "덱을 선택하거나 카드를 추가하세요";
+        studyEl.innerHTML = "덱을 선택하거나 카드를 추가하세요";
         studyEl.classList.remove("back");
         btns.hidden = true;
       } else {
         btns.hidden = false;
         const card = cards[state.flashStudyIndex];
-        studyEl.textContent = flashFlipped ? card.back : card.front;
+        const text = flashFlipped ? card.back : card.front;
+        studyEl.innerHTML = renderFlashHtml(text);
         studyEl.classList.toggle("back", flashFlipped);
       }
       document.getElementById("flashCardList").innerHTML = deck
-        ? cards.map((c, i) => `
+        ? cards.map(c => `
           <div class="flash-card-item">
-            <span>${c.front} → ${c.back}</span>
+            <span>${renderFlashHtml(c.front)} → ${renderFlashHtml(c.back)}</span>
             <button type="button" data-flash-del="${c.id}">삭제</button>
           </div>`).join("")
         : "";
