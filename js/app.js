@@ -24,13 +24,33 @@
 let state;
     let checklistFilter = "all";
 
+    function cloneDefaultFlashDecks() {
+      return DEFAULT_FLASH_DECKS.map(d => ({
+        id: d.id,
+        name: d.name,
+        cards: d.cards.map(c => ({ ...c }))
+      }));
+    }
+
+    function resolveFlashFields(p) {
+      const hasDecks = p && p.flashDecks && p.flashDecks.length > 0;
+      return {
+        flashDecks: hasDecks ? p.flashDecks : cloneDefaultFlashDecks(),
+        flashActiveDeckId: (p && p.flashActiveDeckId) || (hasDecks ? null : DEFAULT_FLASH_DECKS[0].id),
+        flashStudyIndex: (p && p.flashStudyIndex) || 0
+      };
+    }
+
     function defaultState() {
+      const flash = resolveFlashFields(null);
       return {
         reqChecked:{}, timelineChecked:{}, templeChecked:{}, examStatus:{},
         theme:"warm-dark", weeklyMemo:"", adminMemo:"",
         studyLogs:[], checklistFilter:"all", schedule:[],
         weeklyStudyGoal:600, budgetSpent:0,
-        flashDecks:[], flashActiveDeckId:null, flashStudyIndex:0,
+        flashDecks: flash.flashDecks,
+        flashActiveDeckId: flash.flashActiveDeckId,
+        flashStudyIndex: flash.flashStudyIndex,
         pomodoro:{ workMin:25, breakMin:5, todayCount:0, lastDate:"", topic:"" },
         careerPipeline:[]
       };
@@ -188,7 +208,8 @@ let state;
             reqChecked,
             timelineChecked: p.timelineChecked || {},
             templeChecked: p.templeChecked || {},
-            examStatus: migrateExamStatus(reqChecked, p.examStatus)
+            examStatus: migrateExamStatus(reqChecked, p.examStatus),
+            ...resolveFlashFields(p)
           });
         }
         if (v5) {
@@ -607,7 +628,8 @@ let state;
         timelineChecked: p.timelineChecked || {},
         templeChecked: p.templeChecked || {},
         examStatus: migrateExamStatus(reqChecked, p.examStatus),
-        schedule: (p.schedule && p.schedule.length) ? p.schedule : applyFall2026Schedule()
+        schedule: (p.schedule && p.schedule.length) ? p.schedule : applyFall2026Schedule(),
+        ...resolveFlashFields(p)
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       scheduleCloudSync();
@@ -1056,6 +1078,23 @@ let state;
         flashFlipped = false;
         document.getElementById("flashNewDeck").value = "";
         saveState();
+      };
+      document.getElementById("btnFlashLoadDefaults").onclick = () => {
+        ensurePomodoro();
+        let added = 0;
+        DEFAULT_FLASH_DECKS.forEach(def => {
+          if (state.flashDecks.some(d => d.id === def.id)) return;
+          state.flashDecks.push({
+            id: def.id,
+            name: def.name,
+            cards: def.cards.map(c => ({ ...c }))
+          });
+          added++;
+        });
+        if (!added) { toast("기본 덱이 이미 있음"); return; }
+        if (!state.flashActiveDeckId) state.flashActiveDeckId = DEFAULT_FLASH_DECKS[0].id;
+        saveState();
+        toast(`기본 덱 ${added}개 추가`);
       };
       document.getElementById("flashDeckSelect").onchange = e => {
         state.flashActiveDeckId = e.target.value || null;

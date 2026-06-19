@@ -334,3 +334,48 @@ const CAREER_COLUMNS = [
 const CAREER_CLOSED_STATUSES = ["rejected", "withdrawn"];
 const CAREER_TYPE_LABELS = { job:"온캠/PT", intern:"인턴", networking:"네트워킹" };
 const CAREER_ADVANCE = { target:"applied", applied:"interview", interview:"offer", networking:"applied" };
+
+const DEFAULT_FLASH_DECKS = [
+  {
+    id: "deck-fm",
+    name: "Exam FM",
+    cards: [
+      { id:"fm-01", front:"Effective annual rate (EAR)", back:"(1 + i/m)^m − 1 · nominal i, m compounding periods/year" },
+      { id:"fm-02", front:"Annuity-immediate vs annuity-due", back:"Immediate: payments end of period · Due: start · a_n| = ä_n| × v" },
+      { id:"fm-03", front:"BA II Plus: BG (P/Y, C/Y)", back:"P/Y = payments/year · C/Y = compounding/year · BG sets both at once" },
+      { id:"fm-04", front:"Macaulay duration", back:"Weighted avg time to cash flows · price sensitivity measure · D = Σ t·PV(CF_t) / Price" },
+      { id:"fm-05", front:"Modified duration & convexity", back:"Mod duration ≈ −(1/P)(dP/di) · Convexity captures curvature · ΔP ≈ −ModDur·Δi + ½·Convex·(Δi)²" },
+      { id:"fm-06", front:"Redington immunization (3 conditions)", back:"PV assets = PV liabilities · Duration match · Assets convexity > liabilities convexity" },
+      { id:"fm-07", front:"Spot rate s_n", back:"Yield on zero-coupon bond maturing at n · used to discount single payment at n" },
+      { id:"fm-08", front:"Forward rate f(m,n)", back:"(1+s_{m+n})^{m+n} / (1+s_m)^m = (1+f)^{n} (concept) · lock in future borrowing/lending" },
+      { id:"fm-09", front:"Callable bond — price behavior", back:"Price capped by call schedule · OAS < Z-spread · investor short call option" },
+      { id:"fm-10", front:"Sinking fund payment", back:"Extra deposits so fund reaches redemption value · often improves issuer credit" },
+      { id:"fm-11", front:"Nominal APR → effective annual", back:"EAR = (1 + APR/m)^m − 1 · APR alone is not the true yearly rate" },
+      { id:"fm-12", front:"Continuous compounding δ", back:"Accumulation e^{δt} · force of interest δ = ln(1+i) · PV = FV·e^{−δt}" },
+      { id:"fm-13", front:"Put-call parity (European)", back:"C − P = S − K·v · same strike K, expiry · arbitrage if violated" },
+      { id:"fm-14", front:"Loan: outstanding balance after k payments", back:"OB_k = payment × a_{n−k|} · amortization: early payments mostly interest" },
+      { id:"fm-15", front:"Duration-matching quick check", back:"Single liability at time m → match with zero or coupon bond portfolio · duration ≈ m" }
+    ]
+  },
+  {
+    id: "deck-p",
+    name: "Exam P",
+    cards: [
+      { id:"p-01", front:"Conditional probability", back:"P(A|B) = P(A∩B) / P(B) · P(B) > 0" },
+      { id:"p-02", front:"Bayes' theorem", back:"P(A|B) = P(B|A)P(A) / P(B) · update prior with evidence" },
+      { id:"p-03", front:"Law of total probability", back:"P(A) = Σ P(A|B_i)P(B_i) · partition B_i" },
+      { id:"p-04", front:"E[aX + b]", back:"a·E[X] + b · linearity of expectation" },
+      { id:"p-05", front:"Var(X)", back:"E[X²] − (E[X])² · Var(aX+b) = a²Var(X)" },
+      { id:"p-06", front:"Binomial(n,p)", back:"P(X=k) = C(n,k) p^k (1−p)^{n−k} · E=np · Var=np(1−p)" },
+      { id:"p-07", front:"Poisson(λ)", back:"P(X=k) = e^{−λ} λ^k / k! · E=Var=λ · counts rare events" },
+      { id:"p-08", front:"Exponential(λ) — memoryless", back:"P(X>s+t | X>s) = P(X>t) · E=1/λ · waiting time until event" },
+      { id:"p-09", front:"Normal: standardize Z", back:"Z = (X−μ)/σ ~ N(0,1) · use Φ table · linear combo of normals is normal" },
+      { id:"p-10", front:"Central Limit Theorem (idea)", back:"Sum/mean of iid (finite variance) → approx Normal for large n" },
+      { id:"p-11", front:"Cov(X,Y)", back:"E[XY] − E[X]E[Y] · Var(X+Y) = Var(X)+Var(Y)+2Cov if dependent add 2Cov" },
+      { id:"p-12", front:"MLE (idea)", back:"Choose parameter θ maximizing L(θ|data) or log-likelihood · asymptotically efficient" },
+      { id:"p-13", front:"Min of two exponentials", back:"If X,Y iid Exp(λ), P(X<Y) = λ_X/(λ_X+λ_Y) · competition of independent events" },
+      { id:"p-14", front:"Uniform(0,a) order stats", back:"f_{X_(1)}(x) = n(1−x/a)^{n−1}/a · min/max formulas on exam" },
+      { id:"p-15", front:"Survival function S(x)", back:"S(x) = 1 − F(x) = P(X>x) · hazard h(x) = f(x)/S(x)" }
+    ]
+  }
+];
