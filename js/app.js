@@ -679,12 +679,20 @@ let state;
     function renderExamDeadlines() {
       const el = document.getElementById("examDeadlinesTable");
       if (!el) return;
-      el.innerHTML = `<thead><tr><th>시험</th><th>시험일</th><th>등록 마감 (예상)</th><th>비고</th></tr></thead><tbody>` +
+      el.innerHTML = `<thead><tr><th>시험</th><th>시험 window</th><th>등록 마감</th><th>비고</th></tr></thead><tbody>` +
         EXAM_DEADLINES.map(d => {
-          const regDays = daysUntil(d.regDeadline);
-          const cls = regDays < 0 ? "deadline-passed" : regDays <= 21 ? "deadline-soon" : "";
-          const regLabel = regDays < 0 ? "지남" : regDays <= 30 ? fmtDday(regDays) + " · " + d.regDeadline : d.regDeadline;
-          return `<tr class="${cls}"><td><strong>${d.exam}</strong></td><td>${d.examDate}</td><td>${regLabel}</td><td style="color:var(--muted);font-size:0.78rem">${d.note}</td></tr>`;
+          const window = d.examEnd ? `${d.examDate.slice(5)} ~ ${d.examEnd.slice(5)}` : d.examDate;
+          let regLabel = "—";
+          let cls = "";
+          if (d.regDeadline) {
+            const regDays = daysUntil(d.regDeadline);
+            cls = regDays < 0 ? "deadline-passed" : regDays <= 21 ? "deadline-soon" : "";
+            regLabel = regDays < 0 ? "지남" : regDays <= 30 ? fmtDday(regDays) + " · " + d.regDeadline : d.regDeadline;
+          } else {
+            regLabel = "Closed";
+            cls = "deadline-passed";
+          }
+          return `<tr class="${cls}"><td><strong>${d.exam}</strong></td><td>${window}</td><td>${regLabel}</td><td style="color:var(--muted);font-size:0.78rem">${d.note}</td></tr>`;
         }).join("") + "</tbody>";
     }
 
@@ -786,17 +794,17 @@ let state;
 
       // Alert
       const alert = document.getElementById("urgentAlert");
-      const fmDays = daysUntil("2026-06-20");
+      const fmDays = daysUntil("2026-06-22");
       const fmSt = getExamStatus("fm-jun20");
       if (fmSt === "failed") {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>Exam FM 불합격</strong> — 8월 재응시 준비. 합격하면 체크리스트에서 <strong>합격</strong>으로 변경하세요.`;
+        alert.innerHTML = `<strong>Exam FM 불합격</strong> — 8/6–17 재응시 · <strong>등록 마감 7/8 12AM</strong> (SOA 공식). P는 11월 권장 (9월은 너무 촉박).`;
       } else if (fmSt !== "passed" && fmDays >= 0 && fmDays <= 45) {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>Exam FM ${fmtDday(fmDays)}</strong> — ASA까지 ${remaining}% 남음. Path C: FM → 여름 VEE 2개 → P 9월.`;
+        alert.innerHTML = `<strong>Exam FM ${fmtDday(fmDays)}</strong> (6/11–22 window) — Path C: FM → 여름 VEE → P <strong>11월</strong> (등록 9/30).`;
       } else if ((!isReqChecked("vee-econ") || !isReqChecked("vee-acct")) && (phase.id === "summer26" || phase.id === "pre")) {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>2026 여름:</strong> VEE Economics + Accounting/Finance 온라인 완료 · 동시에 Exam P(9월) 본격 준비.`;
+        alert.innerHTML = `<strong>2026 여름:</strong> VEE 2개 완료 · Exam P는 7월부터 본격 (350h) → <strong>11/4–15</strong> 응시 목표.`;
       } else if (!isReqChecked("vee-stats-check") && phase.id === "sem1") {
         alert.style.display = "block";
         alert.innerHTML = `<strong>VEE Math Statistics</strong> — Temple 담당자에게 Purdue 학점 면제 확인!`;
@@ -1204,10 +1212,10 @@ let state;
       bindTaskList(document.getElementById("focusTasks"), "timeline");
 
       const pri = [
-        { id:"fm-jun20", text:"6/20 Exam FM 준비", meta:fmtDday(daysUntil("2026-06-20")), highlight:true },
+        { id:"fm-jun20", text:"6월 FM window (6/11–22)", meta:fmtDday(daysUntil("2026-06-22")), highlight:true },
         { id:"vee-econ", text:"VEE Economics — 2026 여름", meta:"온라인", highlight:true },
         { id:"vee-acct", text:"VEE Acct & Finance — 2026 여름", meta:"온라인", highlight:true },
-        { id:"prep-p", text:"Exam P 9월 대비 공부 시작", meta:fmtDday(daysUntil("2026-09-15")), highlight:true },
+        { id:"prep-p", text:"Exam P 11월 대비 공부 (7월~)", meta:fmtDday(daysUntil("2026-11-15")), highlight:true },
         { id:"vee-stats-check", text:"VEE Stats — Temple 면제 확인", meta:"입학 직후" }
       ];
       document.getElementById("priorityTasks").innerHTML = pri.map(timelineTaskLi).join("");
@@ -1331,12 +1339,12 @@ let state;
 
       if (getExamStatus("fm-jun20") === "failed") {
         el.innerHTML = `<div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:baseline">
-          <div><span class="hours-big">8월</span> <span class="stat-sub">FM 재응시 · Plan B</span></div>
-          <div class="stat-sub">6/20 불합격 → 추가 공부 후 재응시. 합격하면 체크리스트 <strong style="color:var(--accent)">합격</strong> 선택.</div>
+          <div><span class="hours-big">8/6–17</span> <span class="stat-sub">FM 재응시 · 등록 <strong>7/8 12AM</strong></span></div>
+          <div class="stat-sub">6월 불합격 → 8월 window. P는 <strong>11월</strong>로 (9월 등록 8/12는 FM 재응시와 겹침).</div>
         </div>
-        <p class="stat-sub" style="margin-top:0.5rem">권장: 250h 기준 부족한 파트 집중 · CA 계산기 연습 유지.</p>`;
+        <p class="stat-sub" style="margin-top:0.5rem">권장: 250h 기준 부족한 파트 집중 · CA Adapt EL 유지.</p>`;
       } else if (getExamStatus("fm-jun20") !== "passed") {
-        const days = Math.max(1, daysUntil("2026-06-20"));
+        const days = Math.max(1, daysUntil("2026-06-22"));
         const weeks = Math.max(1, Math.ceil(days / 7));
         const need = 250;
         const perWeek = Math.ceil(need / weeks);
@@ -1350,10 +1358,10 @@ let state;
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 다음 창 준비</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. 합격 시 체크리스트 업데이트.</p>`;
       } else if (getExamStatus("exam-p") !== "passed") {
-        const days = Math.max(1, daysUntil("2026-09-15"));
+        const days = Math.max(1, daysUntil("2026-11-15"));
         const weeks = Math.max(1, Math.ceil(days / 7));
-        el.innerHTML = `<div><span class="hours-big">350h</span> <span class="stat-sub">Exam P 권장 · <strong>9월</strong> 응시</span></div>
-        <p class="stat-sub" style="margin-top:0.5rem">D-${days} · 남은 ${weeks}주 → 여름에 VEE 2개 + P 병행. Path C: Fall에 AS 5001 (elective).</p>`;
+        el.innerHTML = `<div><span class="hours-big">350h</span> <span class="stat-sub">Exam P 권장 · <strong>11/4–15</strong> 응시</span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">D-${days} · 남은 ${weeks}주 · 등록 <strong>9/30 10AM</strong>. 7월부터 시작 → Fall AS 5001 병행. 9월 P는 한 달 공부로는 부족.</p>`;
       } else if (getExamStatus("exam-pa") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108) 기반 복습</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;
