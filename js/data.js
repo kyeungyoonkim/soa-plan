@@ -36,7 +36,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"fm-retake", text:"떨어지면 8/6–17 재응시", meta:"등록 마감 7/8 12AM" }
       ]},
       { id:"summer26", name:"2026 여름", period:"2026년 7월 ~ 8월", start:"2026-07-01", end:"2026-08-31", tasks:[
-        { id:"vee-econ", text:"VEE Microeconomics 완료", meta:"온라인 · 이번 여름", highlight:true },
+        { id:"vee-macro", text:"VEE Macroeconomics ✓", meta:"Economics VEE · 이미 완료" },
+        { id:"vee-econ", text:"VEE Microeconomics 완료", meta:"Economics VEE 마무리 · 이번 여름", highlight:true },
+        { id:"vee-acct", text:"VEE Accounting & Finance 완료", meta:"온라인 · 이번 여름", highlight:true },
         { id:"prep-p", text:"Exam P 11월 대비 본격 공부", meta:"7월부터 · 350h", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 지원 준비", meta:"8/24 입학 전" }
       ]},
@@ -85,7 +87,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"exam-p", cat:"exam", name:"Exam P", method:"11/4–15 응시 (등록 9/30) · 9월은 fast track", when:"1학기", order:4 },
       { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2028년 4/14–17 (5108 완료 후) · 10월은 비추", when:"졸업 후", order:11 },
       { id:"vee-stats-check", cat:"vee", name:"VEE Math Statistics", method:"Purdue 학점 Temple 면제 확인", when:"1학기", order:1 },
-      { id:"vee-econ", cat:"vee", name:"VEE Microeconomics", method:"2026 여름 온라인 (Micro만)", when:"2026 여름", order:2 },
+      { id:"vee-macro", cat:"vee", name:"VEE Macroeconomics", method:"이미 수강 완료 (Economics VEE 1/2)", when:"완료", order:2 },
+      { id:"vee-econ", cat:"vee", name:"VEE Microeconomics", method:"2026 여름 · Macro 완료 → Micro만", when:"2026 여름", order:3 },
+      { id:"vee-acct", cat:"vee", name:"VEE Accounting & Finance", method:"2026 여름 온라인", when:"2026 여름", order:4 },
       { id:"as-5102-5104", cat:"uec", name:"Exam FAM", method:"AS 5102 & 5104 UEC", when:"2학기", order:7 },
       { id:"as-5108", cat:"uec", name:"Exam SRM", method:"AS 5108 UEC", when:"3학기 (Fall Y2)", order:6 },
       { id:"as-5114", cat:"uec", name:"Exam ASTAM", method:"AS 5114 UEC", when:"3학기", order:10 },
@@ -108,7 +112,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"fm-register", cat:"admin", name:"FM 시험 등록", method:"SOA registration deadline 확인", when:"지금", order:31 },
       { id:"fm-transcript", cat:"admin", name:"FM 합격 transcript", method:"SOA에 성적 제출", when:"합격 후", order:32 },
       { id:"p-transcript", cat:"admin", name:"P 합격 transcript", method:"SOA에 성적 제출", when:"합격 후", order:33 },
-      { id:"vee-submit", cat:"admin", name:"VEE 학점 SOA 제출", method:"Micro Econ 완료 후 Candidate Central", when:"완료 시", order:34 },
+      { id:"vee-submit", cat:"admin", name:"VEE 학점 SOA 제출", method:"Econ(Micro)+Acct 완료 후 Candidate Central · Macro transcript 포함", when:"완료 시", order:34 },
       { id:"uec-grade", cat:"admin", name:"UEC 성적 요건 확인", method:"Temple AS과목 B 이상 등", when:"수강 전", order:35 },
       { id:"cpt-paperwork", cat:"admin", name:"CPT 서류", method:"국제학생실 + 고용주", when:"인턴 전", order:36 },
       { id:"pa-transcript", cat:"admin", name:"PA 합격 transcript", method:"SOA에 성적 제출", when:"합격 후", order:37 }
@@ -130,7 +134,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const MILESTONES = DDAYS;
     const CAT_CLS = { exam:"cat-exam", vee:"cat-vee", module:"cat-module", uec:"cat-uec", career:"cat-career", admin:"cat-admin" };
     const EXAM_IDS = ["fm-jun20","exam-p","exam-pa"];
-    const VEE_IDS = ["vee-stats-check","vee-econ"];
+    const VEE_IDS = ["vee-stats-check","vee-macro","vee-econ","vee-acct"];
     const MOD_IDS = ["paf","asf","fap-12","fap-34","fap-5","fap-final","atpa","apc"];
     const UEC_IDS = ["as-5102-5104","as-5108","as-5114"];
     const CAREER_IDS = ["oncampus-job","intern-fall","intern-confirm","cpt-pt","cpt-ft","graduate","asa"];
@@ -148,7 +152,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { name: "Exam PA", fee: 1234 }
       ],
       vee: [
-        { name: "VEE Microeconomics", fee: 92 },
+        { name: "VEE Economics (Micro 남음)", fee: 92, optional: "Macro 완료" },
+        { name: "VEE Accounting & Finance", fee: 92 },
         { name: "VEE Math Statistics", fee: 92, optional: "Purdue 면제 가능" }
       ],
       modules: [
@@ -231,12 +236,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         alt: null
       },
       {
-        when: "2026 여름 · VEE Micro",
+        when: "2026 여름 · VEE",
         tier: "best", tierLabel: "1순위",
-        pick: "Coaching Actuaries VEE Microeconomics",
-        cost: "~$65–100",
-        costDetail: "학생 65% off · SOA 제출 $92 별도",
-        plan: "7–8월 Microeconomics만 · 하루 1–2h · 완료 후 Candidate Central VEE 제출",
+        pick: "CA VEE — Microeconomics + Accounting & Finance",
+        cost: "~$130–200",
+        costDetail: "학생 65% off · SOA 제출 $92×2 별도 · Macro는 이미 완료",
+        plan: "7–8월 Micro + Acct/Fin 병행 · Economics VEE = Macro(완료) + Micro · 완료 후 SOA 제출",
         links: [
           { text: "CA VEE", url: "https://www.coachingactuaries.com/vee" },
           { text: "ACTEX VEE", url: "https://www.actexlearning.com/search?q=VEE" }

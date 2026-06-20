@@ -35,7 +35,6 @@
       color: var(--text);
       min-height: 100vh;
       line-height: 1.55;
-      transition: background 0.3s, color 0.3s;
     }
     body::before {
       content: "";
@@ -48,15 +47,6 @@
     .eyebrow { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.35rem; }
     h1 { font-family: "Instrument Serif", Georgia, serif; font-size: clamp(1.85rem, 4.5vw, 2.5rem); font-weight: 400; line-height: 1.12; }
     .subtitle { color: var(--muted); font-size: 0.9rem; max-width: 36rem; margin-top: 0.35rem; }
-    .theme-btns { display: flex; gap: 0.4rem; }
-    .theme-btn {
-      font: inherit; font-size: 0.75rem; font-weight: 500;
-      padding: 0.45rem 0.75rem; border-radius: 999px;
-      border: 1px solid var(--border); background: var(--surface);
-      color: var(--muted); cursor: pointer; transition: 0.2s;
-    }
-    .theme-btn:hover { color: var(--text); }
-    .theme-btn.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
 
     .nav { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-bottom: 1.25rem; padding: 0.28rem; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; width: fit-content; }
     .nav button { font: inherit; font-size: 0.8rem; font-weight: 500; padding: 0.45rem 0.9rem; border: none; border-radius: 999px; background: transparent; color: var(--muted); cursor: pointer; transition: 0.2s; }
@@ -351,7 +341,7 @@
     .rec-tier.later { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
     .rec-links a { color: var(--accent); font-size: 0.78rem; margin-right: 0.5rem; }
     @media print {
-      .nav, .theme-btns, .filter-row, .btn-action, .toast, .footer-note, .auth-gate { display: none !important; }
+      .nav, .filter-row, .btn-action, .toast, .footer-note, .auth-gate { display: none !important; }
       .panel { display: block !important; page-break-inside: avoid; }
       body { background: #fff; color: #111; }
     }
@@ -415,12 +405,8 @@
       <header>
         <div class="eyebrow">Temple MS · ASA Pathway</div>
         <h1>My ASA Plan</h1>
-        <p class="subtitle">2026 FM → Path C → Temple → 2028 ASA · P 11월 · VEE Micro 2026 여름</p>
+        <p class="subtitle">2026 FM → Path C → Temple → 2028 ASA · P 11월 · VEE Micro+Acct 2026 여름</p>
       </header>
-      <div class="theme-btns">
-        <button class="theme-btn active" data-theme="warm-dark">다크</button>
-        <button class="theme-btn" data-theme="warm-light">라이트</button>
-      </div>
     </div>
 
     <nav class="nav" id="nav">
@@ -508,8 +494,8 @@
         <div class="card">
           <div class="card-title">VEE</div>
           <div class="ring-wrap">
-            <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringVee" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringVeeTxt">0/2</text></svg>
-            <div><div class="stat-sub">Stats · Micro Econ</div><div id="veeLeft" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">2개 남음</div></div>
+            <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringVee" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringVeeTxt">0/4</text></svg>
+            <div><div class="stat-sub">Stats · Macro✓ · Micro · Acct</div><div id="veeLeft" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">4개 남음</div></div>
           </div>
         </div>
         <div class="card">
@@ -793,7 +779,7 @@
         <table class="guide-table">
           <thead><tr><th>시기</th><th>Temple (Path C)</th><th>SOA / ASA 플랜</th></tr></thead>
           <tbody>
-            <tr><td>2026 여름</td><td>— (입학 전)</td><td><strong>VEE Microeconomics</strong> · FM 재응시(필요시, 등록 7/8) · P 11월 준비 시작</td></tr>
+            <tr><td>2026 여름</td><td>— (입학 전)</td><td><strong>VEE Micro + Acct/Fin</strong> (Macro ✓) · FM 재응시(필요시) · P 11월 준비</td></tr>
             <tr><td>Fall Y1 (2026)<br/><span style="color:var(--muted);font-size:0.78rem">8/24 ~ 12/15</span></td><td>8/24 입학 · AS 5101, 5001, 5104, HCM 5101 (12 cr)</td><td><strong>Exam P 11/4–15</strong> (등록 9/30) · FM UEC(5101) · FAM 일부(5104)</td></tr>
             <tr><td>Spring Y1 (2027)<br/><span style="color:var(--muted);font-size:0.78rem">1/11 ~ 5/4</span></td><td>AS 5102, RMI 5051, selective 등</td><td>ASF, FAP 3-4, CPT PT · FAM UEC(5102+5104) 완성</td></tr>
             <tr><td>Fall Y2 (2027)<br/><span style="color:var(--muted);font-size:0.78rem">8/24 ~ 12/15</span></td><td>AS 5108, AS 5114(selective) 등</td><td>SRM·ASTAM UEC · FAP final · <strong>12월 졸업</strong></td></tr>
@@ -838,8 +824,9 @@
           <table class="guide-table">
             <thead><tr><th>VEE</th><th>추천 플랫폼</th><th>비고</th></tr></thead>
             <tbody>
-              <tr><td>Microeconomics</td><td><a href="https://www.coachingactuaries.com/vee" target="_blank" rel="noopener" style="color:var(--accent)">Coaching Actuaries</a> · <a href="https://www.actexlearning.com/" target="_blank" rel="noopener" style="color:var(--accent)">ACTEX</a></td><td>SOA Economics VEE · $92 제출 · CA 학생 할인</td></tr>
-              <tr><td>Math Statistics</td><td>—</td><td>Purdue 학점 → Temple 면제 확인 (Acct/Fin 불필요)</td></tr>
+              <tr><td>Economics</td><td><a href="https://www.coachingactuaries.com/vee" target="_blank" rel="noopener" style="color:var(--accent)">Coaching Actuaries</a> · ACTEX</td><td><strong>Macro ✓</strong> → Micro만 2026 여름 · SOA $92 제출</td></tr>
+              <tr><td>Accounting & Finance</td><td><a href="https://www.coachingactuaries.com/vee" target="_blank" rel="noopener" style="color:var(--accent)">Coaching Actuaries</a> · ACTEX</td><td>2026 여름 · Micro와 병행</td></tr>
+              <tr><td>Math Statistics</td><td>—</td><td>Purdue 학점 → Temple 면제 확인</td></tr>
               <tr><td>Math Statistics</td><td>Purdue 학점 → Temple 면제</td><td>입학 직후 FoxMS에 확인</td></tr>
             </tbody>
           </table>
@@ -856,7 +843,7 @@
         <ul class="tip-list">
           <li><strong>계산기:</strong> TI BA II Plus (~$50) — FM 필수 · Amazon/학교 서점</li>
           <li><strong>Adapt 목표:</strong> earned level 6+ (FM·P) · calibration exam 먼저</li>
-          <li><strong>VEE 여름:</strong> Microeconomics만 · Stats는 Purdue 면제 확인</li>
+          <li><strong>VEE 여름:</strong> Micro + Acct/Fin (Macro는 이미 완료 → 체크리스트에서 Macro 체크) · Stats Purdue 면제 확인</li>
           <li><strong>재응시:</strong> Prometric 변경 $70 · SOA 시험비 전액 재납</li>
         </ul>
       </div>
@@ -903,7 +890,7 @@
           <div id="budgetRows"></div>
           <input type="number" id="budgetSpent" placeholder="지금까지 SOA·교재에 쓴 금액 ($)" min="0" style="margin-top:0.5rem;margin-bottom:0.3rem" />
           <div class="stat-sub">남은 예산: <strong id="budgetLeft" style="color:var(--accent)">—</strong> · <span id="budgetTotalLabel">—</span></div>
-          <div class="stat-sub" style="margin-top:0.25rem;font-size:0.75rem">재응시·학습자료(CA/TIA)는 별도 · Stats Purdue 면제 시 VEE $92만</div>
+          <div class="stat-sub" style="margin-top:0.25rem;font-size:0.75rem">재응시·학습자료(CA/TIA)는 별도 · Stats Purdue 면제 시 VEE $184 (Econ+Acct)</div>
         </div>
         <div class="card">
           <div class="card-title">주간 공부 목표 (분)</div>
@@ -990,8 +977,8 @@
   <div class="toast" id="toast">저장됨</div>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
-  <script src="js/data.js?v=20260621"></script>
+  <script src="js/data.js?v=20260623"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script defer src="js/app.js?v=20260621"></script>
+  <script defer src="js/app.js?v=20260623"></script>
 </body>
 </html>

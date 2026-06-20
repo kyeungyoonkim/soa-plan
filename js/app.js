@@ -801,10 +801,10 @@ let state;
         alert.innerHTML = `<strong>Exam FM 불합격</strong> — 8/6–17 재응시 · <strong>등록 마감 7/8 12AM</strong> (SOA 공식). P는 11월 권장 (9월은 너무 촉박).`;
       } else if (fmSt !== "passed" && fmDays >= 0 && fmDays <= 45) {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>Exam FM ${fmtDday(fmDays)}</strong> (6/11–22 window) — Path C: FM → 여름 VEE Micro → P <strong>11월</strong> (등록 9/30).`;
-      } else if (!isReqChecked("vee-econ") && (phase.id === "summer26" || phase.id === "pre")) {
+        alert.innerHTML = `<strong>Exam FM ${fmtDday(fmDays)}</strong> (6/11–22 window) — Path C: FM → 여름 VEE (Micro+Acct) → P <strong>11월</strong>.`;
+      } else if ((!isReqChecked("vee-econ") || !isReqChecked("vee-acct")) && (phase.id === "summer26" || phase.id === "pre")) {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>2026 여름:</strong> VEE Microeconomics 완료 · Exam P는 7월부터 본격 (350h) → <strong>11/4–15</strong> 응시 목표.`;
+        alert.innerHTML = `<strong>2026 여름:</strong> VEE Micro (Macro ✓) + Accounting & Finance · Exam P 7월부터 → <strong>11/4–15</strong>.`;
       } else if (!isReqChecked("vee-stats-check") && phase.id === "sem1") {
         alert.style.display = "block";
         alert.innerHTML = `<strong>VEE Math Statistics</strong> — Temple 담당자에게 Purdue 학점 면제 확인!`;
@@ -1244,7 +1244,9 @@ let state;
 
       const pri = [
         { id:"fm-jun20", text:"6월 FM window (6/11–22)", meta:fmtDday(daysUntil("2026-06-22")), highlight:true },
-        { id:"vee-econ", text:"VEE Microeconomics — 2026 여름", meta:"온라인", highlight:true },
+        { id:"vee-macro", text:"VEE Macro ✓ (완료)", meta:"Economics 1/2", highlight:false },
+        { id:"vee-econ", text:"VEE Microeconomics — 2026 여름", meta:"Economics 2/2", highlight:true },
+        { id:"vee-acct", text:"VEE Accounting & Finance — 2026 여름", meta:"온라인", highlight:true },
         { id:"prep-p", text:"Exam P 11월 대비 공부 (7월~)", meta:fmtDday(daysUntil("2026-11-15")), highlight:true },
         { id:"vee-stats-check", text:"VEE Stats — Temple 면제 확인", meta:"입학 직후" }
       ];
@@ -1529,7 +1531,7 @@ let state;
         el.innerHTML =
           row("Exam FM", 275) + row("Exam P", 275) + row("Exam PA", 1234) +
           `<div class="stat-sub" style="margin:0.35rem 0 0.2rem;font-size:0.72rem;color:var(--muted)">VEE · 모듈 · FAP · APC</div>` +
-          row("VEE Micro Econ", 92, " <span style='font-size:0.72rem;color:var(--accent2)'>(Stats Purdue 면제)</span>") +
+          row("VEE Econ + Acct", 184, " <span style='font-size:0.72rem;color:var(--accent2)'>(Stats Purdue 면제 · Macro 완료)</span>") +
           row("PAF + ASF + FAP + ATPA + APC", 4228) +
           `<div class="budget-row"><span><strong>ASA SOA 합계</strong></span><span style="color:var(--accent2)"><strong>${fmt(total)}</strong></span></div>`;
       }
@@ -1564,8 +1566,6 @@ let state;
     }
 
     function render() {
-      document.documentElement.setAttribute("data-theme", state.theme || "warm-dark");
-      document.querySelectorAll(".theme-btn").forEach(b => b.classList.toggle("active", b.dataset.theme === (state.theme||"warm-dark")));
       checklistFilter = state.checklistFilter || "all";
       renderDashboard();
       renderTimeline();
@@ -1590,15 +1590,6 @@ let state;
 
       document.getElementById("nav").addEventListener("click", e => {
         if (e.target.tagName === "BUTTON" && e.target.dataset.tab) switchTab(e.target.dataset.tab);
-      });
-
-      document.querySelectorAll(".theme-btn").forEach(btn => {
-        btn.onclick = () => {
-          state.theme = btn.dataset.theme;
-          document.documentElement.setAttribute("data-theme", state.theme);
-          document.querySelectorAll(".theme-btn").forEach(b => b.classList.toggle("active", b.dataset.theme === state.theme));
-          saveState(true);
-        };
       });
 
       document.getElementById("weeklyMemo").addEventListener("input", e => {
