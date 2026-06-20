@@ -1366,8 +1366,8 @@ let state;
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108) 기반 복습</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;
       } else if (getExamStatus("exam-pa") !== "passed") {
-        el.innerHTML = `<div><span class="hours-big">500h</span> <span class="stat-sub">Exam PA 권장 · AS 5108(SRM) 후</span></div>
-        <p class="stat-sub" style="margin-top:0.5rem">3학기 10월 목표. SRM UEC 완료 후 PA가 자연스럽게 연결.</p>`;
+        el.innerHTML = `<div><span class="hours-big">500h</span> <span class="stat-sub">Exam PA · <strong>2028년 4월</strong> (5108 후)</span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">5108(Fall Y2) 완료 → 1–3월 PA 집중 → 4/14–17 응시. 10월 PA는 5108과 같은 학기라 비추.</p>`;
       } else {
         el.innerHTML = `<p class="stat-sub">시험 3개 완료. UEC·모듈·FAP에 집중. <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('guide')">Temple 학위 요건 보기</span></p>`;
       }
