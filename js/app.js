@@ -600,7 +600,7 @@ let state;
       if (pct >= 80) return "거의 다 왔어! 마지막 스퍼트만.";
       if (pct >= 50) return "절반 넘었어. 이 속도면 충분해.";
       if (pct >= 25) return "기반이 쌓이고 있어. 꾸준히 가자.";
-      if (remaining <= 5) return "시작이 반이야. FM이 1순위!";
+      if (remaining <= 5) return "시작이 반이야. P가 1순위!";
       return "한 걸음씩. 오늘도 조금만.";
     }
 
@@ -759,7 +759,7 @@ let state;
 
       // Category bars
       const cats = [
-        { label:"시험 (FM·P·PA)", ids: EXAM_IDS, cls:"cat-exam" },
+        { label:"시험 (P·PA)", ids: EXAM_IDS, cls:"cat-exam" },
         { label:"VEE", ids: VEE_IDS, cls:"cat-vee" },
         { label:"UEC (FAM·SRM·ASTAM)", ids: UEC_IDS, cls:"cat-uec" },
         { label:"모듈 & FAP", ids: MOD_IDS, cls:"cat-module" },
@@ -794,17 +794,20 @@ let state;
 
       // Alert
       const alert = document.getElementById("urgentAlert");
-      const fmDays = daysUntil("2026-06-22");
-      const fmSt = getExamStatus("fm-jun20");
-      if (fmSt === "failed") {
+      const pDays = daysUntil("2026-09-21");
+      const pSt = getExamStatus("exam-p");
+      if (pSt === "failed") {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>Exam FM 불합격</strong> — 8/6–17 재응시 · <strong>등록 마감 7/8 12AM</strong> (SOA 공식). P는 11월 권장 (9월은 너무 촉박).`;
-      } else if (fmSt !== "passed" && fmDays >= 0 && fmDays <= 45) {
+        alert.innerHTML = `<strong>Exam P 불합격</strong> — 11월 fallback (등록 9/30) 또는 다음 window 준비.`;
+      } else if (pSt !== "passed" && pDays >= 0 && pDays <= 90) {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>Exam FM ${fmtDday(fmDays)}</strong> (6/11–22 window) — Path C: FM → 여름 VEE (Micro+Acct) → P <strong>11월</strong>.`;
+        alert.innerHTML = `<strong>Exam P ${fmtDday(pDays)}</strong> (9/10–21) — 등록 <strong>8/12</strong> · 7월 SAS · FM은 Fall <strong>5101 UEC</strong>.`;
       } else if ((!isReqChecked("vee-econ") || !isReqChecked("vee-acct")) && (phase.id === "summer26" || phase.id === "pre")) {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>2026 여름:</strong> VEE Micro (Macro ✓) + Accounting & Finance · Exam P 7월부터 → <strong>11/4–15</strong>.`;
+        alert.innerHTML = `<strong>2026 여름:</strong> VEE Micro+Acct · SAS 7월 · P 9월 본격 (등록 8/12).`;
+      } else if (!isReqChecked("sas-cert") && (phase.id === "summer26" || phase.id === "pre")) {
+        alert.style.display = "block";
+        alert.innerHTML = `<strong>SAS 7월 중</strong> — P·VEE와 주간 시간표 나눠서 준비.`;
       } else if (!isReqChecked("vee-stats-check") && phase.id === "sem1") {
         alert.style.display = "block";
         alert.innerHTML = `<strong>VEE Math Statistics</strong> — Temple 담당자에게 Purdue 학점 면제 확인!`;
@@ -1243,11 +1246,13 @@ let state;
       bindTaskList(document.getElementById("focusTasks"), "timeline");
 
       const pri = [
-        { id:"fm-jun20", text:"6월 FM window (6/11–22)", meta:fmtDday(daysUntil("2026-06-22")), highlight:true },
+        { id:"prep-p", text:"Exam P 9월 대비", meta:fmtDday(daysUntil("2026-09-21")), highlight:true },
+        { id:"sas-cert", text:"SAS 7월 중", meta:fmtDday(daysUntil("2026-07-15")), highlight:true },
+        { id:"exam-p", text:"9/10–21 Exam P", meta:"등록 8/12", highlight:true },
         { id:"vee-macro", text:"VEE Macro ✓ (완료)", meta:"Economics 1/2", highlight:false },
         { id:"vee-econ", text:"VEE Microeconomics — 2026 여름", meta:"Economics 2/2", highlight:true },
         { id:"vee-acct", text:"VEE Accounting & Finance — 2026 여름", meta:"온라인", highlight:true },
-        { id:"prep-p", text:"Exam P 11월 대비 공부 (7월~)", meta:fmtDday(daysUntil("2026-11-15")), highlight:true },
+        { id:"as-5101", text:"Fall AS 5101 → FM UEC", meta:"시험 대신 수업", highlight:false },
         { id:"vee-stats-check", text:"VEE Stats — Temple 면제 확인", meta:"입학 직후" }
       ];
       document.getElementById("priorityTasks").innerHTML = pri.map(timelineTaskLi).join("");
@@ -1369,31 +1374,15 @@ let state;
       const logged = getWeekStudyMinutes();
       const goal = state.weeklyStudyGoal || 600;
 
-      if (getExamStatus("fm-jun20") === "failed") {
-        el.innerHTML = `<div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:baseline">
-          <div><span class="hours-big">8/6–17</span> <span class="stat-sub">FM 재응시 · 등록 <strong>7/8 12AM</strong></span></div>
-          <div class="stat-sub">6월 불합격 → 8월 window. P는 <strong>11월</strong>로 (9월 등록 8/12는 FM 재응시와 겹침).</div>
-        </div>
-        <p class="stat-sub" style="margin-top:0.5rem">권장: 250h 기준 부족한 파트 집중 · CA Adapt EL 유지.</p>`;
-      } else if (getExamStatus("fm-jun20") !== "passed") {
-        const days = Math.max(1, daysUntil("2026-06-22"));
-        const weeks = Math.max(1, Math.ceil(days / 7));
-        const need = 250;
-        const perWeek = Math.ceil(need / weeks);
-        const perDay = Math.ceil(perWeek / 5);
-        el.innerHTML = `<div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:baseline">
-          <div><span class="hours-big">${need}h</span> <span class="stat-sub">FM 권장 총량</span></div>
-          <div class="stat-sub">D-${days} · 남은 ${weeks}주 → <strong style="color:var(--accent)">주 ${perWeek}h</strong> (하루 ~${perDay}h, 주5일)</div>
-        </div>
-        <p class="stat-sub" style="margin-top:0.5rem">추천: TIA FM(무료) + CA Adapt $195 · EL 6+ · <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('guide')">학습자료 상세 →</span></p>`;
-      } else if (getExamStatus("exam-p") === "failed") {
-        el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 다음 창 준비</span></div>
-        <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. 합격 시 체크리스트 업데이트.</p>`;
+      if (getExamStatus("exam-p") === "failed") {
+        el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 11월 또는 다음 window</span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. FM은 Fall 5101 UEC로 진행.</p>`;
       } else if (getExamStatus("exam-p") !== "passed") {
-        const days = Math.max(1, daysUntil("2026-11-15"));
+        const days = Math.max(1, daysUntil("2026-09-21"));
         const weeks = Math.max(1, Math.ceil(days / 7));
-        el.innerHTML = `<div><span class="hours-big">350h</span> <span class="stat-sub">Exam P 권장 · <strong>11/4–15</strong> 응시</span></div>
-        <p class="stat-sub" style="margin-top:0.5rem">D-${days} · 남은 ${weeks}주 · 등록 <strong>9/30 10AM</strong>. 7월부터 시작 → Fall AS 5001 병행. 9월 P는 한 달 공부로는 부족.</p>`;
+        const perWeek = Math.ceil(350 / weeks);
+        el.innerHTML = `<div><span class="hours-big">350h</span> <span class="stat-sub">Exam P · <strong>9/10–21</strong></span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">D-${days} · ${weeks}주 · 주 ~<strong>${perWeek}h</strong> · 등록 <strong>8/12</strong> · 7월 SAS·VEE 병행 · FM=5101 UEC.</p>`;
       } else if (getExamStatus("exam-pa") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108) 기반 복습</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;
@@ -1401,7 +1390,7 @@ let state;
         el.innerHTML = `<div><span class="hours-big">500h</span> <span class="stat-sub">Exam PA · <strong>2028년 4월</strong> (5108 후)</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">5108(Fall Y2) 완료 → 1–3월 PA 집중 → 4/14–17 응시. 10월 PA는 5108과 같은 학기라 비추.</p>`;
       } else {
-        el.innerHTML = `<p class="stat-sub">시험 3개 완료. UEC·모듈·FAP에 집중. <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('guide')">Temple 학위 요건 보기</span></p>`;
+        el.innerHTML = `<p class="stat-sub">SOA 시험(P·PA) 완료. FM UEC·모듈·FAP에 집중. <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('guide')">Temple 학위 요건 →</span></p>`;
       }
     }
 
@@ -1507,7 +1496,7 @@ let state;
         sum.innerHTML = `
           <table class="guide-table">
             <tbody>
-              <tr><td colspan="2" style="font-weight:600;color:var(--muted);font-size:0.75rem">시험 3개</td></tr>
+              <tr><td colspan="2" style="font-weight:600;color:var(--muted);font-size:0.75rem">시험 2개 (FM=5101 UEC)</td></tr>
               ${SOA_FEES.exams.map(x => `<tr><td>${x.name}</td><td>${fmt(x.fee)}</td></tr>`).join("")}
               <tr><td colspan="2" style="font-weight:600;color:var(--muted);font-size:0.75rem;padding-top:0.5rem">VEE (SOA 제출 $92/과목)</td></tr>
               ${SOA_FEES.vee.map(x => `<tr><td>${x.name}${x.optional ? " <span style='color:var(--accent2);font-size:0.75rem'>(" + x.optional + ")</span>" : ""}</td><td>${fmt(x.fee)}</td></tr>`).join("")}
@@ -1529,7 +1518,7 @@ let state;
       if (el) {
         const row = (name, fee, extra) => `<div class="budget-row"><span>${name}${extra || ""}</span><span>${fmt(fee)}</span></div>`;
         el.innerHTML =
-          row("Exam FM", 275) + row("Exam P", 275) + row("Exam PA", 1234) +
+          row("Exam P", 275) + row("Exam PA", 1234) +
           `<div class="stat-sub" style="margin:0.35rem 0 0.2rem;font-size:0.72rem;color:var(--muted)">VEE · 모듈 · FAP · APC</div>` +
           row("VEE Econ + Acct", 184, " <span style='font-size:0.72rem;color:var(--accent2)'>(Stats Purdue 면제 · Macro 완료)</span>") +
           row("PAF + ASF + FAP + ATPA + APC", 4228) +
