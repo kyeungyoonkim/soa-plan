@@ -905,31 +905,77 @@ let state;
         .replace(/"/g, "&quot;");
     }
 
+    function flashPlainText(text) {
+      return String(text || "")
+        .replace(/\$\$([\s\S]+?)\$\$/g, (_, tex) => tex.trim())
+        .replace(/\$([^$\n]+?)\$/g, (_, tex) => tex.trim());
+    }
+
+    function flashPlainHtml(text) {
+      return escapeHtml(flashPlainText(text)).replace(/ · /g, '<br><span class="flash-sep">·</span> ');
+    }
+
+    const KATEX_OPTS = { throwOnError: false, strict: "ignore", output: "htmlAndMathml", trust: false };
+
     function renderFlashHtml(text) {
-      if (!text) return "";
+      if (!text) return '<div class="flash-content"></div>';
       if (typeof katex === "undefined") {
-        return escapeHtml(text).replace(/ · /g, "<br>· ");
+        return `<div class="flash-content">${flashPlainHtml(text)}</div>`;
       }
       const parts = String(text).split(/(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$)/g);
-      return parts.map(part => {
+      const inner = parts.map(part => {
         if (part.startsWith("$$") && part.endsWith("$$")) {
           const tex = part.slice(2, -2).trim();
           try {
-            return katex.renderToString(tex, { displayMode: true, throwOnError: false });
+            return katex.renderToString(tex, { ...KATEX_OPTS, displayMode: true });
           } catch {
-            return escapeHtml(part);
+            return escapeHtml(tex);
           }
         }
         if (part.startsWith("$") && part.endsWith("$") && part.length > 2) {
           const tex = part.slice(1, -1).trim();
           try {
-            return katex.renderToString(tex, { displayMode: false, throwOnError: false });
+            return katex.renderToString(tex, { ...KATEX_OPTS, displayMode: false });
           } catch {
-            return escapeHtml(part);
+            return escapeHtml(tex);
           }
         }
-        return escapeHtml(part).replace(/ · /g, "<br>· ");
+        if (!part) return "";
+        return escapeHtml(part).replace(/ · /g, '<br><span class="flash-sep">·</span> ');
       }).join("");
+      return `<div class="flash-content">${inner}</div>`;
+    }
+
+    function updateFlashStudyCard() {
+      const deck = getActiveFlashDeck();
+      const cards = deck ? deck.cards || [] : [];
+      const studyEl = document.getElementById("flashCard");
+      const btns = document.getElementById("flashStudyBtns");
+      const metaEl = document.getElementById("flashMeta");
+      if (metaEl) {
+        metaEl.textContent = deck
+          ? `${deck.name} · 카드 ${cards.length}장 · ${state.flashStudyIndex + 1}/${cards.length || 1}`
+          : "카드 0장";
+      }
+      if (!studyEl) return;
+      if (!deck || !cards.length) {
+        studyEl.textContent = "덱을 선택하거나 카드를 추가하세요";
+        studyEl.classList.remove("back");
+        if (btns) btns.hidden = true;
+        return;
+      }
+      if (btns) btns.hidden = false;
+      const card = cards[state.flashStudyIndex];
+      const text = flashFlipped ? card.back : card.front;
+      studyEl.innerHTML = renderFlashHtml(text);
+      studyEl.classList.toggle("back", flashFlipped);
+    }
+
+    function persistFlashStudy(quiet) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      scheduleCloudSync();
+      updateFlashStudyCard();
+      if (!quiet) toast("저장됨");
     }
 
     function formatPomo(sec) {
@@ -1058,26 +1104,11 @@ let state;
       const deck = getActiveFlashDeck();
       const cards = deck ? deck.cards || [] : [];
       if (state.flashStudyIndex >= cards.length) state.flashStudyIndex = 0;
-      document.getElementById("flashMeta").textContent = deck
-        ? `${deck.name} · 카드 ${cards.length}장 · ${state.flashStudyIndex + 1}/${cards.length || 1}`
-        : "카드 0장";
-      const studyEl = document.getElementById("flashCard");
-      const btns = document.getElementById("flashStudyBtns");
-      if (!deck || !cards.length) {
-        studyEl.innerHTML = "덱을 선택하거나 카드를 추가하세요";
-        studyEl.classList.remove("back");
-        btns.hidden = true;
-      } else {
-        btns.hidden = false;
-        const card = cards[state.flashStudyIndex];
-        const text = flashFlipped ? card.back : card.front;
-        studyEl.innerHTML = renderFlashHtml(text);
-        studyEl.classList.toggle("back", flashFlipped);
-      }
+      updateFlashStudyCard();
       document.getElementById("flashCardList").innerHTML = deck
         ? cards.map(c => `
           <div class="flash-card-item">
-            <span>${renderFlashHtml(c.front)} → ${renderFlashHtml(c.back)}</span>
+            <span>${flashPlainHtml(c.front)} → ${flashPlainHtml(c.back)}</span>
             <button type="button" data-flash-del="${c.id}">삭제</button>
           </div>`).join("")
         : "";
@@ -1179,25 +1210,25 @@ let state;
         const deck = getActiveFlashDeck();
         if (!deck || !deck.cards?.length) return;
         flashFlipped = !flashFlipped;
-        renderFlashcards();
+        updateFlashStudyCard();
       };
       document.getElementById("btnFlashFlip").onclick = () => {
         flashFlipped = !flashFlipped;
-        renderFlashcards();
+        updateFlashStudyCard();
       };
       document.getElementById("btnFlashPrev").onclick = () => {
         const deck = getActiveFlashDeck();
         if (!deck?.cards?.length) return;
         state.flashStudyIndex = (state.flashStudyIndex - 1 + deck.cards.length) % deck.cards.length;
         flashFlipped = false;
-        saveState(true);
+        persistFlashStudy(true);
       };
       document.getElementById("btnFlashNext").onclick = () => {
         const deck = getActiveFlashDeck();
         if (!deck?.cards?.length) return;
         state.flashStudyIndex = (state.flashStudyIndex + 1) % deck.cards.length;
         flashFlipped = false;
-        saveState(true);
+        persistFlashStudy(true);
       };
 
       document.addEventListener("visibilitychange", () => {

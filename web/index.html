@@ -256,19 +256,45 @@
     .pomo-stats { font-size: 0.78rem; color: var(--muted); margin-top: 0.65rem; }
 
     .flash-study {
-      min-height: 8rem; padding: 1.1rem 1rem; border-radius: 12px;
+      min-height: 12rem; padding: 0; border-radius: 12px;
       background: var(--surface2); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center; text-align: center;
-      cursor: pointer; font-size: 0.95rem; line-height: 1.55; margin-bottom: 0.75rem;
-      overflow-x: auto;
+      display: flex; align-items: stretch; justify-content: center; text-align: center;
+      cursor: pointer; font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.75rem;
+      overflow: hidden;
     }
-    .flash-study .katex { font-size: 1.05em; }
-    .flash-study .katex-display { margin: 0.4rem 0; }
-    .flash-card-item .katex { font-size: 0.82em; }
+    .flash-content {
+      width: 100%; min-height: 12rem; padding: 1.15rem 1rem;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0.35rem; box-sizing: border-box;
+      font-family: "DM Sans", system-ui, sans-serif;
+      word-break: break-word; overflow-wrap: anywhere;
+    }
+    .flash-study .katex,
+    .flash-study .katex-display,
+    .flash-study .katex * {
+      color: inherit !important;
+    }
+    .flash-study .katex {
+      font-size: 1.02em;
+      line-height: 1.45;
+      max-width: 100%;
+    }
+    .flash-study .katex-display {
+      margin: 0.35rem 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      max-width: 100%;
+      padding: 0 0.15rem;
+    }
+    .flash-study .katex-display > .katex {
+      white-space: nowrap;
+    }
     .flash-study.back { color: var(--accent); }
     .flash-meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.55rem; }
     .flash-card-list { max-height: 10rem; overflow-y: auto; margin-top: 0.65rem; }
-    .flash-card-item { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+    .flash-card-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; line-height: 1.45; }
+    .flash-card-item span { flex: 1; min-width: 0; color: var(--muted); font-family: "DM Sans", system-ui, sans-serif; }
+    .flash-card-item .flash-sep { color: var(--accent); }
     .flash-card-item button { font: inherit; font-size: 0.72rem; border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 6px; padding: 0.15rem 0.4rem; cursor: pointer; }
 
     .career-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 0.65rem; }
@@ -986,8 +1012,8 @@
   <div class="toast" id="toast">저장됨</div>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
-  <script src="js/data.js?v=20260619"></script>
+  <script src="js/data.js?v=20260620"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script defer src="js/app.js?v=20260619"></script>
+  <script defer src="js/app.js?v=20260620"></script>
 </body>
 </html>
