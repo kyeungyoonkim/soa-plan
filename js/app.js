@@ -60,7 +60,7 @@ let state;
       const flash = resolveFlashFields(null);
       return {
         reqChecked:{}, timelineChecked:{}, templeChecked:{}, examStatus:{},
-        theme:"warm-dark", weeklyMemo:"", adminMemo:"",
+        weeklyMemo:"", adminMemo:"",
         studyLogs:[], checklistFilter:"all", schedule:[],
         weeklyStudyGoal:600, budgetSpent:0,
         flashDecks: flash.flashDecks,

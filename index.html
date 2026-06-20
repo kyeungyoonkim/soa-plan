@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="warm-dark">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,28 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif&display=swap" rel="stylesheet" />
   <style>
-    /* Warm Dark — default, low eye strain */
-    [data-theme="warm-dark"] {
-      --bg: #1c1a18;
-      --surface: #262320;
-      --surface2: #302c28;
-      --border: rgba(220,210,195,0.1);
-      --text: #ddd6cc;
-      --muted: #9a9288;
-      --accent: #7db892;
-      --accent-dim: rgba(125,184,146,0.15);
-      --accent2: #c9a962;
-      --accent2-dim: rgba(201,169,98,0.14);
-      --blue: #8eb4d4;
-      --purple: #b8a4d4;
-      --warn: #d4a574;
-      --warn-bg: rgba(212,165,116,0.1);
-      --warn-border: rgba(212,165,116,0.28);
-      --shadow: 0 8px 32px rgba(0,0,0,0.25);
-      --glow: rgba(125,184,146,0.08);
-    }
-    /* Warm Light — paper-like, easy on eyes */
-    [data-theme="warm-light"] {
+    :root {
+      --radius: 14px;
       --bg: #f3ede4;
       --surface: #faf7f2;
       --surface2: #efe9df;
@@ -48,8 +28,6 @@
       --shadow: 0 4px 20px rgba(60,50,30,0.08);
       --glow: rgba(77,138,101,0.06);
     }
-
-    :root { --radius: 14px; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: "DM Sans", system-ui, sans-serif;
@@ -57,7 +35,6 @@
       color: var(--text);
       min-height: 100vh;
       line-height: 1.55;
-      transition: background 0.3s, color 0.3s;
     }
     body::before {
       content: "";
@@ -70,15 +47,6 @@
     .eyebrow { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.35rem; }
     h1 { font-family: "Instrument Serif", Georgia, serif; font-size: clamp(1.85rem, 4.5vw, 2.5rem); font-weight: 400; line-height: 1.12; }
     .subtitle { color: var(--muted); font-size: 0.9rem; max-width: 36rem; margin-top: 0.35rem; }
-    .theme-btns { display: flex; gap: 0.4rem; }
-    .theme-btn {
-      font: inherit; font-size: 0.75rem; font-weight: 500;
-      padding: 0.45rem 0.75rem; border-radius: 999px;
-      border: 1px solid var(--border); background: var(--surface);
-      color: var(--muted); cursor: pointer; transition: 0.2s;
-    }
-    .theme-btn:hover { color: var(--text); }
-    .theme-btn.active { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
 
     .nav { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-bottom: 1.25rem; padding: 0.28rem; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; width: fit-content; }
     .nav button { font: inherit; font-size: 0.8rem; font-weight: 500; padding: 0.45rem 0.9rem; border: none; border-radius: 999px; background: transparent; color: var(--muted); cursor: pointer; transition: 0.2s; }
@@ -373,7 +341,7 @@
     .rec-tier.later { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
     .rec-links a { color: var(--accent); font-size: 0.78rem; margin-right: 0.5rem; }
     @media print {
-      .nav, .theme-btns, .filter-row, .btn-action, .toast, .footer-note, .auth-gate { display: none !important; }
+      .nav, .filter-row, .btn-action, .toast, .footer-note, .auth-gate { display: none !important; }
       .panel { display: block !important; page-break-inside: avoid; }
       body { background: #fff; color: #111; }
     }
@@ -439,10 +407,6 @@
         <h1>My ASA Plan</h1>
         <p class="subtitle">2026 FM → Path C → Temple → 2028 ASA · P 11월 · VEE Micro 2026 여름</p>
       </header>
-      <div class="theme-btns">
-        <button class="theme-btn active" data-theme="warm-dark">다크</button>
-        <button class="theme-btn" data-theme="warm-light">라이트</button>
-      </div>
     </div>
 
     <nav class="nav" id="nav">
@@ -1012,8 +976,8 @@
   <div class="toast" id="toast">저장됨</div>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
-  <script src="js/data.js?v=20260621"></script>
+  <script src="js/data.js?v=20260622"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script defer src="js/app.js?v=20260621"></script>
+  <script defer src="js/app.js?v=20260622"></script>
 </body>
 </html>

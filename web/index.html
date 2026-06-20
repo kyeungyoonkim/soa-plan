@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="warm-dark">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,28 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif&display=swap" rel="stylesheet" />
   <style>
-    /* Warm Dark — default, low eye strain */
-    [data-theme="warm-dark"] {
-      --bg: #1c1a18;
-      --surface: #262320;
-      --surface2: #302c28;
-      --border: rgba(220,210,195,0.1);
-      --text: #ddd6cc;
-      --muted: #9a9288;
-      --accent: #7db892;
-      --accent-dim: rgba(125,184,146,0.15);
-      --accent2: #c9a962;
-      --accent2-dim: rgba(201,169,98,0.14);
-      --blue: #8eb4d4;
-      --purple: #b8a4d4;
-      --warn: #d4a574;
-      --warn-bg: rgba(212,165,116,0.1);
-      --warn-border: rgba(212,165,116,0.28);
-      --shadow: 0 8px 32px rgba(0,0,0,0.25);
-      --glow: rgba(125,184,146,0.08);
-    }
-    /* Warm Light — paper-like, easy on eyes */
-    [data-theme="warm-light"] {
+    :root {
+      --radius: 14px;
       --bg: #f3ede4;
       --surface: #faf7f2;
       --surface2: #efe9df;
@@ -48,8 +28,6 @@
       --shadow: 0 4px 20px rgba(60,50,30,0.08);
       --glow: rgba(77,138,101,0.06);
     }
-
-    :root { --radius: 14px; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: "DM Sans", system-ui, sans-serif;
@@ -860,8 +838,8 @@
           <table class="guide-table">
             <thead><tr><th>VEE</th><th>추천 플랫폼</th><th>비고</th></tr></thead>
             <tbody>
-              <tr><td>Economics</td><td><a href="https://www.coachingactuaries.com/vee" target="_blank" rel="noopener" style="color:var(--accent)">Coaching Actuaries</a> · <a href="https://www.actexlearning.com/" target="_blank" rel="noopener" style="color:var(--accent)">ACTEX</a></td><td>SOA $92/과목 · CA 학생 할인</td></tr>
-              <tr><td>Accounting & Finance</td><td><a href="https://www.coachingactuaries.com/vee" target="_blank" rel="noopener" style="color:var(--accent)">Coaching Actuaries</a> · ACTEX</td><td>2026 여름 2개 병행</td></tr>
+              <tr><td>Microeconomics</td><td><a href="https://www.coachingactuaries.com/vee" target="_blank" rel="noopener" style="color:var(--accent)">Coaching Actuaries</a> · <a href="https://www.actexlearning.com/" target="_blank" rel="noopener" style="color:var(--accent)">ACTEX</a></td><td>SOA Economics VEE · $92 제출 · CA 학생 할인</td></tr>
+              <tr><td>Math Statistics</td><td>—</td><td>Purdue 학점 → Temple 면제 확인 (Acct/Fin 불필요)</td></tr>
               <tr><td>Math Statistics</td><td>Purdue 학점 → Temple 면제</td><td>입학 직후 FoxMS에 확인</td></tr>
             </tbody>
           </table>
@@ -878,7 +856,7 @@
         <ul class="tip-list">
           <li><strong>계산기:</strong> TI BA II Plus (~$50) — FM 필수 · Amazon/학교 서점</li>
           <li><strong>Adapt 목표:</strong> earned level 6+ (FM·P) · calibration exam 먼저</li>
-          <li><strong>VEE 여름:</strong> Econ+Acct 하루 2–3h · Stats는 Purdue 면제 확인</li>
+          <li><strong>VEE 여름:</strong> Microeconomics만 · Stats는 Purdue 면제 확인</li>
           <li><strong>재응시:</strong> Prometric 변경 $70 · SOA 시험비 전액 재납</li>
         </ul>
       </div>
@@ -925,7 +903,7 @@
           <div id="budgetRows"></div>
           <input type="number" id="budgetSpent" placeholder="지금까지 SOA·교재에 쓴 금액 ($)" min="0" style="margin-top:0.5rem;margin-bottom:0.3rem" />
           <div class="stat-sub">남은 예산: <strong id="budgetLeft" style="color:var(--accent)">—</strong> · <span id="budgetTotalLabel">—</span></div>
-          <div class="stat-sub" style="margin-top:0.25rem;font-size:0.75rem">재응시·학습자료(CA/TIA)는 별도 · Stats VEE 면제 시 −$92</div>
+          <div class="stat-sub" style="margin-top:0.25rem;font-size:0.75rem">재응시·학습자료(CA/TIA)는 별도 · Stats Purdue 면제 시 VEE $92만</div>
         </div>
         <div class="card">
           <div class="card-title">주간 공부 목표 (분)</div>
@@ -1012,8 +990,8 @@
   <div class="toast" id="toast">저장됨</div>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
-  <script src="js/data.js?v=20260620"></script>
+  <script src="js/data.js?v=20260621"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script defer src="js/app.js?v=20260620"></script>
+  <script defer src="js/app.js?v=20260621"></script>
 </body>
 </html>
