@@ -1404,45 +1404,25 @@ let state;
 
     function renderSchedule() {
       const grid = document.getElementById("scheduleGrid");
+      if (!grid) return;
       const today = new Date().getDay();
       grid.innerHTML = DAY_ORDER.map((d) => {
         const classes = (state.schedule || []).filter(c => c.day === d)
           .sort((a, b) => a.start.localeCompare(b.start));
         return `<div class="schedule-day${d === today ? " today" : ""}">
           <div class="day-name">${DAY_NAMES[d]}</div>
-          ${classes.length ? classes.map((c, idx) => {
-            const realIdx = state.schedule.indexOf(c);
-            return `<div class="class-chip" data-idx="${realIdx}" title="클릭하면 삭제">
+          ${classes.length ? classes.map(c => `<div class="class-chip">
               <div class="t">${c.name}</div>
               <div class="m">${c.start}-${c.end}${c.location ? " · " + c.location : ""}</div>
-            </div>`;
-          }).join("") : `<div style="font-size:0.7rem;color:var(--muted)">—</div>`}
+            </div>`).join("") : `<div style="font-size:0.7rem;color:var(--muted)">—</div>`}
         </div>`;
       }).join("");
 
-      grid.querySelectorAll(".class-chip").forEach(chip => {
-        chip.onclick = () => {
-          if (confirm("이 수업을 삭제할까요?")) {
-            state.schedule.splice(+chip.dataset.idx, 1);
-            saveState();
-          }
-        };
-      });
-
-      const sems = [...new Set((state.schedule||[]).map(c => c.semester).filter(Boolean))];
-      document.getElementById("scheduleSemester").textContent = sems[0] || "학기 미설정";
-
-      document.getElementById("gcalLinks").innerHTML = DDAYS.map(m =>
-        `<li><span>${m.label} <span style="color:var(--muted);font-size:0.75rem">${m.date}</span></span>
-        <a class="btn-action" href="${googleCalUrl(m.label, m.date, "ASA Plan")}" target="_blank" rel="noopener">+ Google</a></li>`
-      ).join("");
-
-      // Today classes on dashboard
-      const todayClasses = (state.schedule || []).filter(c => c.day === today)
-        .sort((a, b) => a.start.localeCompare(b.start));
-      document.getElementById("todayClasses").innerHTML = todayClasses.length
-        ? todayClasses.map(c => `<li><strong>${c.start}-${c.end}</strong> ${c.name}${c.location ? " @ " + c.location : ""}</li>`).join("")
-        : "<li>오늘 등록된 수업 없음 · <span style='cursor:pointer;color:var(--accent)' onclick=\"switchTab('schedule')\">시간표 추가</span></li>";
+      const semEl = document.getElementById("scheduleSemester");
+      if (semEl) {
+        const sems = [...new Set((state.schedule||[]).map(c => c.semester).filter(Boolean))];
+        semEl.textContent = sems[0] || "학기 미설정";
+      }
     }
 
     function renderStudyGoal() {
@@ -1602,30 +1582,6 @@ let state;
         saveState();
       };
 
-      document.getElementById("btnAddClass").onclick = () => {
-        const name = document.getElementById("clsName").value.trim();
-        if (!name) { toast("수업명 입력"); return; }
-        if (!state.schedule) state.schedule = [];
-        state.schedule.push({
-          name,
-          day: +document.getElementById("clsDay").value,
-          start: document.getElementById("clsStart").value || "10:00",
-          end: document.getElementById("clsEnd").value || "11:30",
-          location: document.getElementById("clsLoc").value.trim(),
-          semester: document.getElementById("clsSemester").value.trim() || "2026 Fall"
-        });
-        document.getElementById("clsName").value = "";
-        document.getElementById("clsLoc").value = "";
-        saveState();
-      };
-
-      document.getElementById("btnLoadFall2026").onclick = () => {
-        if (state.schedule && state.schedule.length && !confirm("기존 시간표를 2026 Fall 등록 시간표로 교체할까요?")) return;
-        state.schedule = applyFall2026Schedule();
-        saveState();
-        toast("2026 Fall 시간표 적용됨");
-      };
-
       document.getElementById("btnExportData").onclick = exportBackup;
       document.getElementById("btnConnectDrive").onclick = connectCloudFile;
       document.getElementById("btnDisconnectDrive").onclick = disconnectCloudFile;
@@ -1638,8 +1594,6 @@ let state;
 
       initCloudSync();
       bindCareerForm();
-
-      document.getElementById("btnExportIcs").onclick = downloadIcs;
 
       document.getElementById("studyGoalInput").addEventListener("change", e => {
         state.weeklyStudyGoal = Math.max(60, +e.target.value || 600);
