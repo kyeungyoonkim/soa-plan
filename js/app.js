@@ -601,7 +601,7 @@ let state;
       if (pct >= 50) return "절반 넘었어. 이 속도면 충분해.";
       if (pct >= 25) return "기반이 쌓이고 있어. 꾸준히 가자.";
       if (remaining <= 5) return "시작이 반이야. P가 1순위!";
-      return "한 걸음씩. 오늘도 조금만.";
+      return "오늘 걷지 않으면 내일 뛰어야 한다";
     }
 
     function getJourneyPct() {
@@ -763,24 +763,12 @@ let state;
         { label:"VEE", ids: VEE_IDS, cls:"cat-vee" },
         { label:"UEC (FAM·SRM·ASTAM)", ids: UEC_IDS, cls:"cat-uec" },
         { label:"모듈 & FAP", ids: MOD_IDS, cls:"cat-module" },
-        { label:"커리어", ids: CAREER_IDS, cls:"cat-career" },
-        { label:"행정", ids: ADMIN_IDS, cls:"cat-admin" }
+        { label:"커리어·행정", ids: [...CAREER_IDS, ...ADMIN_IDS], cls:"cat-career" }
       ];
       document.getElementById("catBars").innerHTML = cats.map(c => {
         const p = getProgress(c.ids);
         return `<div class="cat-bar-row"><div class="cat-bar-head"><span class="${c.cls}">${c.label}</span><span>${p.done}/${p.total} · ${p.left}개 남음</span></div><div class="progress-wrap"><div class="progress-bar" style="width:${p.pct}%"></div></div></div>`;
       }).join("");
-
-      // Rings
-      const ep = getProgress(EXAM_IDS), vp = getProgress(VEE_IDS), up = getProgress(UEC_IDS), mp = getProgress(MOD_IDS);
-      setRing("ringExam", ep.pct, ep.done+"/"+ep.total);
-      setRing("ringVee", vp.pct, vp.done+"/"+vp.total);
-      setRing("ringUec", up.pct, up.done+"/"+up.total);
-      setRing("ringMod", mp.pct, mp.done+"/"+mp.total);
-      document.getElementById("examLeft").textContent = ep.left + "개 남음 · " + (100-ep.pct) + "%";
-      document.getElementById("veeLeft").textContent = vp.left + "개 남음 · " + (100-vp.pct) + "%";
-      document.getElementById("uecLeft").textContent = up.left + "개 남음 · " + (100-up.pct) + "%";
-      document.getElementById("modLeft").textContent = mp.left + "개 남음 · " + (100-mp.pct) + "%";
 
       // Left todo
       const leftItems = REQUIREMENTS.filter(r => !isReqDone(r.id)).sort((a,b) => a.order - b.order).slice(0,5);
@@ -855,6 +843,8 @@ let state;
     function renderChecklist() {
       let items = [...REQUIREMENTS];
       if (checklistFilter === "left") items = items.filter(r => !isReqDone(r.id));
+      else if (checklistFilter === "career-admin" || checklistFilter === "career" || checklistFilter === "admin")
+        items = items.filter(r => r.cat === "career" || r.cat === "admin");
       else if (checklistFilter !== "all") items = items.filter(r => r.cat === checklistFilter);
 
       document.getElementById("checkBody").innerHTML = items.map(r => `
@@ -1371,8 +1361,7 @@ let state;
 
     function renderExamStudyGuide() {
       const el = document.getElementById("examStudyGuide");
-      const logged = getWeekStudyMinutes();
-      const goal = state.weeklyStudyGoal || 600;
+      if (!el) return;
 
       if (getExamStatus("exam-p") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 11월 또는 다음 window</span></div>
@@ -1437,25 +1426,12 @@ let state;
         <a class="btn-action" href="${googleCalUrl(m.label, m.date, "ASA Plan")}" target="_blank" rel="noopener">+ Google</a></li>`
       ).join("");
 
-      // Today classes on dashboard
-      const todayClasses = (state.schedule || []).filter(c => c.day === today)
-        .sort((a, b) => a.start.localeCompare(b.start));
-      document.getElementById("todayClasses").innerHTML = todayClasses.length
-        ? todayClasses.map(c => `<li><strong>${c.start}-${c.end}</strong> ${c.name}${c.location ? " @ " + c.location : ""}</li>`).join("")
-        : "<li>오늘 등록된 수업 없음 · <span style='cursor:pointer;color:var(--accent)' onclick=\"switchTab('schedule')\">시간표 추가</span></li>";
     }
 
     function renderStudyGoal() {
       const goal = state.weeklyStudyGoal || 600;
-      const done = getWeekStudyMinutes();
-      const pct = Math.min(100, Math.round(done / goal * 100));
-      document.getElementById("studyGoalMin").textContent = goal;
-      document.getElementById("studyWeekMin").textContent = done;
-      document.getElementById("studyGoalPct").textContent = pct + "%";
-      document.getElementById("studyGoalBar").style.width = pct + "%";
-      if (document.getElementById("studyGoalInput")) {
-        document.getElementById("studyGoalInput").value = goal;
-      }
+      const input = document.getElementById("studyGoalInput");
+      if (input) input.value = goal;
     }
 
     function renderStudyRecommendations() {
