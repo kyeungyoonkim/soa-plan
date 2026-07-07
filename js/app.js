@@ -734,6 +734,10 @@ let state;
       document.getElementById("phasePct").textContent = pp.pct + "%";
       document.getElementById("phaseBar").style.width = pp.pct + "%";
 
+      const tlAll = getTimelineProgress(getAllTimelineIds());
+      document.getElementById("timelineDashPct").textContent = tlAll.pct + "%";
+      document.getElementById("timelineDashBar").style.width = tlAll.pct + "%";
+
       const next = getNextMilestone();
       const days = daysUntil(next.date);
       document.getElementById("countdownDays").textContent = fmtDday(days);
@@ -752,6 +756,29 @@ let state;
           <div class="d-label">${d.label}${failed ? " · 불합격" : ""}</div>
           <div class="d-date">${d.date}</div></div>`;
       }).join("");
+
+      // Category bars
+      const cats = [
+        { label:"시험 (P·PA)", ids: EXAM_IDS, cls:"cat-exam" },
+        { label:"VEE", ids: VEE_IDS, cls:"cat-vee" },
+        { label:"UEC (FAM·SRM·ASTAM)", ids: UEC_IDS, cls:"cat-uec" },
+        { label:"모듈 & FAP", ids: MOD_IDS, cls:"cat-module" },
+        { label:"커리어·행정", ids: [...CAREER_IDS, ...ADMIN_IDS], cls:"cat-career" }
+      ];
+      document.getElementById("catBars").innerHTML = cats.map(c => {
+        const p = getProgress(c.ids);
+        return `<div class="cat-bar-row"><div class="cat-bar-head"><span class="${c.cls}">${c.label}</span><span>${p.done}/${p.total} · ${p.left}개 남음</span></div><div class="progress-wrap"><div class="progress-bar" style="width:${p.pct}%"></div></div></div>`;
+      }).join("");
+
+      // Left todo
+      const leftItems = REQUIREMENTS.filter(r => !isReqDone(r.id)).sort((a,b) => a.order - b.order).slice(0,5);
+      document.getElementById("leftTodo").innerHTML = leftItems.length
+        ? leftItems.map(r => {
+            const st = r.cat === "exam" ? getExamStatus(r.id) : null;
+            const tag = st === "failed" ? " · 불합격" : "";
+            return `<li><span>${r.name}${tag}</span><span class="when">${r.when}</span></li>`;
+          }).join("")
+        : "<li><span style='color:var(--accent)'>전부 완료!</span></li>";
 
       // Alert
       const alert = document.getElementById("urgentAlert");
@@ -1228,9 +1255,13 @@ let state;
     function renderTemple() {
       const tp = getTempleCreditProgress();
       setRing("ringTemple", tp.pct, tp.doneCr + "/" + tp.total);
+      const ringDash = document.getElementById("ringTempleDash");
+      if (ringDash) setRing("ringTempleDash", tp.pct, tp.doneCr + "/" + tp.total);
       document.getElementById("templeRemainingPct").textContent = tp.remainingPct;
       document.getElementById("templeCreditsDone").textContent = tp.doneCr;
       document.getElementById("templeBar").style.width = tp.pct + "%";
+      const dashSub = document.getElementById("templeDashSub");
+      if (dashSub) dashSub.textContent = tp.leftCr + " cr · " + tp.remainingPct + "% 남음";
 
       document.getElementById("templeCourseList").innerHTML = TEMPLE_COURSES.map(c => `
         <li class="${isTempleChecked(c.id)?"checked":""}" data-id="${c.id}">

@@ -435,7 +435,7 @@
           </div>
           <div class="journey-bar"><div class="journey-fill" id="journeyFill" style="width:0%"></div></div>
           <div class="journey-labels"><span>2026 P</span><span id="journeyMid">진행 중</span><span>2028 ASA</span></div>
-          <div class="motivate" id="motivateMsg">오늘 걷지 않으면 내일 뛰어야 한다</div>
+          <div class="motivate" id="motivateMsg">시작이 반이야. P부터 집중!</div>
         </div>
         <div class="card">
           <div class="card-title">다음 마일스톤</div>
@@ -451,6 +451,35 @@
         <div class="dday-grid" id="ddayGrid"></div>
       </div>
 
+      <div class="grid grid-2" style="margin-bottom:0.9rem">
+        <div class="card">
+          <div class="card-title">카테고리별 진행 (체크리스트)</div>
+          <div id="catBars"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Temple MS 학위</div>
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringTempleDash" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringTempleDashTxt">0/30</text></svg>
+            <div>
+              <div class="stat-sub">30 credits · Path C</div>
+              <div id="templeDashSub" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">30 cr · 100% 남음</div>
+              <div class="stat-sub" style="margin-top:0.35rem;cursor:pointer;color:var(--accent)" onclick="switchTab('checklist')">수강 과목 체크 →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-bottom:0.9rem">
+        <div class="card">
+          <div class="card-title">앞으로 할 것 (Top 5)</div>
+          <ul class="left-list" id="leftTodo"></ul>
+        </div>
+        <div class="card">
+          <div class="card-title">타임라인 (일정용)</div>
+          <div class="stat-sub">전체 타임라인 · <strong id="timelineDashPct" style="color:var(--accent)">0%</strong></div>
+          <div class="progress-wrap"><div class="progress-bar" id="timelineDashBar" style="width:0%"></div></div>
+          <div class="stat-sub" style="margin-top:0.4rem">체크해도 ASA %는 안 변함 · <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('timeline')">타임라인 →</span></div>
+        </div>
+      </div>
     </section>
 
     <!-- TIMELINE -->
