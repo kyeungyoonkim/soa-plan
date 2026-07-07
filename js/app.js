@@ -1577,11 +1577,6 @@ let state;
       const sems = [...new Set((state.schedule||[]).map(c => c.semester).filter(Boolean))];
       document.getElementById("scheduleSemester").textContent = sems[0] || "학기 미설정";
 
-      document.getElementById("gcalLinks").innerHTML = DDAYS.map(m =>
-        `<li><span>${m.label} <span style="color:var(--muted);font-size:0.75rem">${m.date}</span></span>
-        <a class="btn-action" href="${googleCalUrl(m.label, m.date, "ASA Plan")}" target="_blank" rel="noopener">+ Google</a></li>`
-      ).join("");
-
       // Today classes on dashboard
       const todayClasses = (state.schedule || []).filter(c => c.day === today)
         .sort((a, b) => a.start.localeCompare(b.start));
@@ -1783,8 +1778,6 @@ let state;
 
       initCloudSync();
       bindCareerForm();
-
-      document.getElementById("btnExportIcs").onclick = downloadIcs;
 
       document.getElementById("studyGoalInput").addEventListener("change", e => {
         state.weeklyStudyGoal = Math.max(60, +e.target.value || 600);
