@@ -218,10 +218,74 @@
     .cloud-status.ok { border-color: var(--accent); color: var(--accent); }
     .cloud-status.warn { border-color: var(--warn-border); color: var(--warn); }
 
-    .pomo-wrap { text-align: center; padding: 0.5rem 0; }
-    .pomo-time { font-family: "Instrument Serif", Georgia, serif; font-size: 3.2rem; line-height: 1; color: var(--accent2); }
-    .pomo-mode { font-size: 0.82rem; color: var(--muted); margin: 0.35rem 0 0.85rem; }
-    .pomo-stats { font-size: 0.78rem; color: var(--muted); margin-top: 0.65rem; }
+    .pomo-hero {
+      padding: 1.35rem 1.4rem 1.25rem;
+      background: linear-gradient(165deg, var(--surface) 0%, rgba(77,138,101,0.07) 100%);
+      border-color: rgba(77,138,101,0.22);
+      box-shadow: 0 8px 28px rgba(77,138,101,0.1);
+    }
+    .pomo-hero.running { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim), 0 8px 28px rgba(77,138,101,0.14); }
+    .pomo-hero.running.break-mode { border-color: var(--accent2); box-shadow: 0 0 0 3px var(--accent2-dim), 0 8px 28px rgba(160,125,46,0.12); }
+    .pomo-hero-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.85rem; }
+    .pomo-cheer {
+      font-size: 0.88rem; font-weight: 600; color: var(--accent);
+      padding: 0.45rem 0.75rem; background: var(--accent-dim); border-radius: 999px;
+      max-width: 16rem; line-height: 1.35; text-align: right;
+    }
+    .pomo-hero.running .pomo-cheer { animation: pomo-pulse 2s ease-in-out infinite; }
+    @keyframes pomo-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.72; } }
+    .pomo-ring-wrap { position: relative; width: min(220px, 58vw); margin: 0 auto 0.85rem; aspect-ratio: 1; }
+    .pomo-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .pomo-ring-bg { fill: none; stroke: var(--surface2); stroke-width: 7; }
+    .pomo-ring-fg { fill: none; stroke: var(--accent); stroke-width: 7; stroke-linecap: round; transition: stroke-dashoffset 0.35s, stroke 0.3s; }
+    .pomo-hero.break-mode .pomo-ring-fg { stroke: var(--accent2); }
+    .pomo-ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .pomo-time { font-family: "Instrument Serif", Georgia, serif; font-size: clamp(3rem, 10vw, 3.75rem); line-height: 1; color: var(--accent2); }
+    .pomo-hero.running .pomo-time { color: var(--accent); }
+    .pomo-hero.running.break-mode .pomo-time { color: var(--accent2); }
+    .pomo-mode-badge {
+      margin-top: 0.35rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 999px;
+      background: var(--surface2); color: var(--muted);
+    }
+    .pomo-hero.running .pomo-mode-badge { background: var(--accent-dim); color: var(--accent); }
+    .pomo-hero.running.break-mode .pomo-mode-badge { background: var(--accent2-dim); color: var(--accent2); }
+    .pomo-bar-wrap { height: 8px; background: var(--surface2); border-radius: 999px; overflow: hidden; margin-bottom: 0.85rem; }
+    .pomo-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 999px; transition: width 0.35s; }
+    .pomo-hero.break-mode .pomo-bar-fill { background: linear-gradient(90deg, var(--accent2), #c9a24a); }
+    .pomo-topic {
+      font-size: 1rem !important; padding: 0.7rem 0.9rem !important; margin-bottom: 0.75rem !important;
+      border-width: 2px !important; text-align: center;
+    }
+    .pomo-topic:focus { box-shadow: 0 0 0 3px var(--accent-dim); }
+    .pomo-actions { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
+    .btn-pomo-go {
+      font: inherit; font-size: 1.05rem; font-weight: 700;
+      padding: 0.75rem 2rem; border: none; border-radius: 999px;
+      background: var(--accent); color: #fff; cursor: pointer;
+      box-shadow: 0 4px 14px rgba(77,138,101,0.35);
+      transition: transform 0.15s, filter 0.15s;
+    }
+    .btn-pomo-go:hover { filter: brightness(1.06); transform: translateY(-1px); }
+    .pomo-achievement {
+      padding: 0.85rem 1rem; background: var(--surface2); border-radius: 12px; border: 1px solid var(--border);
+    }
+    .pomo-achievement-head { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; margin-bottom: 0.55rem; }
+    .pomo-achievement-head strong { font-family: "Instrument Serif", Georgia, serif; font-size: 1.35rem; color: var(--accent2); }
+    .pomo-dots { display: flex; gap: 0.45rem; justify-content: center; margin-bottom: 0.45rem; }
+    .pomo-dot {
+      width: 2rem; height: 2rem; border-radius: 50%;
+      border: 2px solid var(--border); background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; transition: 0.25s;
+    }
+    .pomo-dot.done { background: var(--accent); border-color: var(--accent); color: #fff; transform: scale(1.05); }
+    .pomo-dot.goal-met { box-shadow: 0 0 0 2px var(--accent2); }
+    .pomo-week { text-align: center; font-size: 0.78rem; color: var(--muted); }
+    .pomo-week strong { color: var(--accent); }
+    .pomo-settings { margin-top: 0.75rem; font-size: 0.8rem; color: var(--muted); }
+    .pomo-settings summary { cursor: pointer; user-select: none; }
+    .pomo-settings[open] summary { margin-bottom: 0.35rem; color: var(--text); }
 
     .flash-study {
       min-height: 12rem; padding: 0; border-radius: 12px;
@@ -411,9 +475,9 @@
       <button data-tab="home" class="active">대시보드</button>
       <button data-tab="timeline">타임라인</button>
       <button data-tab="checklist">체크리스트</button>
-      <button data-tab="focus">지금 집중</button>
-      <button data-tab="career">커리어</button>
+      <button data-tab="focus">집중</button>
       <button data-tab="guide">가이드 · 메모</button>
+      <button data-tab="career">커리어</button>
       <button data-tab="backup">백업</button>
     </nav>
 
@@ -571,26 +635,49 @@
       </div>
     </section>
     <section class="panel" id="panel-focus">
-      <div class="grid grid-2" style="margin-bottom:0.9rem">
-        <div class="card">
-          <div class="card-title">Pomodoro</div>
-          <div class="pomo-wrap">
+      <div class="card pomo-hero" id="pomoHero">
+        <div class="pomo-hero-top">
+          <div>
+            <div class="eyebrow" style="margin-bottom:0.25rem">한 덩어리씩 · ADHD 맞춤</div>
+            <div class="card-title" style="margin-bottom:0">뽀모도로</div>
+          </div>
+          <div class="pomo-cheer" id="pomoCheer">주제 적고 ▶ 시작 — 딱 이것만!</div>
+        </div>
+        <div class="pomo-ring-wrap">
+          <svg class="pomo-ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="pomo-ring-bg" cx="60" cy="60" r="54"/>
+            <circle class="pomo-ring-fg" id="pomoRingFg" cx="60" cy="60" r="54"/>
+          </svg>
+          <div class="pomo-ring-center">
             <div class="pomo-time" id="pomoDisplay">25:00</div>
-            <div class="pomo-mode" id="pomoModeLabel">집중</div>
-            <div class="btn-row" style="justify-content:center">
-              <button class="btn-action primary" id="btnPomoStart">시작</button>
-              <button class="btn-action" id="btnPomoPause" hidden>일시정지</button>
-              <button class="btn-action" id="btnPomoReset">리셋</button>
-            </div>
-            <input type="text" id="pomoTopic" placeholder="집중 주제 (예: FM annuity)" style="margin-top:0.65rem" />
-            <div class="pomo-stats">오늘 <strong id="pomoTodayCount" style="color:var(--accent)">0</strong>회 · 이번 주 <strong id="pomoWeekCount" style="color:var(--accent)">0</strong>회</div>
-            <div class="form-row" style="margin-top:0.55rem">
-              <div><label style="font-size:0.75rem;color:var(--muted)">집중(분)</label><input type="number" id="pomoWorkMin" min="5" max="90" value="25" /></div>
-              <div><label style="font-size:0.75rem;color:var(--muted)">휴식(분)</label><input type="number" id="pomoBreakMin" min="1" max="30" value="5" /></div>
-            </div>
+            <div class="pomo-mode-badge" id="pomoModeLabel">집중</div>
           </div>
         </div>
-        <div class="card">
+        <div class="pomo-bar-wrap"><div class="pomo-bar-fill" id="pomoProgressBar"></div></div>
+        <input type="text" id="pomoTopic" class="pomo-topic" placeholder="지금 할 한 가지 (예: FM Chap 3 annuity)" />
+        <div class="pomo-actions">
+          <button type="button" class="btn-pomo-go" id="btnPomoStart">▶ 시작</button>
+          <button type="button" class="btn-action" id="btnPomoPause" hidden>일시정지</button>
+          <button type="button" class="btn-action" id="btnPomoReset">리셋</button>
+        </div>
+        <div class="pomo-achievement">
+          <div class="pomo-achievement-head">
+            <span>오늘 <strong id="pomoTodayCount">0</strong> / <strong id="pomoDailyGoal">4</strong> 회</span>
+            <span><strong id="pomoTodayMin">0</strong>분 집중</span>
+          </div>
+          <div class="pomo-dots" id="pomoDots"></div>
+          <div class="pomo-week">이번 주 <strong id="pomoWeekCount">0</strong>회 완료</div>
+        </div>
+        <details class="pomo-settings">
+          <summary>집중 · 휴식 시간 설정</summary>
+          <div class="form-row" style="margin-top:0.5rem">
+            <div><label style="font-size:0.75rem;color:var(--muted)">집중(분)</label><input type="number" id="pomoWorkMin" min="5" max="90" value="25" /></div>
+            <div><label style="font-size:0.75rem;color:var(--muted)">휴식(분)</label><input type="number" id="pomoBreakMin" min="1" max="30" value="5" /></div>
+          </div>
+        </details>
+      </div>
+
+      <div class="card" style="margin-top:0.9rem">
           <div class="card-title">Flashcard</div>
           <div class="form-row">
             <div style="flex:1"><label style="font-size:0.75rem;color:var(--muted)">덱</label><select id="flashDeckSelect"></select></div>
@@ -612,10 +699,9 @@
           <button class="btn-action primary" id="btnFlashAddCard" style="margin-top:0.35rem">카드 추가</button>
           <p class="stat-sub" style="margin-top:0.45rem">수식은 <code>$E[X]=np$</code> 또는 <code>$$a_{\\overline{n}|}$$</code> 형식으로 입력하면 예쁘게 표시됩니다.</p>
           <div class="flash-card-list" id="flashCardList"></div>
-        </div>
       </div>
-      <div class="info-box" style="margin-bottom:0.9rem">아래 체크는 <strong>타임라인 일정용</strong> (ASA %와 별개)</div>
-      <div class="card"><div class="card-title" id="focusTitle">지금 집중</div><ul class="task-list" id="focusTasks"></ul></div>
+      <div class="info-box" style="margin-bottom:0.9rem;margin-top:0.9rem">아래 체크는 <strong>타임라인 일정용</strong> (ASA %와 별개)</div>
+      <div class="card"><div class="card-title" id="focusTitle">집중</div><ul class="task-list" id="focusTasks"></ul></div>
       <div class="card" style="margin-top:0.9rem"><div class="card-title">우선 확인</div><ul class="task-list" id="priorityTasks"></ul></div>
     </section>
 

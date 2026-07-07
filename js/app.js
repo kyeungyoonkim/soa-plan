@@ -886,8 +886,12 @@ let state;
     let pomoInterval = null;
     let pomoEndAt = null;
     let pomoRemainingSec = 0;
+    let pomoPhaseTotalSec = 0;
     let pomoMode = "work";
     let pomoRunning = false;
+    const POMO_RING_CIRC = 2 * Math.PI * 54;
+    const POMO_DAILY_GOAL = 4;
+    const POMO_WIN_MSGS = ["하나 끝! 🎯", "굿! 또 해냈어", "집중력 레벨업 ✓", "완료! momentum ↑", "잘했어 — 이 속도 유지"];
     let flashFlipped = false;
 
     function ensurePomodoro() {
@@ -981,6 +985,57 @@ let state;
       if (!quiet) toast("저장됨");
     }
 
+    function getPomoDailyGoal() {
+      ensurePomodoro();
+      return state.pomodoro.dailyGoal || POMO_DAILY_GOAL;
+    }
+
+    function getPomoPhaseTotalSec() {
+      ensurePomodoro();
+      return pomoMode === "work"
+        ? (state.pomodoro.workMin || 25) * 60
+        : (state.pomodoro.breakMin || 5) * 60;
+    }
+
+    function getPomoTodayMinutes() {
+      const today = new Date().toISOString().slice(0, 10);
+      return (state.studyLogs || [])
+        .filter(l => l.date === today && (l.topic || "").includes("Pomodoro"))
+        .reduce((s, l) => s + (+l.minutes || 0), 0);
+    }
+
+    function getPomoCheerMessage() {
+      ensurePomodoro();
+      const today = new Date().toISOString().slice(0, 10);
+      const count = state.pomodoro.lastDate === today ? (state.pomodoro.todayCount || 0) : 0;
+      const goal = getPomoDailyGoal();
+      if (pomoRunning && pomoMode === "break") return "쉬는 중 — 물 마시고 스트레칭";
+      if (pomoRunning) return "지금 이것만. 멈추지 마!";
+      if (count >= goal) return "오늘 목표 달성! 🔥 대단해";
+      if (count === 0) return "주제 적고 ▶ 시작 — 딱 이것만!";
+      if (count === 1) return "첫 판 클리어! momentum 시작";
+      if (count >= goal - 1) return `거의 다 왔어! ${goal - count}개만 더`;
+      return `${count}번 해냈어 — 계속 가자!`;
+    }
+
+    function renderPomoCheer() {
+      const el = document.getElementById("pomoCheer");
+      if (el) el.textContent = getPomoCheerMessage();
+    }
+
+    function renderPomoDots() {
+      const el = document.getElementById("pomoDots");
+      if (!el) return;
+      ensurePomodoro();
+      const today = new Date().toISOString().slice(0, 10);
+      const count = state.pomodoro.lastDate === today ? (state.pomodoro.todayCount || 0) : 0;
+      const goal = getPomoDailyGoal();
+      el.innerHTML = Array.from({ length: goal }, (_, i) => {
+        const done = i < count;
+        return `<div class="pomo-dot${done ? " done" : ""}">${done ? "✓" : ""}</div>`;
+      }).join("");
+    }
+
     function formatPomo(sec) {
       const m = Math.floor(sec / 60);
       const s = sec % 60;
@@ -1006,27 +1061,47 @@ let state;
     }
 
     function setPomoUi(left) {
+      const total = pomoPhaseTotalSec || getPomoPhaseTotalSec();
+      const pct = total ? Math.round((1 - left / total) * 100) : 0;
       document.getElementById("pomoDisplay").textContent = formatPomo(left);
       document.getElementById("pomoModeLabel").textContent = pomoMode === "work" ? "집중" : "휴식";
       document.getElementById("btnPomoStart").hidden = pomoRunning;
       document.getElementById("btnPomoPause").hidden = !pomoRunning;
+      const ring = document.getElementById("pomoRingFg");
+      if (ring) {
+        ring.style.strokeDasharray = POMO_RING_CIRC;
+        ring.style.strokeDashoffset = total ? POMO_RING_CIRC * (left / total) : POMO_RING_CIRC;
+      }
+      const bar = document.getElementById("pomoProgressBar");
+      if (bar) bar.style.width = pct + "%";
+      const hero = document.getElementById("pomoHero");
+      if (hero) {
+        hero.classList.toggle("running", pomoRunning);
+        hero.classList.toggle("break-mode", pomoMode === "break");
+      }
+      const startBtn = document.getElementById("btnPomoStart");
+      if (startBtn) startBtn.textContent = pomoRunning ? "진행 중…" : "▶ 시작";
+      renderPomoCheer();
     }
 
     function advancePomoPhase() {
       if (pomoMode === "work") {
-        completePomoWork();
+        const count = completePomoWork();
         pomoMode = "break";
-        pomoRemainingSec = (state.pomodoro.breakMin || 5) * 60;
-        toast("집중 완료 · 휴식 시작");
+        pomoPhaseTotalSec = (state.pomodoro.breakMin || 5) * 60;
+        pomoRemainingSec = pomoPhaseTotalSec;
+        toast(POMO_WIN_MSGS[(count - 1) % POMO_WIN_MSGS.length] + ` · 오늘 ${count}회`);
       } else {
         pomoMode = "work";
-        pomoRemainingSec = (state.pomodoro.workMin || 25) * 60;
-        toast("휴식 완료");
+        pomoPhaseTotalSec = (state.pomodoro.workMin || 25) * 60;
+        pomoRemainingSec = pomoPhaseTotalSec;
+        toast("휴식 끝 — 다음 집중 가자!");
       }
       pomoEndAt = null;
       pomoRunning = false;
       stopPomoTicker();
       setPomoUi(pomoRemainingSec);
+      renderPomodoroStats();
     }
 
     function updatePomoFromClock() {
@@ -1040,8 +1115,8 @@ let state;
 
     function resetPomoDisplay() {
       ensurePomodoro();
-      const work = +(state.pomodoro.workMin || 25);
-      pomoRemainingSec = work * 60;
+      pomoPhaseTotalSec = (state.pomodoro.workMin || 25) * 60;
+      pomoRemainingSec = pomoPhaseTotalSec;
       pomoMode = "work";
       pomoRunning = false;
       pomoEndAt = null;
@@ -1055,6 +1130,7 @@ let state;
       if (state.pomodoro.lastDate !== today) state.pomodoro.todayCount = 0;
       state.pomodoro.todayCount = (state.pomodoro.todayCount || 0) + 1;
       state.pomodoro.lastDate = today;
+      const count = state.pomodoro.todayCount;
       const workMin = +(state.pomodoro.workMin || 25);
       const topic = (document.getElementById("pomoTopic")?.value || state.pomodoro.topic || "").trim();
       state.pomodoro.topic = topic;
@@ -1068,13 +1144,20 @@ let state;
       scheduleCloudSync();
       renderPomodoroStats();
       renderStudyGoal();
+      return count;
     }
 
     function renderPomodoroStats() {
       ensurePomodoro();
       const today = new Date().toISOString().slice(0, 10);
       if (state.pomodoro.lastDate !== today) state.pomodoro.todayCount = 0;
-      document.getElementById("pomoTodayCount").textContent = state.pomodoro.todayCount || 0;
+      const count = state.pomodoro.todayCount || 0;
+      const goal = getPomoDailyGoal();
+      document.getElementById("pomoTodayCount").textContent = count;
+      const goalEl = document.getElementById("pomoDailyGoal");
+      if (goalEl) goalEl.textContent = goal;
+      const minEl = document.getElementById("pomoTodayMin");
+      if (minEl) minEl.textContent = getPomoTodayMinutes();
       const weekStart = getWeekStart();
       const weekCount = (state.studyLogs || []).filter(l => {
         if (!(l.topic || "").includes("Pomodoro")) return false;
@@ -1088,6 +1171,8 @@ let state;
       if (workEl && document.activeElement !== workEl) workEl.value = state.pomodoro.workMin || 25;
       if (breakEl && document.activeElement !== breakEl) breakEl.value = state.pomodoro.breakMin || 5;
       if (topicEl && document.activeElement !== topicEl) topicEl.value = state.pomodoro.topic || "";
+      renderPomoDots();
+      renderPomoCheer();
     }
 
     function renderPomodoro() {
@@ -1133,6 +1218,7 @@ let state;
         ensurePomodoro();
         if (!pomoRunning) {
           if (pomoRemainingSec === 0 && !pomoEndAt) resetPomoDisplay();
+          if (!pomoPhaseTotalSec) pomoPhaseTotalSec = getPomoPhaseTotalSec();
           const left = getPomoRemainingSec() || pomoRemainingSec;
           pomoEndAt = Date.now() + left * 1000;
           pomoRunning = true;
@@ -1150,7 +1236,7 @@ let state;
       document.getElementById("btnPomoReset").onclick = () => resetPomoDisplay();
       document.getElementById("pomoWorkMin").onchange = e => {
         state.pomodoro.workMin = Math.max(5, +e.target.value || 25);
-        if (!pomoRunning) resetPomoDisplay();
+        if (!pomoRunning && pomoMode === "work") resetPomoDisplay();
         saveState(true);
       };
       document.getElementById("pomoBreakMin").onchange = e => {
@@ -1241,7 +1327,7 @@ let state;
 
     function renderFocus() {
       const phase = getCurrentPhase();
-      document.getElementById("focusTitle").textContent = `지금 집중 · ${phase.name} (${phase.period})`;
+      document.getElementById("focusTitle").textContent = `집중 · ${phase.name} (${phase.period})`;
       document.getElementById("focusTasks").innerHTML = phase.tasks.map(timelineTaskLi).join("");
       bindTaskList(document.getElementById("focusTasks"), "timeline");
 
