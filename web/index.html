@@ -413,7 +413,6 @@
       <button data-tab="checklist">체크리스트</button>
       <button data-tab="focus">지금 집중</button>
       <button data-tab="career">커리어</button>
-      <button data-tab="schedule">시간표 · 캘린더</button>
       <button data-tab="guide">가이드 · 메모</button>
       <button data-tab="backup">백업</button>
     </nav>
@@ -512,20 +511,22 @@
       </div>
       <div class="link-note"><strong>SRM → PA:</strong> AS 5108(Fall Y2) 완료 → <strong>2028년 4월</strong> Exam PA · 10월은 5108과 겹침</div>
 
-      <div class="grid grid-2" style="margin-top:0.9rem">
-        <div class="card">
-          <div class="card-title">오늘 수업 · 이번 주</div>
-          <ul class="today-classes" id="todayClasses"></ul>
-          <div class="stat-sub" style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border)">
-            주당 수업 <strong id="weeklyClassHrs" style="color:var(--accent)">—</strong> · 공부 목표와 합쳐서 주간 시간 관리
-          </div>
+      <div class="card" style="margin-top:0.9rem">
+        <div class="card-title">주간 시간표 · <span id="scheduleSemester">2026 Fall</span></div>
+        <div class="btn-row" style="margin-bottom:0.65rem">
+          <button class="btn-action primary" id="btnLoadFall2026">2026 Fall 등록 시간표 적용</button>
         </div>
-        <div class="card">
-          <div class="card-title">이번 주 공부 목표</div>
-          <div class="stat-num" id="studyGoalPct" style="font-size:1.8rem">0%</div>
-          <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">600</span>분</div>
-          <div class="progress-wrap"><div class="progress-bar" id="studyGoalBar" style="width:0%"></div></div>
+        <div class="schedule-grid" id="scheduleGrid"></div>
+        <div class="stat-sub" style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border)">
+          주당 수업 <strong id="weeklyClassHrs" style="color:var(--accent)">—</strong> · 수업 클릭 시 삭제
         </div>
+      </div>
+
+      <div class="card" style="margin-top:0.9rem">
+        <div class="card-title">이번 주 공부 목표</div>
+        <div class="stat-num" id="studyGoalPct" style="font-size:1.8rem">0%</div>
+        <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">600</span>분</div>
+        <div class="progress-wrap"><div class="progress-bar" id="studyGoalBar" style="width:0%"></div></div>
       </div>
 
       <div class="card" style="margin-top:0.9rem" id="examStudyGuideCard">
@@ -664,51 +665,6 @@
       </div>
     </section>
 
-    <!-- SCHEDULE -->
-    <section class="panel" id="panel-schedule">
-      <div class="info-box">
-        <strong>2026 Fall 등록 시간표</strong> — AS 5101·5001·5104 + HCM 5101(수 18:00 온라인). BA 5687 토요일 대면은 제외(학기 3회 중 1회만).
-      </div>
-
-      <div class="grid grid-2">
-        <div class="card">
-          <div class="card-title">학교 시간표 추가</div>
-          <input type="text" id="clsName" placeholder="수업명 (예: AS 5108)" />
-          <div class="form-row">
-            <div><label style="font-size:0.75rem;color:var(--muted)">요일</label>
-              <select id="clsDay">
-                <option value="1">월</option><option value="2">화</option><option value="3">수</option>
-                <option value="4">목</option><option value="5">금</option><option value="6">토</option>
-              </select></div>
-            <div><label style="font-size:0.75rem;color:var(--muted)">장소</label>
-              <input type="text" id="clsLoc" placeholder="Wachman 101" /></div>
-          </div>
-          <div class="form-row">
-            <div><label style="font-size:0.75rem;color:var(--muted)">시작</label><input type="time" id="clsStart" value="10:00" /></div>
-            <div><label style="font-size:0.75rem;color:var(--muted)">끝</label><input type="time" id="clsEnd" value="11:30" /></div>
-          </div>
-          <input type="text" id="clsSemester" placeholder="학기 (예: 2026 Fall)" value="2026 Fall" />
-          <button class="btn-action primary" id="btnAddClass">수업 추가</button>
-        </div>
-        <div class="card">
-          <div class="card-title">Google Calendar 연동</div>
-          <p class="stat-sub" style="margin-bottom:0.65rem">한 번에 넣기: ICS 다운로드 → Google Calendar → 설정 → Import</p>
-          <div class="btn-row">
-            <button class="btn-action primary" id="btnExportIcs"> ICS 내보내기 (마일스톤+수업)</button>
-          </div>
-          <p class="stat-sub" style="margin:0.75rem 0 0.5rem">마일스톤 하나씩 추가:</p>
-          <ul class="gcal-list" id="gcalLinks"></ul>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:0.9rem">
-        <div class="card-title">주간 시간표 · <span id="scheduleSemester">2026 Fall</span></div>
-        <div class="btn-row" style="margin-bottom:0.65rem">
-          <button class="btn-action primary" id="btnLoadFall2026">2026 Fall 등록 시간표 적용</button>
-        </div>
-        <div class="schedule-grid" id="scheduleGrid"></div>
-      </div>
-    </section>
 
     <!-- GUIDE -->
     <section class="panel" id="panel-guide">
