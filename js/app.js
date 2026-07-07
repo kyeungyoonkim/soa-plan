@@ -601,7 +601,7 @@ let state;
       if (pct >= 50) return "절반 넘었어. 이 속도면 충분해.";
       if (pct >= 25) return "기반이 쌓이고 있어. 꾸준히 가자.";
       if (remaining <= 5) return "시작이 반이야. P가 1순위!";
-      return "한 걸음씩. 오늘도 조금만.";
+      return "오늘 걷지 않으면 내일 뛰어야 한다";
     }
 
     function getJourneyPct() {
@@ -801,13 +801,13 @@ let state;
         alert.innerHTML = `<strong>Exam P 불합격</strong> — 11월 fallback (등록 9/30) 또는 다음 window 준비.`;
       } else if (pSt !== "passed" && pDays >= 0 && pDays <= 90) {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>Exam P ${fmtDday(pDays)}</strong> (9/10–21) — 등록 <strong>8/12</strong> · 7월 SAS · FM은 Fall <strong>5101 UEC</strong>.`;
+        alert.innerHTML = `<strong>Exam P ${fmtDday(pDays)}</strong> (9/10–21) — 등록 <strong>8/12</strong> · SAS <strong>8/1</strong> · FM은 Fall <strong>5101 UEC</strong>.`;
       } else if ((!isReqChecked("vee-econ") || !isReqChecked("vee-acct")) && (phase.id === "summer26" || phase.id === "pre")) {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>2026 여름:</strong> VEE Micro+Acct · SAS 7월 · P 9월 본격 (등록 8/12).`;
+        alert.innerHTML = `<strong>2026 여름:</strong> VEE Micro+Acct · SAS <strong>8/1</strong> · P 9월 본격 (등록 8/12).`;
       } else if (!isReqChecked("sas-cert") && (phase.id === "summer26" || phase.id === "pre")) {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>SAS 7월 중</strong> — P·VEE와 주간 시간표 나눠서 준비.`;
+        alert.innerHTML = `<strong>SAS 8/1</strong> — P·VEE와 주간 시간표 나눠서 준비.`;
       } else if (!isReqChecked("vee-stats-check") && phase.id === "sem1") {
         alert.style.display = "block";
         alert.innerHTML = `<strong>VEE Math Statistics</strong> — Temple 담당자에게 Purdue 학점 면제 확인!`;
@@ -1247,7 +1247,7 @@ let state;
 
       const pri = [
         { id:"prep-p", text:"Exam P 9월 대비", meta:fmtDday(daysUntil("2026-09-21")), highlight:true },
-        { id:"sas-cert", text:"SAS 7월 중", meta:fmtDday(daysUntil("2026-07-15")), highlight:true },
+        { id:"sas-cert", text:"SAS 8/1", meta:fmtDday(daysUntil("2026-08-01")), highlight:true },
         { id:"exam-p", text:"9/10–21 Exam P", meta:"등록 8/12", highlight:true },
         { id:"vee-macro", text:"VEE Macro ✓ (완료)", meta:"Economics 1/2", highlight:false },
         { id:"vee-econ", text:"VEE Microeconomics — 2026 여름", meta:"Economics 2/2", highlight:true },
@@ -1382,7 +1382,7 @@ let state;
         const weeks = Math.max(1, Math.ceil(days / 7));
         const perWeek = Math.ceil(350 / weeks);
         el.innerHTML = `<div><span class="hours-big">350h</span> <span class="stat-sub">Exam P · <strong>9/10–21</strong></span></div>
-        <p class="stat-sub" style="margin-top:0.5rem">D-${days} · ${weeks}주 · 주 ~<strong>${perWeek}h</strong> · 등록 <strong>8/12</strong> · 7월 SAS·VEE 병행 · FM=5101 UEC.</p>`;
+        <p class="stat-sub" style="margin-top:0.5rem">D-${days} · ${weeks}주 · 주 ~<strong>${perWeek}h</strong> · 등록 <strong>8/12</strong> · 8/1 SAS·VEE 병행 · FM=5101 UEC.</p>`;
       } else if (getExamStatus("exam-pa") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108) 기반 복습</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;

@@ -33,11 +33,11 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const PHASES = [
       { id:"pre", name:"입학 전", period:"지금 ~ 2026년 8월", start:"2025-01-01", end:"2026-08-23", tasks:[
         { id:"prep-p", text:"Exam P 9월 대비 본격 공부", meta:"지금부터 · 350h", highlight:true },
-        { id:"sas-cert", text:"SAS 시험 7월 중", meta:"Base SAS 등 · 일정 확인", highlight:true },
+        { id:"sas-cert", text:"SAS 시험 8/1", meta:"Base SAS 등", highlight:true },
         { id:"exam-p", text:"9/10–21 Exam P 응시", meta:"등록 8/12 12AM", highlight:true }
       ]},
       { id:"summer26", name:"2026 여름", period:"2026년 7월 ~ 8월", start:"2026-07-01", end:"2026-08-31", tasks:[
-        { id:"sas-cert", text:"SAS 시험 7월 중", meta:"7월 집중", highlight:true },
+        { id:"sas-cert", text:"SAS 시험 8/1", meta:"8/1 응시", highlight:true },
         { id:"vee-macro", text:"VEE Macroeconomics ✓", meta:"Economics VEE · 이미 완료" },
         { id:"vee-econ", text:"VEE Microeconomics 완료", meta:"Economics VEE 마무리", highlight:true },
         { id:"vee-acct", text:"VEE Accounting & Finance 완료", meta:"온라인", highlight:true },
@@ -88,7 +88,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"as-5101", cat:"uec", name:"Exam FM", method:"AS 5101 UEC · SOA FM 시험 안 봄", when:"Fall Y1", order:0 },
       { id:"exam-p", cat:"exam", name:"Exam P", method:"9/10–21 응시 (등록 8/12)", when:"2026 여름", order:4 },
       { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2028년 4/14–17 (5108 완료 후)", when:"졸업 후", order:11 },
-      { id:"sas-cert", cat:"career", name:"SAS Certification", method:"7월 중 응시 (Base SAS 등)", when:"2026 여름", order:19 },
+      { id:"sas-cert", cat:"career", name:"SAS Certification", method:"8/1 응시 (Base SAS 등)", when:"2026 여름", order:19 },
       { id:"vee-stats-check", cat:"vee", name:"VEE Math Statistics", method:"Purdue 학점 Temple 면제 확인", when:"1학기", order:1 },
       { id:"vee-macro", cat:"vee", name:"VEE Macroeconomics", method:"이미 수강 완료 (Economics VEE 1/2)", when:"완료", order:2 },
       { id:"vee-econ", cat:"vee", name:"VEE Microeconomics", method:"2026 여름 · Macro 완료 → Micro만", when:"2026 여름", order:3 },
@@ -120,7 +120,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     ];
 
     const DDAYS = [
-      { date:"2026-07-15", label:"SAS 시험 (7월 중)", taskId:"sas-cert" },
+      { date:"2026-08-01", label:"SAS 시험 (8/1)", taskId:"sas-cert" },
       { date:"2026-08-12", label:"Exam P 등록 마감 (9월)", taskId:"exam-p" },
       { date:"2026-08-24", label:"Temple 입학", taskId:"oncampus-job" },
       { date:"2026-09-21", label:"Exam P (9월 window)", taskId:"exam-p" },
@@ -214,7 +214,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         pick: "TIA P (무료) + CA Adapt",
         cost: "~$195",
         costDetail: "Adapt only · 8/12 등록 마감",
-        plan: "① 지금부터 TIA P ② Adapt EL 6+ ③ 9/10–21 응시 · 7월 SAS와 병행 시 주간 시간표 필수",
+        plan: "① 지금부터 TIA P ② Adapt EL 6+ ③ 9/10–21 응시 · 8/1 SAS와 병행 시 주간 시간표 필수",
         links: [
           { text: "TIA P", url: "https://www.theinfiniteactuary.com/exam-p/" },
           { text: "CA Adapt P", url: "https://www.coachingactuaries.com/exam-p/pricing" }
@@ -222,12 +222,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         alt: "CA Learn+Practice P — 학생 ~$216"
       },
       {
-        when: "2026년 7월 · SAS",
-        tier: "best", tierLabel: "7월",
+        when: "2026년 8/1 · SAS",
+        tier: "best", tierLabel: "8/1",
         pick: "SAS Base Programming Specialist",
         cost: "SAS 공식 요금",
-        costDetail: "7월 중 시험 · P·VEE와 겹침 주의",
-        plan: "SAS 공식 prep → 7월 중 Prometric/Pearson 일정 잡기 · 인턴·분석 직무에 유리",
+        costDetail: "8/1 시험 · P·VEE와 겹침 주의",
+        plan: "SAS 공식 prep → 8/1 Prometric/Pearson 응시 · 인턴·분석 직무에 유리",
         links: [
           { text: "SAS Certification", url: "https://www.sas.com/en_us/certification.html" }
         ],
@@ -293,7 +293,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     }
 
     const EXAM_DEADLINES = [
-      { exam:"Exam P (9월 · 목표)", examDate:"2026-09-10", examEnd:"2026-09-21", regDeadline:"2026-08-12", note:"등록 8/12 12AM · SAS·VEE와 7–8월 병행" },
+      { exam:"Exam P (9월 · 목표)", examDate:"2026-09-10", examEnd:"2026-09-21", regDeadline:"2026-08-12", note:"등록 8/12 12AM · SAS 8/1·VEE와 7–8월 병행" },
       { exam:"Exam P (11월 · fallback)", examDate:"2026-11-04", examEnd:"2026-11-15", regDeadline:"2026-09-30", note:"9월 불합격 시" },
       { exam:"Exam FM", examDate:"2026-08-24", examEnd:"2026-12-15", regDeadline:null, note:"SOA 시험 안 봄 · AS 5101 UEC (Fall Y1)" },
       { exam:"Exam PA (4월 · 권장)", examDate:"2028-04-14", examEnd:"2028-04-17", regDeadline:"2028-03-09", note:"5108(Fall Y2) 완료 후" },
@@ -310,8 +310,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const STUDY_HOURS = [
       { exam:"Exam FM (UEC)", min:0, max:0, typical:0, plan:"AS 5101 수업", tips:"SOA FM 시험 없음 · 5101 B- 이상 · 수업+숙제로 대체" },
-      { exam:"Exam P", min:300, max:400, typical:350, plan:"9월 · 지금부터", tips:"7월 SAS·VEE와 겹침 · 8/12 등록 · TIA+Adapt EL 6+" },
-      { exam:"SAS Certification", min:40, max:80, typical:60, plan:"7월 중", tips:"Base SAS prep · P와 주간 시간 나누기" },
+      { exam:"Exam P", min:300, max:400, typical:350, plan:"9월 · 지금부터", tips:"8/1 SAS·VEE와 겹침 · 8/12 등록 · TIA+Adapt EL 6+" },
+      { exam:"SAS Certification", min:40, max:80, typical:60, plan:"8/1", tips:"Base SAS prep · P와 주간 시간 나누기" },
       { exam:"Exam PA", min:400, max:600, typical:500, plan:"5108 후 · 4월", tips:"500h · 5108 끝난 뒤 1–3월 집중. 10월 PA는 5108과 겹침." },
       { exam:"UEC (FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"별도 SOA 시험 없음. 수업 성적(B- 이상 등) 요건 확인." },
       { exam:"PAF / ASF / FAP", min:20, max:40, typical:30, plan:"학기별 e-Learning", tips:"모듈당 대략 20~40시간. deadline 미리 확인." }
