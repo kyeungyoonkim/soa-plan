@@ -3,29 +3,31 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const TEMPLE_TOTAL_CREDITS = 30;
 
     const TEMPLE_COURSES = [
-      { id:"tc-5001", name:"AS 5001 Actuarial Probability", credits:3, group:"Elective (1 of 2) · 2026 Fall", soa:"Exam P prep · UEC 아님" },
       { id:"tc-5101", name:"AS 5101 Theory of Interest", credits:3, group:"Core · 2026 Fall", soa:"FM UEC" },
       { id:"tc-5102", name:"AS 5102 Long-Term Actuarial Modeling", credits:3, group:"Core", soa:"FAM UEC" },
       { id:"tc-5104", name:"AS 5104 Short-Term Actuarial Modeling", credits:3, group:"Core · 2026 Fall", soa:"FAM UEC" },
       { id:"tc-5108", name:"AS 5108 Actuarial Analytics", credits:3, group:"Core", soa:"SRM UEC" },
       { id:"tc-rmi5051", name:"RMI 5051 Managing Risk", credits:3, group:"Core", soa:"—" },
       { id:"tc-ba5687", name:"BA 5687 MS Professional Development", credits:0, group:"Core (0 cr · 대부분 온라인)", soa:"0 cr" },
-      { id:"tc-sel-rmi", name:"Selective: RMI 5101 or RMI 5104", credits:3, group:"Selective (1 of)", soa:"—" },
+      { id:"tc-rmi5104", name:"RMI 5104 Property & Liability", credits:3, group:"Selective · 2026 Fall", soa:"—" },
       { id:"tc-sel-1", name:"Selective: AS 5103 / 5114 / 5118 / 5190", credits:3, group:"Selective (1 of 2)", soa:"5114=ASTAM" },
       { id:"tc-sel-2", name:"Selective: AS 5103 / 5114 / 5118 / 5190", credits:3, group:"Selective (2 of 2)", soa:"—" },
-      { id:"tc-hcm5101", name:"HCM 5101 Health Systems Organization", credits:3, group:"Elective (2 of 2) · 2026 Fall", soa:"Non-Fox elective" }
+      { id:"tc-hcm5101", name:"HCM 5101 Health Systems Organization", credits:3, group:"Elective (1 of 2) · 2026 Fall", soa:"Non-Fox elective" },
+      { id:"tc-elec-2", name:"Elective (추가 1과목)", credits:3, group:"Elective (2 of 2)", soa:"AS 5001 대신" }
     ];
 
     // 2026 Fall 등록 시간표 (BA 5687 토요일 제외 — 학기 3회 중 1회만 대면)
+    // AS 5001 미수강 · RMI 5104 월수 11:00–12:15 온라인
     const DEFAULT_FALL_2026_SCHEDULE = [
       { name:"AS 5101 Theory of Interest", day:1, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
       { name:"AS 5101 Theory of Interest", day:3, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
-      { name:"AS 5001 Actuarial Probability", day:1, start:"11:00", end:"12:20", location:"", semester:"2026 Fall" },
-      { name:"AS 5001 Actuarial Probability", day:3, start:"11:00", end:"12:20", location:"", semester:"2026 Fall" },
+      { name:"RMI 5104 Property & Liability", day:1, start:"11:00", end:"12:15", location:"온라인", semester:"2026 Fall" },
+      { name:"RMI 5104 Property & Liability", day:3, start:"11:00", end:"12:15", location:"온라인", semester:"2026 Fall" },
       { name:"AS 5104 Short-Term Modeling", day:2, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
       { name:"AS 5104 Short-Term Modeling", day:4, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
       { name:"HCM 5101 Health Systems", day:3, start:"18:00", end:"20:30", location:"온라인", semester:"2026 Fall" }
     ];
+    const FALL_2026_SCHEDULE_VERSION = 2;
     const CIRC = 2 * Math.PI * 30;
     const JOURNEY_START = "2026-01-01";
     const JOURNEY_END = "2028-06-01";
@@ -47,7 +49,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ]},
       { id:"sem1", name:"1학기 (Fall Y1)", period:"2026년 8/24 ~ 12/15", start:"2026-08-24", end:"2026-12-15", tasks:[
         { id:"as-5101", text:"AS 5101 → FM UEC", meta:"시험 대신 수업 · B- 이상", highlight:true },
-        { id:"as-5001", text:"AS 5001 Actuarial Probability", meta:"Elective · P 복습", highlight:true },
+        { id:"rmi-5104", text:"RMI 5104 Property & Liability", meta:"Selective · 월수 온라인", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 바로 지원", meta:"입학 즉시" },
         { id:"vee-stats-check", text:"VEE Math Statistics — Purdue 학점 Temple 면제 확인", meta:"입학 직후!", highlight:true },
         { id:"intern-fall", text:"가을 계리사 인턴 지원", meta:"커리어" },
@@ -252,7 +254,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         pick: "AS 5101 Theory of Interest",
         cost: "$0 추가",
         costDetail: "SOA FM 시험 면제 · tuition 포함",
-        plan: "5101 수업 + B- 이상 → FM UEC · 5001/5104와 병행 · SOA FM 시험 등록 불필요",
+        plan: "5101 수업 + B- 이상 → FM UEC · 5104/RMI 5104와 병행 · SOA FM 시험 등록 불필요",
         links: [
           { text: "Temple Canvas", url: "https://canvas.temple.edu/" }
         ],

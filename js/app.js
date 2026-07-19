@@ -203,8 +203,9 @@ let state;
     }
 
     function withDefaultSchedule(st) {
-      if ((st.schedule || []).length === 0) {
-        return { ...st, schedule: applyFall2026Schedule() };
+      const ver = st.fallScheduleVersion || 0;
+      if ((st.schedule || []).length === 0 || ver < FALL_2026_SCHEDULE_VERSION) {
+        return { ...st, schedule: applyFall2026Schedule(), fallScheduleVersion: FALL_2026_SCHEDULE_VERSION };
       }
       return st;
     }
@@ -1853,6 +1854,8 @@ let state;
     function initApp() {
       state = loadState();
       checklistFilter = state.checklistFilter || "all";
+      // Persist auto-migrated Fall 2026 schedule version
+      saveState(true);
 
       document.getElementById("nav").addEventListener("click", e => {
         if (e.target.tagName === "BUTTON" && e.target.dataset.tab) switchTab(e.target.dataset.tab);
@@ -1899,6 +1902,7 @@ let state;
       document.getElementById("btnLoadFall2026").onclick = () => {
         if (state.schedule && state.schedule.length && !confirm("기존 시간표를 2026 Fall 등록 시간표로 교체할까요?")) return;
         state.schedule = applyFall2026Schedule();
+        state.fallScheduleVersion = FALL_2026_SCHEDULE_VERSION;
         saveState();
         toast("2026 Fall 시간표 적용됨");
       };
