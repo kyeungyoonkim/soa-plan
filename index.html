@@ -318,48 +318,6 @@
     .pomo-settings summary { cursor: pointer; user-select: none; }
     .pomo-settings[open] summary { margin-bottom: 0.35rem; color: var(--text); }
 
-    .flash-study {
-      min-height: 12rem; padding: 0; border-radius: 12px;
-      background: var(--surface2); border: 1px solid var(--border);
-      display: flex; align-items: stretch; justify-content: center; text-align: center;
-      cursor: pointer; font-size: 0.95rem; line-height: 1.6; margin-bottom: 0.75rem;
-      overflow: hidden;
-    }
-    .flash-content {
-      width: 100%; min-height: 12rem; padding: 1.15rem 1rem;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 0.35rem; box-sizing: border-box;
-      font-family: "DM Sans", system-ui, sans-serif;
-      word-break: break-word; overflow-wrap: anywhere;
-    }
-    .flash-study .katex,
-    .flash-study .katex-display,
-    .flash-study .katex * {
-      color: inherit !important;
-    }
-    .flash-study .katex {
-      font-size: 1.02em;
-      line-height: 1.45;
-      max-width: 100%;
-    }
-    .flash-study .katex-display {
-      margin: 0.35rem 0;
-      overflow-x: auto;
-      overflow-y: hidden;
-      max-width: 100%;
-      padding: 0 0.15rem;
-    }
-    .flash-study .katex-display > .katex {
-      white-space: nowrap;
-    }
-    .flash-study.back { color: var(--accent); }
-    .flash-meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.55rem; }
-    .flash-card-list { max-height: 10rem; overflow-y: auto; margin-top: 0.65rem; }
-    .flash-card-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; line-height: 1.45; }
-    .flash-card-item span { flex: 1; min-width: 0; color: var(--muted); font-family: "DM Sans", system-ui, sans-serif; }
-    .flash-card-item .flash-sep { color: var(--accent); }
-    .flash-card-item button { font: inherit; font-size: 0.72rem; border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 6px; padding: 0.15rem 0.4rem; cursor: pointer; }
-
     .career-board { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 0.65rem; }
     .career-col { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.75rem; min-height: 140px; }
     .career-col-title { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
@@ -723,29 +681,6 @@
         </details>
       </div>
 
-      <div class="card" style="margin-top:0.9rem">
-          <div class="card-title">Flashcard</div>
-          <div class="form-row">
-            <div style="flex:1"><label style="font-size:0.75rem;color:var(--muted)">덱</label><select id="flashDeckSelect"></select></div>
-            <div style="flex:1"><label style="font-size:0.75rem;color:var(--muted)">새 덱</label><input type="text" id="flashNewDeck" placeholder="Exam FM" /></div>
-          </div>
-          <button class="btn-action" id="btnFlashAddDeck" style="margin-top:0.35rem">덱 추가</button>
-          <button class="btn-action" id="btnFlashLoadDefaults" style="margin-top:0.35rem">기본 FM·P 덱 추가</button>
-          <div class="flash-meta" id="flashMeta">카드 0장</div>
-          <div class="flash-study" id="flashCard">덱을 선택하거나 카드를 추가하세요</div>
-          <div class="btn-row" id="flashStudyBtns" hidden>
-            <button class="btn-action" id="btnFlashPrev">이전</button>
-            <button class="btn-action primary" id="btnFlashFlip">뒤집기</button>
-            <button class="btn-action" id="btnFlashNext">다음</button>
-          </div>
-          <div class="form-row" style="margin-top:0.55rem">
-            <div><input type="text" id="flashFront" placeholder="앞 (질문/개념)" /></div>
-            <div><input type="text" id="flashBack" placeholder="뒤 (답/공식)" /></div>
-          </div>
-          <button class="btn-action primary" id="btnFlashAddCard" style="margin-top:0.35rem">카드 추가</button>
-          <p class="stat-sub" style="margin-top:0.45rem">수식은 <code>$E[X]=np$</code> 또는 <code>$$a_{\\overline{n}|}$$</code> 형식으로 입력하면 예쁘게 표시됩니다.</p>
-          <div class="flash-card-list" id="flashCardList"></div>
-      </div>
       <div class="info-box" style="margin-bottom:0.9rem;margin-top:0.9rem">아래 체크는 <strong>타임라인 일정용</strong> (ASA %와 별개)</div>
       <div class="card"><div class="card-title" id="focusTitle">공부모드</div><ul class="task-list" id="focusTasks"></ul></div>
       <div class="card" style="margin-top:0.9rem"><div class="card-title">우선 확인</div><ul class="task-list" id="priorityTasks"></ul></div>
@@ -1101,9 +1036,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
-  <script src="js/data.js?v=20260719f"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script defer src="js/app.js?v=20260719f"></script>
+  <script src="js/data.js?v=20260719g"></script>
+  <script defer src="js/app.js?v=20260719g"></script>
 </body>
 </html>

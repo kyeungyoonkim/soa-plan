@@ -24,49 +24,12 @@
 let state;
     let checklistFilter = "all";
 
-    function cloneDefaultFlashDecks() {
-      return DEFAULT_FLASH_DECKS.map(d => ({
-        id: d.id,
-        name: d.name,
-        cards: d.cards.map(c => ({ ...c }))
-      }));
-    }
-
-    function mergeDefaultDeckContent(decks) {
-      const out = Array.isArray(decks) ? decks.map(d => ({ ...d, cards: [...(d.cards || [])] })) : [];
-      DEFAULT_FLASH_DECKS.forEach(def => {
-        const idx = out.findIndex(d => d.id === def.id);
-        const fresh = { id: def.id, name: def.name, cards: def.cards.map(c => ({ ...c })) };
-        if (idx >= 0) out[idx] = fresh;
-        else out.push(fresh);
-      });
-      return out.length ? out : cloneDefaultFlashDecks();
-    }
-
-    function resolveFlashFields(p) {
-      const hasDecks = p && p.flashDecks && p.flashDecks.length > 0;
-      const needsUpgrade = !p || p.flashDeckVersion !== FLASH_DECK_VERSION;
-      let flashDecks = hasDecks ? p.flashDecks : cloneDefaultFlashDecks();
-      if (needsUpgrade) flashDecks = mergeDefaultDeckContent(flashDecks);
-      return {
-        flashDecks,
-        flashActiveDeckId: (p && p.flashActiveDeckId) || DEFAULT_FLASH_DECKS[0].id,
-        flashStudyIndex: (p && p.flashStudyIndex) || 0,
-        flashDeckVersion: FLASH_DECK_VERSION
-      };
-    }
-
     function defaultState() {
-      const flash = resolveFlashFields(null);
       return {
         reqChecked:{}, timelineChecked:{}, templeChecked:{}, examStatus:{},
         weeklyMemo:"", adminMemo:"",
         studyLogs:[], checklistFilter:"all", schedule:[],
         weeklyStudyGoal:600, budgetSpent:0, pomoLogRange:"week",
-        flashDecks: flash.flashDecks,
-        flashActiveDeckId: flash.flashActiveDeckId,
-        flashStudyIndex: flash.flashStudyIndex,
-        flashDeckVersion: flash.flashDeckVersion,
         pomodoro:{ workMin:25, breakMin:5, dailyGoal:4, todayCount:0, lastDate:"", topic:"" },
         careerPipeline:[]
       };
@@ -226,7 +189,6 @@ let state;
             timelineChecked: p.timelineChecked || {},
             templeChecked: p.templeChecked || {},
             examStatus: migrateExamStatus(reqChecked, p.examStatus),
-            ...resolveFlashFields(p)
           });
         }
         if (v5) {
@@ -646,8 +608,6 @@ let state;
         templeChecked: p.templeChecked || {},
         examStatus: migrateExamStatus(reqChecked, p.examStatus),
         schedule: (p.schedule && p.schedule.length) ? p.schedule : applyFall2026Schedule(),
-        ...resolveFlashFields(p),
-        flashDeckVersion: FLASH_DECK_VERSION
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       scheduleCloudSync();
@@ -895,7 +855,6 @@ let state;
     const POMO_BASE_TITLE = document.title || "My ASA Plan";
     let pomoTitleBlinkInterval = null;
     let pomoTitleRunInterval = null;
-    let flashFlipped = false;
 
     function stopPomoTitleBlink() {
       if (pomoTitleBlinkInterval) {
@@ -962,12 +921,6 @@ let state;
     function ensurePomodoro() {
       if (!state.pomodoro) state.pomodoro = { workMin:25, breakMin:5, dailyGoal:4, todayCount:0, lastDate:"", topic:"" };
       if (state.pomodoro.dailyGoal == null) state.pomodoro.dailyGoal = 4;
-      if (!state.flashDecks) state.flashDecks = [];
-    }
-
-    function getActiveFlashDeck() {
-      ensurePomodoro();
-      return (state.flashDecks || []).find(d => d.id === state.flashActiveDeckId) || null;
     }
 
     function escapeHtml(text) {
@@ -976,79 +929,6 @@ let state;
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;");
-    }
-
-    function flashPlainText(text) {
-      return String(text || "")
-        .replace(/\$\$([\s\S]+?)\$\$/g, (_, tex) => tex.trim())
-        .replace(/\$([^$\n]+?)\$/g, (_, tex) => tex.trim());
-    }
-
-    function flashPlainHtml(text) {
-      return escapeHtml(flashPlainText(text)).replace(/ · /g, '<br><span class="flash-sep">·</span> ');
-    }
-
-    const KATEX_OPTS = { throwOnError: false, strict: "ignore", output: "htmlAndMathml", trust: false };
-
-    function renderFlashHtml(text) {
-      if (!text) return '<div class="flash-content"></div>';
-      if (typeof katex === "undefined") {
-        return `<div class="flash-content">${flashPlainHtml(text)}</div>`;
-      }
-      const parts = String(text).split(/(\$\$[\s\S]+?\$\$|\$[^$\n]+?\$)/g);
-      const inner = parts.map(part => {
-        if (part.startsWith("$$") && part.endsWith("$$")) {
-          const tex = part.slice(2, -2).trim();
-          try {
-            return katex.renderToString(tex, { ...KATEX_OPTS, displayMode: true });
-          } catch {
-            return escapeHtml(tex);
-          }
-        }
-        if (part.startsWith("$") && part.endsWith("$") && part.length > 2) {
-          const tex = part.slice(1, -1).trim();
-          try {
-            return katex.renderToString(tex, { ...KATEX_OPTS, displayMode: false });
-          } catch {
-            return escapeHtml(tex);
-          }
-        }
-        if (!part) return "";
-        return escapeHtml(part).replace(/ · /g, '<br><span class="flash-sep">·</span> ');
-      }).join("");
-      return `<div class="flash-content">${inner}</div>`;
-    }
-
-    function updateFlashStudyCard() {
-      const deck = getActiveFlashDeck();
-      const cards = deck ? deck.cards || [] : [];
-      const studyEl = document.getElementById("flashCard");
-      const btns = document.getElementById("flashStudyBtns");
-      const metaEl = document.getElementById("flashMeta");
-      if (metaEl) {
-        metaEl.textContent = deck
-          ? `${deck.name} · 카드 ${cards.length}장 · ${state.flashStudyIndex + 1}/${cards.length || 1}`
-          : "카드 0장";
-      }
-      if (!studyEl) return;
-      if (!deck || !cards.length) {
-        studyEl.textContent = "덱을 선택하거나 카드를 추가하세요";
-        studyEl.classList.remove("back");
-        if (btns) btns.hidden = true;
-        return;
-      }
-      if (btns) btns.hidden = false;
-      const card = cards[state.flashStudyIndex];
-      const text = flashFlipped ? card.back : card.front;
-      studyEl.innerHTML = renderFlashHtml(text);
-      studyEl.classList.toggle("back", flashFlipped);
-    }
-
-    function persistFlashStudy(quiet) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      scheduleCloudSync();
-      updateFlashStudyCard();
-      if (!quiet) toast("저장됨");
     }
 
     function getPomoDailyGoal() {
@@ -1340,35 +1220,6 @@ let state;
       else if (pomoRunning) updatePomoFromClock();
     }
 
-    function renderFlashcards() {
-      ensurePomodoro();
-      const decks = state.flashDecks || [];
-      const sel = document.getElementById("flashDeckSelect");
-      sel.innerHTML = decks.length
-        ? decks.map(d => `<option value="${d.id}" ${d.id === state.flashActiveDeckId ? "selected" : ""}>${d.name}</option>`).join("")
-        : `<option value="">덱 없음</option>`;
-      if (!state.flashActiveDeckId && decks[0]) state.flashActiveDeckId = decks[0].id;
-      const deck = getActiveFlashDeck();
-      const cards = deck ? deck.cards || [] : [];
-      if (state.flashStudyIndex >= cards.length) state.flashStudyIndex = 0;
-      updateFlashStudyCard();
-      document.getElementById("flashCardList").innerHTML = deck
-        ? cards.map(c => `
-          <div class="flash-card-item">
-            <span>${flashPlainHtml(c.front)} → ${flashPlainHtml(c.back)}</span>
-            <button type="button" data-flash-del="${c.id}">삭제</button>
-          </div>`).join("")
-        : "";
-      document.getElementById("flashCardList").querySelectorAll("[data-flash-del]").forEach(btn => {
-        btn.onclick = () => {
-          deck.cards = deck.cards.filter(c => c.id !== btn.dataset.flashDel);
-          if (state.flashStudyIndex >= deck.cards.length) state.flashStudyIndex = Math.max(0, deck.cards.length - 1);
-          flashFlipped = false;
-          saveState(true);
-        };
-      });
-    }
-
     function bindFocusTools() {
       if (bindFocusTools.done) return;
       bindFocusTools.done = true;
@@ -1423,78 +1274,6 @@ let state;
         };
       });
 
-      document.getElementById("btnFlashAddDeck").onclick = () => {
-        const name = document.getElementById("flashNewDeck").value.trim();
-        if (!name) { toast("덱 이름 입력"); return; }
-        ensurePomodoro();
-        const deck = { id: uid(), name, cards: [] };
-        state.flashDecks.push(deck);
-        state.flashActiveDeckId = deck.id;
-        state.flashStudyIndex = 0;
-        flashFlipped = false;
-        document.getElementById("flashNewDeck").value = "";
-        saveState();
-      };
-      document.getElementById("btnFlashLoadDefaults").onclick = () => {
-        ensurePomodoro();
-        let added = 0;
-        DEFAULT_FLASH_DECKS.forEach(def => {
-          if (state.flashDecks.some(d => d.id === def.id)) return;
-          state.flashDecks.push({
-            id: def.id,
-            name: def.name,
-            cards: def.cards.map(c => ({ ...c }))
-          });
-          added++;
-        });
-        if (!added) { toast("기본 덱이 이미 있음"); return; }
-        if (!state.flashActiveDeckId) state.flashActiveDeckId = DEFAULT_FLASH_DECKS[0].id;
-        saveState();
-        toast(`기본 덱 ${added}개 추가`);
-      };
-      document.getElementById("flashDeckSelect").onchange = e => {
-        state.flashActiveDeckId = e.target.value || null;
-        state.flashStudyIndex = 0;
-        flashFlipped = false;
-        saveState(true);
-      };
-      document.getElementById("btnFlashAddCard").onclick = () => {
-        const deck = getActiveFlashDeck();
-        if (!deck) { toast("덱 먼저 추가"); return; }
-        const front = document.getElementById("flashFront").value.trim();
-        const back = document.getElementById("flashBack").value.trim();
-        if (!front || !back) { toast("앞·뒤 모두 입력"); return; }
-        if (!deck.cards) deck.cards = [];
-        deck.cards.push({ id: uid(), front, back });
-        document.getElementById("flashFront").value = "";
-        document.getElementById("flashBack").value = "";
-        saveState();
-      };
-      document.getElementById("flashCard").onclick = () => {
-        const deck = getActiveFlashDeck();
-        if (!deck || !deck.cards?.length) return;
-        flashFlipped = !flashFlipped;
-        updateFlashStudyCard();
-      };
-      document.getElementById("btnFlashFlip").onclick = () => {
-        flashFlipped = !flashFlipped;
-        updateFlashStudyCard();
-      };
-      document.getElementById("btnFlashPrev").onclick = () => {
-        const deck = getActiveFlashDeck();
-        if (!deck?.cards?.length) return;
-        state.flashStudyIndex = (state.flashStudyIndex - 1 + deck.cards.length) % deck.cards.length;
-        flashFlipped = false;
-        persistFlashStudy(true);
-      };
-      document.getElementById("btnFlashNext").onclick = () => {
-        const deck = getActiveFlashDeck();
-        if (!deck?.cards?.length) return;
-        state.flashStudyIndex = (state.flashStudyIndex + 1) % deck.cards.length;
-        flashFlipped = false;
-        persistFlashStudy(true);
-      };
-
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
           stopPomoTitleBlink();
@@ -1536,7 +1315,6 @@ let state;
       bindTaskList(document.getElementById("priorityTasks"), "timeline");
       bindFocusTools();
       renderPomodoro();
-      renderFlashcards();
     }
 
     function renderTemple() {
