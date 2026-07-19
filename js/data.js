@@ -27,7 +27,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { name:"AS 5104 Short-Term Modeling", day:4, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
       { name:"HCM 5101 Health Systems", day:3, start:"18:00", end:"20:30", location:"온라인", semester:"2026 Fall" }
     ];
-    const FALL_2026_SCHEDULE_VERSION = 2;
+    const FALL_2026_SCHEDULE_VERSION = 3;
     const CIRC = 2 * Math.PI * 30;
     const JOURNEY_START = "2026-01-01";
     const JOURNEY_END = "2028-06-01";

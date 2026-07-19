@@ -341,7 +341,7 @@ let state;
       el.className = "cloud-status";
       if (mode === "unsupported") {
         el.classList.add("warn");
-        el.textContent = "Drive 자동 저장: Chrome에서만 가능 (Safari·Firefox 불가)";
+        el.textContent = "Drive: Chrome에서만 가능";
         btnConnect.textContent = "Drive 파일 연결 (Chrome)";
         btnConnect.hidden = false;
         btnDisconnect.hidden = true;
@@ -350,7 +350,7 @@ let state;
       }
       if (mode === "connected") {
         el.classList.add("ok");
-        el.textContent = "Drive 자동 저장 중 · " + (detail || "연결됨");
+        el.textContent = "Drive 연결됨 · " + (detail || "");
         btnConnect.textContent = "Drive 파일 변경";
         btnConnect.hidden = false;
         btnDisconnect.hidden = false;
@@ -380,7 +380,7 @@ let state;
         btnRestore.hidden = true;
         return;
       }
-      el.textContent = "Google Drive 자동 저장: 연결 안 됨 (Chrome + Drive Desktop 권장)";
+      el.textContent = "Google Drive: 연결 안 됨";
       btnConnect.textContent = "Drive 파일 연결";
       btnConnect.hidden = false;
       btnDisconnect.hidden = true;
