@@ -892,7 +892,27 @@ let state;
     const POMO_RING_CIRC = 2 * Math.PI * 54;
     const POMO_DAILY_GOAL = 4;
     const POMO_WIN_MSGS = ["하나 끝! 🎯", "굿! 또 해냈어", "집중력 레벨업 ✓", "완료! momentum ↑", "잘했어 — 이 속도 유지"];
+    const POMO_BASE_TITLE = document.title || "My ASA Plan";
+    let pomoTitleBlinkInterval = null;
     let flashFlipped = false;
+
+    function stopPomoTitleBlink() {
+      if (pomoTitleBlinkInterval) {
+        clearInterval(pomoTitleBlinkInterval);
+        pomoTitleBlinkInterval = null;
+      }
+      document.title = POMO_BASE_TITLE;
+    }
+
+    function startPomoTitleBlink(msg) {
+      stopPomoTitleBlink();
+      let on = true;
+      document.title = msg;
+      pomoTitleBlinkInterval = setInterval(() => {
+        document.title = on ? POMO_BASE_TITLE : msg;
+        on = !on;
+      }, 800);
+    }
 
     function ensurePomodoro() {
       if (!state.pomodoro) state.pomodoro = { workMin:25, breakMin:5, todayCount:0, lastDate:"", topic:"" };
@@ -1148,11 +1168,13 @@ let state;
         pomoPhaseTotalSec = (state.pomodoro.breakMin || 5) * 60;
         pomoRemainingSec = pomoPhaseTotalSec;
         toast(POMO_WIN_MSGS[(count - 1) % POMO_WIN_MSGS.length] + ` · 오늘 ${count}회`);
+        startPomoTitleBlink("✓ 집중 완료! 휴식 시작");
       } else {
         pomoMode = "work";
         pomoPhaseTotalSec = (state.pomodoro.workMin || 25) * 60;
         pomoRemainingSec = pomoPhaseTotalSec;
         toast("휴식 끝 — 다음 집중 가자!");
+        startPomoTitleBlink("휴식 끝! 다시 집중");
       }
       pomoEndAt = null;
       pomoRunning = false;
@@ -1172,6 +1194,7 @@ let state;
 
     function resetPomoDisplay() {
       ensurePomodoro();
+      stopPomoTitleBlink();
       pomoPhaseTotalSec = (state.pomodoro.workMin || 25) * 60;
       pomoRemainingSec = pomoPhaseTotalSec;
       pomoMode = "work";
@@ -1276,6 +1299,7 @@ let state;
       document.getElementById("btnPomoStart").onclick = () => {
         ensurePomodoro();
         if (!pomoRunning) {
+          stopPomoTitleBlink();
           if (pomoRemainingSec === 0 && !pomoEndAt) resetPomoDisplay();
           if (!pomoPhaseTotalSec) pomoPhaseTotalSec = getPomoPhaseTotalSec();
           const left = getPomoRemainingSec() || pomoRemainingSec;
@@ -1286,6 +1310,7 @@ let state;
       };
       document.getElementById("btnPomoPause").onclick = () => {
         if (!pomoRunning) return;
+        stopPomoTitleBlink();
         pomoRemainingSec = getPomoRemainingSec();
         pomoEndAt = null;
         pomoRunning = false;
@@ -1380,8 +1405,12 @@ let state;
       };
 
       document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "visible" && pomoRunning) updatePomoFromClock();
+        if (document.visibilityState === "visible") {
+          stopPomoTitleBlink();
+          if (pomoRunning) updatePomoFromClock();
+        }
       });
+      window.addEventListener("focus", stopPomoTitleBlink);
     }
 
     function renderFocus() {
@@ -1576,6 +1605,11 @@ let state;
 
       const sems = [...new Set((state.schedule||[]).map(c => c.semester).filter(Boolean))];
       document.getElementById("scheduleSemester").textContent = sems[0] || "학기 미설정";
+
+      document.getElementById("gcalLinks").innerHTML = DDAYS.map(m =>
+        `<li><span>${m.label} <span style="color:var(--muted);font-size:0.75rem">${m.date}</span></span>
+        <a class="btn-action" href="${googleCalUrl(m.label, m.date, "ASA Plan")}" target="_blank" rel="noopener">+ Google</a></li>`
+      ).join("");
 
       // Today classes on dashboard
       const todayClasses = (state.schedule || []).filter(c => c.day === today)
@@ -1778,6 +1812,8 @@ let state;
 
       initCloudSync();
       bindCareerForm();
+
+      document.getElementById("btnExportIcs").onclick = downloadIcs;
 
       document.getElementById("studyGoalInput").addEventListener("change", e => {
         state.weeklyStudyGoal = Math.max(60, +e.target.value || 600);
