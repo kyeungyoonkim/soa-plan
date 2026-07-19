@@ -877,8 +877,7 @@ let state;
         };
       });
 
-      document.querySelectorAll(".filter-btn").forEach(btn => {
-        if (btn.id === "btnLogStudy") return;
+      document.querySelectorAll(".filter-btn[data-filter]").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.filter === checklistFilter);
         btn.onclick = () => { checklistFilter = btn.dataset.filter; state.checklistFilter = checklistFilter; renderChecklist(); };
       });
