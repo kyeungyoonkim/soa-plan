@@ -894,6 +894,7 @@ let state;
     const POMO_WIN_MSGS = ["하나 끝! 🎯", "굿! 또 해냈어", "집중력 레벨업 ✓", "완료! momentum ↑", "잘했어 — 이 속도 유지"];
     const POMO_BASE_TITLE = document.title || "My ASA Plan";
     let pomoTitleBlinkInterval = null;
+    let pomoTitleRunInterval = null;
     let flashFlipped = false;
 
     function stopPomoTitleBlink() {
@@ -903,25 +904,59 @@ let state;
       }
     }
 
-    function syncPomoTitle(left) {
-      if (pomoTitleBlinkInterval) return;
-      if (pomoRunning) {
-        const label = pomoMode === "work" ? "집중중" : "휴식중";
-        const sec = left == null ? getPomoRemainingSec() : left;
-        document.title = `${label} ${formatPomo(sec)}`;
-      } else {
-        document.title = POMO_BASE_TITLE;
+    function stopPomoTitleRun() {
+      if (pomoTitleRunInterval) {
+        clearInterval(pomoTitleRunInterval);
+        pomoTitleRunInterval = null;
       }
     }
 
+    function stopAllPomoTitles() {
+      stopPomoTitleBlink();
+      stopPomoTitleRun();
+      document.title = POMO_BASE_TITLE;
+    }
+
+    function runningTitleText(left) {
+      const label = pomoMode === "work" ? "집중중" : "휴식중";
+      const sec = left == null ? getPomoRemainingSec() : left;
+      return `${label} ${formatPomo(Math.max(0, sec))}`;
+    }
+
+    function syncPomoTitle(left) {
+      if (pomoTitleBlinkInterval) return;
+      if (pomoRunning) document.title = runningTitleText(left);
+      else document.title = POMO_BASE_TITLE;
+    }
+
+    function startPomoTitleRun() {
+      stopPomoTitleBlink();
+      stopPomoTitleRun();
+      let flash = false;
+      const tick = () => {
+        if (!pomoRunning) return;
+        const text = runningTitleText();
+        // 다른 탭에 있을 때 더 잘 보이게 깜빡임
+        if (document.hidden) {
+          document.title = flash ? `▶ ${pomoMode === "work" ? "집중중" : "휴식중"}` : text;
+          flash = !flash;
+        } else {
+          document.title = text;
+        }
+      };
+      tick();
+      pomoTitleRunInterval = setInterval(tick, 1000);
+    }
+
     function startPomoTitleBlink(msg) {
+      stopPomoTitleRun();
       stopPomoTitleBlink();
       let on = true;
       document.title = msg;
       pomoTitleBlinkInterval = setInterval(() => {
         document.title = on ? POMO_BASE_TITLE : msg;
         on = !on;
-      }, 800);
+      }, 700);
     }
 
     function ensurePomodoro() {
@@ -1205,7 +1240,7 @@ let state;
 
     function resetPomoDisplay() {
       ensurePomodoro();
-      stopPomoTitleBlink();
+      stopAllPomoTitles();
       pomoPhaseTotalSec = (state.pomodoro.workMin || 25) * 60;
       pomoRemainingSec = pomoPhaseTotalSec;
       pomoMode = "work";
@@ -1213,7 +1248,6 @@ let state;
       pomoEndAt = null;
       stopPomoTicker();
       setPomoUi(pomoRemainingSec);
-      syncPomoTitle();
     }
 
     function completePomoWork() {
@@ -1311,24 +1345,24 @@ let state;
       document.getElementById("btnPomoStart").onclick = () => {
         ensurePomodoro();
         if (!pomoRunning) {
-          stopPomoTitleBlink();
+          stopAllPomoTitles();
           if (pomoRemainingSec === 0 && !pomoEndAt) resetPomoDisplay();
           if (!pomoPhaseTotalSec) pomoPhaseTotalSec = getPomoPhaseTotalSec();
           const left = getPomoRemainingSec() || pomoRemainingSec;
           pomoEndAt = Date.now() + left * 1000;
           pomoRunning = true;
           startPomoTicker();
+          startPomoTitleRun();
         }
       };
       document.getElementById("btnPomoPause").onclick = () => {
         if (!pomoRunning) return;
-        stopPomoTitleBlink();
+        stopAllPomoTitles();
         pomoRemainingSec = getPomoRemainingSec();
         pomoEndAt = null;
         pomoRunning = false;
         stopPomoTicker();
         setPomoUi(pomoRemainingSec);
-        syncPomoTitle();
       };
       document.getElementById("btnPomoReset").onclick = () => resetPomoDisplay();
       document.getElementById("pomoWorkMin").onchange = e => {
@@ -1420,13 +1454,21 @@ let state;
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
           stopPomoTitleBlink();
-          if (pomoRunning) updatePomoFromClock();
-          else syncPomoTitle();
+          if (pomoRunning) {
+            updatePomoFromClock();
+            startPomoTitleRun();
+          } else {
+            document.title = POMO_BASE_TITLE;
+          }
+        } else if (pomoRunning && !pomoTitleBlinkInterval) {
+          startPomoTitleRun();
         }
       });
       window.addEventListener("focus", () => {
-        stopPomoTitleBlink();
-        syncPomoTitle();
+        if (!pomoRunning) {
+          stopPomoTitleBlink();
+          document.title = POMO_BASE_TITLE;
+        }
       });
     }
 
