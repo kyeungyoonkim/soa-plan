@@ -226,14 +226,7 @@
     }
     .pomo-hero.running { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim), 0 8px 28px rgba(77,138,101,0.14); }
     .pomo-hero.running.break-mode { border-color: var(--accent2); box-shadow: 0 0 0 3px var(--accent2-dim), 0 8px 28px rgba(160,125,46,0.12); }
-    .pomo-hero-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.85rem; }
-    .pomo-cheer {
-      font-size: 0.88rem; font-weight: 600; color: var(--accent);
-      padding: 0.45rem 0.75rem; background: var(--accent-dim); border-radius: 999px;
-      max-width: 16rem; line-height: 1.35; text-align: right;
-    }
-    .pomo-hero.running .pomo-cheer { animation: pomo-pulse 2s ease-in-out infinite; }
-    @keyframes pomo-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.72; } }
+    .pomo-hero-top { margin-bottom: 0.85rem; }
     .pomo-ring-wrap { position: relative; width: min(220px, 58vw); margin: 0 auto 0.85rem; aspect-ratio: 1; }
     .pomo-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
     .pomo-ring-bg { fill: none; stroke: var(--surface2); stroke-width: 7; }
@@ -312,6 +305,15 @@
     .pomo-month-n { font-size: 0.55rem; font-weight: 700; margin-top: 1px; opacity: 0.9; }
     .pomo-week { text-align: center; font-size: 0.78rem; color: var(--muted); margin-top: 0.55rem; }
     .pomo-week strong { color: var(--accent); }
+    .pomo-log-row {
+      display: flex; justify-content: space-between; gap: 0.75rem; align-items: baseline;
+      padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.84rem;
+    }
+    .pomo-log-row:last-child { border-bottom: none; }
+    .pomo-log-topic { font-weight: 600; color: var(--text); }
+    .pomo-log-meta { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+    .pomo-goal-row { display: flex; align-items: center; gap: 0.45rem; justify-content: center; margin-top: 0.35rem; }
+    .pomo-goal-row input { width: 4rem; margin: 0; text-align: center; }
     .pomo-settings { margin-top: 0.75rem; font-size: 0.8rem; color: var(--muted); }
     .pomo-settings summary { cursor: pointer; user-select: none; }
     .pomo-settings[open] summary { margin-bottom: 0.35rem; color: var(--text); }
@@ -670,11 +672,7 @@
     <section class="panel" id="panel-focus">
       <div class="card pomo-hero" id="pomoHero">
         <div class="pomo-hero-top">
-          <div>
-            <div class="eyebrow" style="margin-bottom:0.25rem">한 덩어리씩 · ADHD 맞춤</div>
-            <div class="card-title" style="margin-bottom:0">공부모드 · 뽀모도로</div>
-          </div>
-          <div class="pomo-cheer" id="pomoCheer">주제 적고 ▶ 시작 — 딱 이것만!</div>
+          <div class="card-title" style="margin-bottom:0">뽀모도로 타이머</div>
         </div>
         <div class="pomo-ring-wrap">
           <svg class="pomo-ring" viewBox="0 0 120 120" aria-hidden="true">
@@ -695,16 +693,27 @@
         </div>
         <div class="pomo-achievement">
           <div class="pomo-achievement-head">
-            <span>오늘 <strong id="pomoTodayCount">0</strong> / <strong id="pomoDailyGoal">4</strong> 회</span>
+            <span>오늘 <strong id="pomoTodayCount">0</strong> / <strong id="pomoDailyGoalLabel">4</strong> 회</span>
             <span><strong id="pomoTodayMin">0</strong>분 집중</span>
           </div>
-          <div class="pomo-dots" id="pomoDots"></div>
+          <div class="pomo-goal-row">
+            <label style="font-size:0.75rem;color:var(--muted)">일일 목표</label>
+            <input type="number" id="pomoDailyGoal" min="1" max="20" value="4" />
+            <span style="font-size:0.75rem;color:var(--muted)">회</span>
+          </div>
+          <div class="pomo-dots" id="pomoDots" style="margin-top:0.55rem"></div>
           <div class="pomo-cal-label">이번 주</div>
           <div class="pomo-week-grid" id="pomoWeekGrid"></div>
           <div class="pomo-cal-label">이번 달</div>
           <div id="pomoMonthGrid"></div>
           <div class="pomo-week">이번 주 <strong id="pomoWeekCount">0</strong>회 · 이번 달 <strong id="pomoMonthCount">0</strong>회</div>
         </div>
+        <div class="pomo-cal-label" style="margin-top:1rem">공부 기록</div>
+        <div class="filter-row" style="justify-content:center;margin-bottom:0.55rem">
+          <button type="button" class="filter-btn active" id="pomoLogWeekBtn" data-pomo-log="week">이번 주</button>
+          <button type="button" class="filter-btn" id="pomoLogMonthBtn" data-pomo-log="month">이번 달</button>
+        </div>
+        <div id="pomoStudyLog"></div>
         <details class="pomo-settings">
           <summary>집중 · 휴식 시간 설정</summary>
           <div class="form-row" style="margin-top:0.5rem">
@@ -1094,8 +1103,8 @@
   <div class="toast" id="toast">저장됨</div>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
-  <script src="js/data.js?v=20260719"></script>
+  <script src="js/data.js?v=20260719c"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script defer src="js/app.js?v=20260719"></script>
+  <script defer src="js/app.js?v=20260719c"></script>
 </body>
 </html>

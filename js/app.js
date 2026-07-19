@@ -62,12 +62,12 @@ let state;
         reqChecked:{}, timelineChecked:{}, templeChecked:{}, examStatus:{},
         weeklyMemo:"", adminMemo:"",
         studyLogs:[], checklistFilter:"all", schedule:[],
-        weeklyStudyGoal:600, budgetSpent:0,
+        weeklyStudyGoal:600, budgetSpent:0, pomoLogRange:"week",
         flashDecks: flash.flashDecks,
         flashActiveDeckId: flash.flashActiveDeckId,
         flashStudyIndex: flash.flashStudyIndex,
         flashDeckVersion: flash.flashDeckVersion,
-        pomodoro:{ workMin:25, breakMin:5, todayCount:0, lastDate:"", topic:"" },
+        pomodoro:{ workMin:25, breakMin:5, dailyGoal:4, todayCount:0, lastDate:"", topic:"" },
         careerPipeline:[]
       };
     }
@@ -960,7 +960,8 @@ let state;
     }
 
     function ensurePomodoro() {
-      if (!state.pomodoro) state.pomodoro = { workMin:25, breakMin:5, todayCount:0, lastDate:"", topic:"" };
+      if (!state.pomodoro) state.pomodoro = { workMin:25, breakMin:5, dailyGoal:4, todayCount:0, lastDate:"", topic:"" };
+      if (state.pomodoro.dailyGoal == null) state.pomodoro.dailyGoal = 4;
       if (!state.flashDecks) state.flashDecks = [];
     }
 
@@ -1052,7 +1053,7 @@ let state;
 
     function getPomoDailyGoal() {
       ensurePomodoro();
-      return state.pomodoro.dailyGoal || POMO_DAILY_GOAL;
+      return Math.max(1, Math.min(20, +(state.pomodoro.dailyGoal || POMO_DAILY_GOAL)));
     }
 
     function getPomoPhaseTotalSec() {
@@ -1069,25 +1070,6 @@ let state;
         .reduce((s, l) => s + (+l.minutes || 0), 0);
     }
 
-    function getPomoCheerMessage() {
-      ensurePomodoro();
-      const today = new Date().toISOString().slice(0, 10);
-      const count = state.pomodoro.lastDate === today ? (state.pomodoro.todayCount || 0) : 0;
-      const goal = getPomoDailyGoal();
-      if (pomoRunning && pomoMode === "break") return "쉬는 중 — 물 마시고 스트레칭";
-      if (pomoRunning) return "지금 이것만. 멈추지 마!";
-      if (count >= goal) return "오늘 목표 달성! 🔥 대단해";
-      if (count === 0) return "주제 적고 ▶ 시작 — 딱 이것만!";
-      if (count === 1) return "첫 판 클리어! momentum 시작";
-      if (count >= goal - 1) return `거의 다 왔어! ${goal - count}개만 더`;
-      return `${count}번 해냈어 — 계속 가자!`;
-    }
-
-    function renderPomoCheer() {
-      const el = document.getElementById("pomoCheer");
-      if (el) el.textContent = getPomoCheerMessage();
-    }
-
     function renderPomoDots() {
       const el = document.getElementById("pomoDots");
       if (!el) return;
@@ -1099,6 +1081,54 @@ let state;
         const done = i < count;
         return `<div class="pomo-dot${done ? " done" : ""}">${done ? "✓" : ""}</div>`;
       }).join("");
+    }
+
+    function getPomoTopicLabel(raw) {
+      const t = String(raw || "");
+      if (t.startsWith("Pomodoro: ")) return t.slice(10).trim() || "주제 없음";
+      if (t === "Pomodoro 집중") return "주제 없음";
+      return t || "주제 없음";
+    }
+
+    function getPomoLogsInRange(range) {
+      const weekStart = getWeekStart();
+      const now = new Date();
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      return (state.studyLogs || []).filter(l => {
+        if (!(l.topic || "").includes("Pomodoro")) return false;
+        const d = new Date(l.date + "T00:00:00");
+        if (range === "month") return d >= monthStart;
+        return d >= weekStart;
+      });
+    }
+
+    function renderPomoStudyLog() {
+      const el = document.getElementById("pomoStudyLog");
+      if (!el) return;
+      const range = state.pomoLogRange === "month" ? "month" : "week";
+      document.getElementById("pomoLogWeekBtn")?.classList.toggle("active", range === "week");
+      document.getElementById("pomoLogMonthBtn")?.classList.toggle("active", range === "month");
+      const logs = getPomoLogsInRange(range);
+      if (!logs.length) {
+        el.innerHTML = `<p class="stat-sub" style="text-align:center;margin:0.35rem 0">아직 기록이 없어요. 주제를 적고 집중을 완료하면 여기에 쌓입니다.</p>`;
+        return;
+      }
+      const byTopic = {};
+      logs.forEach(l => {
+        const key = getPomoTopicLabel(l.topic);
+        if (!byTopic[key]) byTopic[key] = { sessions: 0, minutes: 0 };
+        byTopic[key].sessions += 1;
+        byTopic[key].minutes += (+l.minutes || 0);
+      });
+      const rows = Object.entries(byTopic)
+        .sort((a, b) => b[1].minutes - a[1].minutes || b[1].sessions - a[1].sessions);
+      const totalMin = rows.reduce((s, [, v]) => s + v.minutes, 0);
+      const totalSes = rows.reduce((s, [, v]) => s + v.sessions, 0);
+      el.innerHTML =
+        `<div class="pomo-log-row"><span class="pomo-log-topic">합계</span><span class="pomo-log-meta">${totalSes}회 · ${totalMin}분</span></div>` +
+        rows.map(([topic, v]) =>
+          `<div class="pomo-log-row"><span class="pomo-log-topic">${escapeHtml(topic)}</span><span class="pomo-log-meta">${v.sessions}회 · ${v.minutes}분</span></div>`
+        ).join("");
     }
 
     function getPomoCountsByDate() {
@@ -1203,7 +1233,6 @@ let state;
       }
       const startBtn = document.getElementById("btnPomoStart");
       if (startBtn) startBtn.textContent = pomoRunning ? "진행 중…" : "▶ 시작";
-      renderPomoCheer();
       syncPomoTitle(left);
     }
 
@@ -1280,8 +1309,10 @@ let state;
       const count = state.pomodoro.todayCount || 0;
       const goal = getPomoDailyGoal();
       document.getElementById("pomoTodayCount").textContent = count;
-      const goalEl = document.getElementById("pomoDailyGoal");
-      if (goalEl) goalEl.textContent = goal;
+      const goalLabel = document.getElementById("pomoDailyGoalLabel");
+      if (goalLabel) goalLabel.textContent = goal;
+      const goalInput = document.getElementById("pomoDailyGoal");
+      if (goalInput && document.activeElement !== goalInput) goalInput.value = goal;
       const minEl = document.getElementById("pomoTodayMin");
       if (minEl) minEl.textContent = getPomoTodayMinutes();
       const weekStart = getWeekStart();
@@ -1300,7 +1331,7 @@ let state;
       renderPomoDots();
       renderPomoWeekGrid();
       renderPomoMonthGrid();
-      renderPomoCheer();
+      renderPomoStudyLog();
     }
 
     function renderPomodoro() {
@@ -1378,6 +1409,19 @@ let state;
         state.pomodoro.topic = e.target.value;
         saveState(true);
       };
+      document.getElementById("pomoDailyGoal").onchange = e => {
+        ensurePomodoro();
+        state.pomodoro.dailyGoal = Math.max(1, Math.min(20, +e.target.value || 4));
+        saveState(true);
+        renderPomodoroStats();
+      };
+      document.querySelectorAll("[data-pomo-log]").forEach(btn => {
+        btn.onclick = () => {
+          state.pomoLogRange = btn.dataset.pomoLog === "month" ? "month" : "week";
+          saveState(true);
+          renderPomoStudyLog();
+        };
+      });
 
       document.getElementById("btnFlashAddDeck").onclick = () => {
         const name = document.getElementById("flashNewDeck").value.trim();
