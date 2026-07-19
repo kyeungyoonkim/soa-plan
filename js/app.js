@@ -901,7 +901,17 @@ let state;
         clearInterval(pomoTitleBlinkInterval);
         pomoTitleBlinkInterval = null;
       }
-      document.title = POMO_BASE_TITLE;
+    }
+
+    function syncPomoTitle(left) {
+      if (pomoTitleBlinkInterval) return;
+      if (pomoRunning) {
+        const label = pomoMode === "work" ? "집중중" : "휴식중";
+        const sec = left == null ? getPomoRemainingSec() : left;
+        document.title = `${label} ${formatPomo(sec)}`;
+      } else {
+        document.title = POMO_BASE_TITLE;
+      }
     }
 
     function startPomoTitleBlink(msg) {
@@ -1159,6 +1169,7 @@ let state;
       const startBtn = document.getElementById("btnPomoStart");
       if (startBtn) startBtn.textContent = pomoRunning ? "진행 중…" : "▶ 시작";
       renderPomoCheer();
+      syncPomoTitle(left);
     }
 
     function advancePomoPhase() {
@@ -1202,6 +1213,7 @@ let state;
       pomoEndAt = null;
       stopPomoTicker();
       setPomoUi(pomoRemainingSec);
+      syncPomoTitle();
     }
 
     function completePomoWork() {
@@ -1316,6 +1328,7 @@ let state;
         pomoRunning = false;
         stopPomoTicker();
         setPomoUi(pomoRemainingSec);
+        syncPomoTitle();
       };
       document.getElementById("btnPomoReset").onclick = () => resetPomoDisplay();
       document.getElementById("pomoWorkMin").onchange = e => {
@@ -1408,9 +1421,13 @@ let state;
         if (document.visibilityState === "visible") {
           stopPomoTitleBlink();
           if (pomoRunning) updatePomoFromClock();
+          else syncPomoTitle();
         }
       });
-      window.addEventListener("focus", stopPomoTitleBlink);
+      window.addEventListener("focus", () => {
+        stopPomoTitleBlink();
+        syncPomoTitle();
+      });
     }
 
     function renderFocus() {
