@@ -38,7 +38,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"prep-p", text:"Exam P 대비 본격 공부", meta:"지금부터 · 350h", highlight:true },
         { id:"sas-cert", text:"SAS Base 시험 8/1", meta:"Base Programming", highlight:true },
         { id:"vee-macro", text:"VEE Macroeconomics ✓", meta:"Economics VEE · 이미 완료" },
-        { id:"vee-econ", text:"VEE Microeconomics 완료", meta:"Economics VEE 마무리", highlight:true },
+        { id:"vee-econ", text:"VEE Microeconomics — CLEP", meta:"Modern States 무료 · 목표 8/10", highlight:true },
         { id:"vee-acct", text:"VEE Accounting & Finance 완료", meta:"온라인", highlight:true },
         { id:"exam-p", text:"Exam P 9/20 응시", meta:"등록 8/12 12AM", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 지원 준비", meta:"8/24 입학 전" }
@@ -90,7 +90,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"sas-cert", cat:"career", name:"SAS Base Certification", method:"8/1 응시", when:"2026 여름", order:19 },
       { id:"vee-stats-check", cat:"vee", name:"VEE Math Statistics", method:"Purdue 학점 Temple 면제 확인", when:"1학기", order:1 },
       { id:"vee-macro", cat:"vee", name:"VEE Macroeconomics", method:"이미 수강 완료 (Economics VEE 1/2)", when:"완료", order:2 },
-      { id:"vee-econ", cat:"vee", name:"VEE Microeconomics", method:"2026 여름 · Macro 완료 → Micro만", when:"2026 여름", order:3 },
+      { id:"vee-econ", cat:"vee", name:"VEE Microeconomics", method:"Modern States → CLEP Principles of Microeconomics (무료) · 목표 8/10", when:"2026 여름", order:3 },
       { id:"vee-acct", cat:"vee", name:"VEE Accounting & Finance", method:"2026 여름 온라인", when:"2026 여름", order:4 },
       { id:"as-5102-5104", cat:"uec", name:"Exam FAM", method:"AS 5102 & 5104 UEC", when:"2학기", order:7 },
       { id:"as-5108", cat:"uec", name:"Exam SRM", method:"AS 5108 UEC", when:"3학기 (Fall Y2)", order:6 },
@@ -121,6 +121,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const DDAYS = [
       { date:"2026-08-01", label:"SAS Base 시험", taskId:"sas-cert" },
+      { date:"2026-08-10", label:"CLEP Microeconomics", taskId:"vee-econ" },
       { date:"2026-08-12", label:"Exam P 등록 마감 (9월)", taskId:"exam-p" },
       { date:"2026-08-24", label:"Temple 입학", taskId:"oncampus-job" },
       { date:"2026-09-20", label:"Exam P (9/20)", taskId:"exam-p" },
@@ -234,17 +235,31 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         alt: null
       },
       {
-        when: "2026 여름 · VEE",
+        when: "2026 여름 · VEE Micro",
+        tier: "free", tierLabel: "무료",
+        pick: "Modern States → CLEP Principles of Microeconomics",
+        cost: "$0 (바우처)",
+        costDetail: "Modern States 수강 완료 → CLEP 바우처 · Macro는 이미 완료",
+        plan: "Modern States Micro 코스 완료 → CLEP 등록 · 목표 8/10 응시 · 원격(Proctortrack) 또는 테스트센터 · 통과 후 Macro와 합쳐 SOA VEE Economics 제출",
+        links: [
+          { text: "Modern States Micro", url: "https://www.modernstates.org/course/principles-of-microeconomics/" },
+          { text: "CLEP Microeconomics", url: "https://clep.collegeboard.org/clep/principles-of-microeconomics" },
+          { text: "SOA VEE Directory", url: "https://www.soa.org/education/exam-req/instructions-for-vee-directory/" }
+        ],
+        alt: "원격 응시는 Windows PC 필수 · Mac이면 테스트센터"
+      },
+      {
+        when: "2026 여름 · VEE Acct",
         tier: "best", tierLabel: "1순위",
-        pick: "CA VEE — Microeconomics + Accounting & Finance",
-        cost: "~$130–200",
-        costDetail: "학생 65% off · SOA 제출 $92×2 별도 · Macro는 이미 완료",
-        plan: "7–8월 Micro + Acct/Fin 병행 · Economics VEE = Macro(완료) + Micro · 완료 후 SOA 제출",
+        pick: "CA VEE — Accounting & Finance",
+        cost: "~$65–100",
+        costDetail: "학생 할인 · SOA 제출 $92 별도",
+        plan: "7–8월 Acct/Fin · Micro(CLEP)와 병행 가능 · 완료 후 SOA 제출",
         links: [
           { text: "CA VEE", url: "https://www.coachingactuaries.com/vee" },
           { text: "ACTEX VEE", url: "https://www.actexlearning.com/search?q=VEE" }
         ],
-        alt: "ACTEX VEE — CA와 비슷한 가격대, 승인 과정 동일"
+        alt: "ACTEX VEE — CA와 비슷한 가격대"
       },
       {
         when: "Fall 2026 · FM UEC",

@@ -1292,7 +1292,7 @@ let state;
         { id:"sas-cert", text:"SAS Base 8/1", meta:fmtDday(daysUntil("2026-08-01")), highlight:true },
         { id:"exam-p", text:"Exam P 9/20", meta:"등록 8/12", highlight:true },
         { id:"vee-macro", text:"VEE Macro ✓ (완료)", meta:"Economics 1/2", highlight:false },
-        { id:"vee-econ", text:"VEE Microeconomics — 2026 여름", meta:"Economics 2/2", highlight:true },
+        { id:"vee-econ", text:"VEE Micro — CLEP 8/10", meta:fmtDday(daysUntil("2026-08-10")), highlight:true },
         { id:"vee-acct", text:"VEE Accounting & Finance — 2026 여름", meta:"온라인", highlight:true },
         { id:"as-5101", text:"Fall AS 5101 → FM UEC", meta:"시험 대신 수업", highlight:false },
         { id:"vee-stats-check", text:"VEE Stats — Temple 면제 확인", meta:"입학 직후" }
