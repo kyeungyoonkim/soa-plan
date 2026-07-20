@@ -8,7 +8,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"tc-5104", name:"AS 5104 Short-Term Actuarial Modeling", credits:3, group:"Core · 2026 Fall", soa:"FAM UEC" },
       { id:"tc-5108", name:"AS 5108 Actuarial Analytics", credits:3, group:"Core", soa:"SRM UEC" },
       { id:"tc-rmi5051", name:"RMI 5051 Managing Risk", credits:3, group:"Core", soa:"—" },
-      { id:"tc-ba5687", name:"BA 5687 MS Professional Development", credits:0, group:"Core (0 cr · 대부분 온라인)", soa:"0 cr" },
+      { id:"tc-ba5687", name:"BA 5687 MS Professional Development", credits:0, group:"Core (0 cr · 토 3회: 10/3·10/24·11/7)", soa:"0 cr" },
       { id:"tc-rmi5104", name:"RMI 5104 Property & Liability", credits:3, group:"Selective (1/3) · 2026 Fall", soa:"—" },
       { id:"tc-sel-1", name:"Selective: AS 5103 / 5114 / 5118 / 5190", credits:3, group:"Selective (2/3)", soa:"5114=ASTAM" },
       { id:"tc-sel-2", name:"Selective: AS 5103 / 5114 / 5118 / 5190", credits:3, group:"Selective (3/3)", soa:"—" },
@@ -16,18 +16,19 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"tc-elec-2", name:"Elective (추가 1과목)", credits:3, group:"Elective (2/2) · 3 cr", soa:"—" }
     ];
 
-    // 2026 Fall 등록 시간표 (BA 5687 토요일 제외 — 학기 3회 중 1회만 대면)
+    // 2026 Fall 시간표 · BA 5687은 토요 3회 (10/3 대면, 10/24·11/7 온라인)
     // RMI 5104 월수 11:00–12:15 온라인
     const DEFAULT_FALL_2026_SCHEDULE = [
-      { name:"AS 5101 Theory of Interest", day:1, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
-      { name:"AS 5101 Theory of Interest", day:3, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
+      { name:"AS 5101 Theory of Interest", day:1, start:"09:30", end:"10:50", location:"Alter Hall 0A237", semester:"2026 Fall" },
+      { name:"AS 5101 Theory of Interest", day:3, start:"09:30", end:"10:50", location:"Alter Hall 0A237", semester:"2026 Fall" },
       { name:"RMI 5104 Property & Liability", day:1, start:"11:00", end:"12:15", location:"온라인", semester:"2026 Fall" },
       { name:"RMI 5104 Property & Liability", day:3, start:"11:00", end:"12:15", location:"온라인", semester:"2026 Fall" },
-      { name:"AS 5104 Short-Term Modeling", day:2, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
-      { name:"AS 5104 Short-Term Modeling", day:4, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
-      { name:"HCM 5101 Health Systems", day:3, start:"18:00", end:"20:30", location:"온라인", semester:"2026 Fall" }
+      { name:"AS 5104 Short-Term Modeling", day:2, start:"09:30", end:"10:50", location:"Speakman Hall 00213", semester:"2026 Fall" },
+      { name:"AS 5104 Short-Term Modeling", day:4, start:"09:30", end:"10:50", location:"Speakman Hall 00213", semester:"2026 Fall" },
+      { name:"HCM 5101 Health Systems", day:3, start:"18:00", end:"20:30", location:"온라인", semester:"2026 Fall" },
+      { name:"BA 5687 Professional Dev", day:6, start:"—", end:"—", location:"10/3만 Alter Hall 0A231 · 10/24·11/7 온라인", note:"10/3 · 10/24 · 11/7", semester:"2026 Fall" }
     ];
-    const FALL_2026_SCHEDULE_VERSION = 3;
+    const FALL_2026_SCHEDULE_VERSION = 4;
     const CIRC = 2 * Math.PI * 30;
     const JOURNEY_START = "2026-01-01";
     const JOURNEY_END = "2028-06-01";
@@ -139,7 +140,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const ASA_IDS = [...EXAM_IDS, ...VEE_IDS, ...UEC_IDS, ...MOD_IDS];
 
     const DAY_NAMES = ["일","월","화","수","목","금","토"];
-    const DAY_ORDER = [1,2,3,4,5,6,0];
+    const DAY_ORDER = [1,2,3,4,5,6];
     const SOA_FEES = {
       source: "SOA 공식 · 2025.12.16",
       sourceUrl: "https://www.soa.org/education/exam-req/syllabus-study-materials/exam-and-module-fees/",

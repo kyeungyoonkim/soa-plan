@@ -1370,9 +1370,11 @@ let state;
           <div class="day-name">${DAY_NAMES[d]}</div>
           ${classes.length ? classes.map((c, idx) => {
             const realIdx = state.schedule.indexOf(c);
+            const when = c.note || (c.start === "—" ? "" : `${c.start}-${c.end}`);
+            const meta = [when, c.location].filter(Boolean).join(" · ");
             return `<div class="class-chip" data-idx="${realIdx}" title="클릭하면 삭제">
               <div class="t">${c.name}</div>
-              <div class="m">${c.start}-${c.end}${c.location ? " · " + c.location : ""}</div>
+              <div class="m">${meta || "—"}</div>
             </div>`;
           }).join("") : `<div style="font-size:0.7rem;color:var(--muted)">—</div>`}
         </div>`;
@@ -1388,13 +1390,17 @@ let state;
       });
 
       const sems = [...new Set((state.schedule||[]).map(c => c.semester).filter(Boolean))];
-      document.getElementById("scheduleSemester").textContent = sems[0] || "학기 미설정";
+      const semEl = document.getElementById("scheduleSemester");
+      if (semEl) semEl.textContent = sems[0] || "";
 
       // Today classes on dashboard
       const todayClasses = (state.schedule || []).filter(c => c.day === today)
-        .sort((a, b) => a.start.localeCompare(b.start));
+        .sort((a, b) => String(a.start).localeCompare(String(b.start)));
       document.getElementById("todayClasses").innerHTML = todayClasses.length
-        ? todayClasses.map(c => `<li><strong>${c.start}-${c.end}</strong> ${c.name}${c.location ? " @ " + c.location : ""}</li>`).join("")
+        ? todayClasses.map(c => {
+            const when = c.note || (c.start === "—" ? "" : `${c.start}-${c.end}`);
+            return `<li>${when ? `<strong>${when}</strong> ` : ""}${c.name}${c.location ? " @ " + c.location : ""}</li>`;
+          }).join("")
         : "<li>오늘 등록된 수업 없음 · <span style='cursor:pointer;color:var(--accent)' onclick=\"switchTab('schedule')\">시간표 추가</span></li>";
     }
 
@@ -1574,7 +1580,7 @@ let state;
       };
 
       document.getElementById("btnLoadFall2026").onclick = () => {
-        if (state.schedule && state.schedule.length && !confirm("기존 시간표를 2026 Fall 등록 시간표로 교체할까요?")) return;
+        if (state.schedule && state.schedule.length && !confirm("기존 시간표를 2026 Fall로 교체할까요?")) return;
         state.schedule = applyFall2026Schedule();
         state.fallScheduleVersion = FALL_2026_SCHEDULE_VERSION;
         saveState();
