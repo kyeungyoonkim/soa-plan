@@ -46,6 +46,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"sem1", name:"1학기 (Fall Y1)", period:"2026년 8/24 ~ 12/15", start:"2026-08-24", end:"2026-12-15", tasks:[
         { id:"as-5101", text:"AS 5101 → FM UEC", meta:"시험 대신 수업 · B- 이상", highlight:true },
         { id:"rmi-5104", text:"RMI 5104 Property & Liability", meta:"Selective · 월수 온라인", highlight:true },
+        { id:"shi-research", text:"Dr. Shi 리서치 프로젝트", meta:"학기 시작 직후", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 바로 지원", meta:"입학 즉시" },
         { id:"vee-stats-check", text:"VEE Math Statistics — Purdue 학점 Temple 면제 확인", meta:"입학 직후!", highlight:true },
         { id:"intern-fall", text:"가을 계리사 인턴 지원", meta:"커리어" },
@@ -102,13 +103,14 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"fap-final", cat:"module", name:"FAP 최종 평가", method:"e-Learning", when:"3학기", order:15 },
       { id:"atpa", cat:"module", name:"ATPA Assessment", method:"SOA", when:"여름", order:9 },
       { id:"apc", cat:"module", name:"APC", method:"Professionalism", when:"졸업 후", order:16 },
-      { id:"oncampus-job", cat:"career", name:"온캠퍼스 잡", method:"입학 즉시 지원", when:"1학기", order:20 },
-      { id:"intern-fall", cat:"career", name:"가을 인턴 지원", method:"계리사 인턴 채용", when:"1학기", order:21 },
-      { id:"intern-confirm", cat:"career", name:"인턴 확정", method:"겨울방학 전", when:"겨울", order:22 },
-      { id:"cpt-pt", cat:"career", name:"CPT 파트타임", method:"2학기 인턴", when:"2학기", order:23 },
-      { id:"cpt-ft", cat:"career", name:"CPT 풀타임", method:"여름 인턴", when:"여름", order:24 },
-      { id:"graduate", cat:"career", name:"졸업", method:"Temple MS 완료", when:"2027.12", order:25 },
-      { id:"asa", cat:"career", name:"ASA 완성", method:"모든 요건 + APC", when:"2028", order:26 },
+      { id:"shi-research", cat:"career", name:"Dr. Shi 리서치 프로젝트", method:"학기 시작 직후 · Dr. Tianxiang Shi", when:"1학기", order:20 },
+      { id:"oncampus-job", cat:"career", name:"온캠퍼스 잡", method:"입학 즉시 지원", when:"1학기", order:21 },
+      { id:"intern-fall", cat:"career", name:"가을 인턴 지원", method:"계리사 인턴 채용", when:"1학기", order:22 },
+      { id:"intern-confirm", cat:"career", name:"인턴 확정", method:"겨울방학 전", when:"겨울", order:23 },
+      { id:"cpt-pt", cat:"career", name:"CPT 파트타임", method:"2학기 인턴", when:"2학기", order:24 },
+      { id:"cpt-ft", cat:"career", name:"CPT 풀타임", method:"여름 인턴", when:"여름", order:25 },
+      { id:"graduate", cat:"career", name:"졸업", method:"Temple MS 완료", when:"2027.12", order:26 },
+      { id:"asa", cat:"career", name:"ASA 완성", method:"모든 요건 + APC", when:"2028", order:27 },
       { id:"soa-join", cat:"admin", name:"SOA Candidate 등록", method:"soa.org 가입", when:"P 전후", order:30 },
       { id:"p-transcript", cat:"admin", name:"P 합격 transcript", method:"SOA에 성적 제출", when:"합격 후", order:33 },
       { id:"vee-submit", cat:"admin", name:"VEE 학점 SOA 제출", method:"Econ(Micro)+Acct 완료 후 Candidate Central · Macro transcript 포함", when:"완료 시", order:34 },
@@ -135,7 +137,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const VEE_IDS = ["vee-stats-check","vee-macro","vee-econ","vee-acct"];
     const MOD_IDS = ["paf","asf","fap-12","fap-34","fap-5","fap-final","atpa","apc"];
     const UEC_IDS = ["as-5101","as-5102-5104","as-5108","as-5114"];
-    const CAREER_IDS = ["sas-cert","oncampus-job","intern-fall","intern-confirm","cpt-pt","cpt-ft","graduate","asa"];
+    const CAREER_IDS = ["sas-cert","shi-research","oncampus-job","intern-fall","intern-confirm","cpt-pt","cpt-ft","graduate","asa"];
     const ADMIN_IDS = ["soa-join","p-transcript","vee-submit","uec-grade","cpt-paperwork","pa-transcript"];
     const ASA_IDS = [...EXAM_IDS, ...VEE_IDS, ...UEC_IDS, ...MOD_IDS];
 
