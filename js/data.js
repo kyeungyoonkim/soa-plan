@@ -206,7 +206,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const STUDY_RECOMMENDATIONS = [
       {
-        when: "지금 · Exam P (9월)",
+        when: "지금 · Exam P (9/20)",
         tier: "best", tierLabel: "1순위",
         pick: "TIA P (무료) + CA Adapt",
         cost: "~$195",
@@ -307,7 +307,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const STUDY_HOURS = [
       { exam:"Exam FM (UEC)", min:0, max:0, typical:0, plan:"AS 5101 수업", tips:"SOA FM 시험 없음 · 5101 B- 이상 · 수업+숙제로 대체" },
-      { exam:"Exam P", min:300, max:400, typical:350, plan:"9월 · 지금부터", tips:"8/1 SAS·VEE와 겹침 · 8/12 등록 · TIA+Adapt EL 6+" },
+      { exam:"Exam P", min:300, max:400, typical:350, plan:"9/20 · 지금부터", tips:"8/1 SAS·VEE와 겹침 · 8/12 등록 · TIA+Adapt EL 6+" },
       { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"8/1", tips:"Base SAS prep · P와 주간 시간 나누기" },
       { exam:"Exam PA", min:400, max:600, typical:500, plan:"5108 후 · 4월", tips:"500h · 5108 끝난 뒤 1–3월 집중. 10월 PA는 5108과 겹침." },
       { exam:"UEC (FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"별도 SOA 시험 없음. 수업 성적(B- 이상 등) 요건 확인." },
