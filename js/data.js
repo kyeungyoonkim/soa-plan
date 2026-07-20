@@ -201,7 +201,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         name: "ASM (Actuarial Study Materials)",
         url: "https://www.studymanuals.com/",
         exams: "FM · P · PA",
-        pricing: "Study manual 전자/纸质",
+        pricing: "Study manual 전자/인쇄본",
         note: "TIA와 함께 쓰는 경우 많음"
       },
       {
