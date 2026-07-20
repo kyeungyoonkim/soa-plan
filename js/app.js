@@ -948,20 +948,32 @@ let state;
       const weekStart = getWeekStart();
       const now = new Date();
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      const lastWeekStart = new Date(weekStart);
+      lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+      const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       return (state.studyLogs || []).filter(l => {
         if (!(l.topic || "").includes("Pomodoro")) return false;
         const d = new Date(l.date + "T00:00:00");
+        if (range === "last-week") return d >= lastWeekStart && d < weekStart;
+        if (range === "last-month") return d >= lastMonthStart && d < monthStart;
         if (range === "month") return d >= monthStart;
         return d >= weekStart;
       });
     }
 
+    function normalizePomoLogRange(range) {
+      const allowed = ["last-week", "last-month", "week", "month"];
+      return allowed.includes(range) ? range : "week";
+    }
+
     function renderPomoStudyLog() {
       const el = document.getElementById("pomoStudyLog");
       if (!el) return;
-      const range = state.pomoLogRange === "month" ? "month" : "week";
-      document.getElementById("pomoLogWeekBtn")?.classList.toggle("active", range === "week");
-      document.getElementById("pomoLogMonthBtn")?.classList.toggle("active", range === "month");
+      const range = normalizePomoLogRange(state.pomoLogRange);
+      state.pomoLogRange = range;
+      document.querySelectorAll("[data-pomo-log]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.pomoLog === range);
+      });
       const logs = getPomoLogsInRange(range);
       if (!logs.length) {
         el.innerHTML = `<p class="stat-sub" style="text-align:center;margin:0.35rem 0">아직 기록이 없어요. 주제를 적고 집중을 완료하면 여기에 쌓입니다.</p>`;
@@ -1242,7 +1254,7 @@ let state;
       };
       document.querySelectorAll("[data-pomo-log]").forEach(btn => {
         btn.onclick = () => {
-          state.pomoLogRange = btn.dataset.pomoLog === "month" ? "month" : "week";
+          state.pomoLogRange = normalizePomoLogRange(btn.dataset.pomoLog);
           saveState(true);
           renderPomoStudyLog();
         };

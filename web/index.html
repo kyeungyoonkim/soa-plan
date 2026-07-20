@@ -635,7 +635,7 @@
           </div>
         </div>
         <div class="pomo-bar-wrap"><div class="pomo-bar-fill" id="pomoProgressBar"></div></div>
-        <input type="text" id="pomoTopic" class="pomo-topic" placeholder="지금 할 한 가지 (예: FM Chap 3 annuity)" />
+        <input type="text" id="pomoTopic" class="pomo-topic" placeholder="지금 할 일" />
         <div class="pomo-actions">
           <button type="button" class="btn-pomo-go" id="btnPomoStart">▶ 시작</button>
           <button type="button" class="btn-action" id="btnPomoPause" hidden>일시정지</button>
@@ -659,7 +659,9 @@
           <div class="pomo-week">이번 주 <strong id="pomoWeekCount">0</strong>회 · 이번 달 <strong id="pomoMonthCount">0</strong>회</div>
         </div>
         <div class="pomo-cal-label" style="margin-top:1rem">공부 기록</div>
-        <div class="filter-row" style="justify-content:center;margin-bottom:0.55rem">
+        <div class="filter-row" style="justify-content:center;margin-bottom:0.55rem;flex-wrap:wrap">
+          <button type="button" class="filter-btn" id="pomoLogLastWeekBtn" data-pomo-log="last-week">지난 주</button>
+          <button type="button" class="filter-btn" id="pomoLogLastMonthBtn" data-pomo-log="last-month">지난 달</button>
           <button type="button" class="filter-btn active" id="pomoLogWeekBtn" data-pomo-log="week">이번 주</button>
           <button type="button" class="filter-btn" id="pomoLogMonthBtn" data-pomo-log="month">이번 달</button>
         </div>
@@ -1029,7 +1031,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="../js/data.js?v=20260720e"></script>
-  <script defer src="../js/app.js?v=20260720e"></script>
+  <script src="../js/data.js?v=20260720f"></script>
+  <script defer src="../js/app.js?v=20260720f"></script>
 </body>
 </html>
