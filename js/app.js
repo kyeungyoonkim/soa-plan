@@ -533,9 +533,14 @@ let state;
     }
 
     function getNextMilestone() {
-      const today = new Date().toISOString().slice(0,10);
-      for (const m of MILESTONES) if (m.date >= today && !isReqDone(m.taskId)) return m;
-      return MILESTONES[MILESTONES.length-1];
+      return getUpcomingMilestones(1)[0];
+    }
+
+    function getUpcomingMilestones(n) {
+      const today = new Date().toISOString().slice(0, 10);
+      const upcoming = MILESTONES.filter(m => m.date >= today && !isReqDone(m.taskId));
+      if (upcoming.length) return upcoming.slice(0, n);
+      return MILESTONES.slice(-n);
     }
 
     function bindTaskList(container, mode) {
@@ -577,26 +582,6 @@ let state;
     function getWeekStudyMinutes() {
       const weekStart = getWeekStart();
       return (state.studyLogs || []).filter(l => new Date(l.date + "T00:00:00") >= weekStart).reduce((s, l) => s + (+l.minutes || 0), 0);
-    }
-
-    function getWeeklyClassMinutes() {
-      const seen = new Set();
-      let total = 0;
-      (state.schedule || []).forEach(c => {
-        const key = c.name + "|" + c.start + "|" + c.end;
-        if (seen.has(key)) return;
-        seen.add(key);
-        const [sh, sm] = c.start.split(":").map(Number);
-        const [eh, em] = c.end.split(":").map(Number);
-        total += (eh * 60 + em) - (sh * 60 + sm);
-      });
-      return total;
-    }
-
-    function fmtHoursMinutes(mins) {
-      const h = Math.floor(mins / 60);
-      const m = mins % 60;
-      return m ? `${h}h ${m}m` : `${h}h`;
     }
 
     function applyBackupPayload(p) {
@@ -668,14 +653,6 @@ let state;
         </div>`).join("");
     }
 
-    function renderWeeklyLoad() {
-      const el = document.getElementById("weeklyClassHrs");
-      if (!el) return;
-      const classMin = getWeeklyClassMinutes();
-      const studyGoal = state.weeklyStudyGoal || 600;
-      el.textContent = fmtHoursMinutes(classMin) + " 수업 + " + fmtHoursMinutes(studyGoal) + " 공부 ≈ " + fmtHoursMinutes(classMin + studyGoal);
-    }
-
     function renderDashboard() {
       const asa = getProgress(asaReqIds());
       const full = getProgress(allReqIds());
@@ -699,10 +676,14 @@ let state;
       document.getElementById("timelineDashPct").textContent = tlAll.pct + "%";
       document.getElementById("timelineDashBar").style.width = tlAll.pct + "%";
 
-      const next = getNextMilestone();
-      const days = daysUntil(next.date);
-      document.getElementById("countdownDays").textContent = fmtDday(days);
-      document.getElementById("countdownLabel").textContent = next.label + " · " + next.date;
+      const milestones = getUpcomingMilestones(2);
+      document.getElementById("nextMilestones").innerHTML = milestones.map((m, i) => {
+        const days = daysUntil(m.date);
+        return `<div class="milestone-row${i ? " next" : ""}">
+          <div class="stat-num" style="color:var(--accent2);font-size:${i ? "1.45rem" : "2.2rem"}">${fmtDday(days)}</div>
+          <div class="stat-sub">${m.label} · ${m.date}</div>
+        </div>`;
+      }).join("");
 
       // D-day grid
       document.getElementById("ddayGrid").innerHTML = DDAYS.map(d => {
@@ -743,8 +724,11 @@ let state;
       document.getElementById("uecLeft").textContent = up.left + "개 남음 · " + (100-up.pct) + "%";
       document.getElementById("modLeft").textContent = mp.left + "개 남음 · " + (100-mp.pct) + "%";
 
-      // Left todo
-      const leftItems = REQUIREMENTS.filter(r => !isReqDone(r.id)).sort((a,b) => a.order - b.order).slice(0,5);
+      // Left todo — Top 3 priority
+      const topTodoIds = ["sas-cert", "vee-econ", "exam-p"];
+      const leftItems = topTodoIds
+        .map(id => REQUIREMENTS.find(r => r.id === id))
+        .filter(r => r && !isReqDone(r.id));
       document.getElementById("leftTodo").innerHTML = leftItems.length
         ? leftItems.map(r => {
             const st = r.cat === "exam" ? getExamStatus(r.id) : null;
@@ -753,22 +737,12 @@ let state;
           }).join("")
         : "<li><span style='color:var(--accent)'>전부 완료!</span></li>";
 
-      // Alert
+      // Alert — only critical reminders
       const alert = document.getElementById("urgentAlert");
-      const pDays = daysUntil("2026-09-21");
       const pSt = getExamStatus("exam-p");
       if (pSt === "failed") {
         alert.style.display = "block";
         alert.innerHTML = `<strong>Exam P 불합격</strong> — 11월 fallback (등록 9/30) 또는 다음 window 준비.`;
-      } else if (pSt !== "passed" && pDays >= 0 && pDays <= 90) {
-        alert.style.display = "block";
-        alert.innerHTML = `<strong>Exam P ${fmtDday(pDays)}</strong> (9/10–21) — 등록 <strong>8/12</strong> · SAS <strong>8/1</strong> · FM은 Fall <strong>5101 UEC</strong>.`;
-      } else if ((!isReqChecked("vee-econ") || !isReqChecked("vee-acct")) && (phase.id === "summer26" || phase.id === "pre")) {
-        alert.style.display = "block";
-        alert.innerHTML = `<strong>2026 여름:</strong> VEE Micro+Acct · SAS <strong>8/1</strong> · P 9월 본격 (등록 8/12).`;
-      } else if (!isReqChecked("sas-cert") && (phase.id === "summer26" || phase.id === "pre")) {
-        alert.style.display = "block";
-        alert.innerHTML = `<strong>SAS 8/1</strong> — P·VEE와 주간 시간표 나눠서 준비.`;
       } else if (!isReqChecked("vee-stats-check") && phase.id === "sem1") {
         alert.style.display = "block";
         alert.innerHTML = `<strong>VEE Math Statistics</strong> — Temple 담당자에게 Purdue 학점 면제 확인!`;
@@ -1303,7 +1277,7 @@ let state;
 
       const pri = [
         { id:"prep-p", text:"Exam P 9월 대비", meta:fmtDday(daysUntil("2026-09-21")), highlight:true },
-        { id:"sas-cert", text:"SAS 8/1", meta:fmtDday(daysUntil("2026-08-01")), highlight:true },
+        { id:"sas-cert", text:"SAS Base 8/1", meta:fmtDday(daysUntil("2026-08-01")), highlight:true },
         { id:"exam-p", text:"9/10–21 Exam P", meta:"등록 8/12", highlight:true },
         { id:"vee-macro", text:"VEE Macro ✓ (완료)", meta:"Economics 1/2", highlight:false },
         { id:"vee-econ", text:"VEE Microeconomics — 2026 여름", meta:"Economics 2/2", highlight:true },
@@ -1433,11 +1407,7 @@ let state;
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 11월 또는 다음 window</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. FM은 Fall 5101 UEC로 진행.</p>`;
       } else if (getExamStatus("exam-p") !== "passed") {
-        const days = Math.max(1, daysUntil("2026-09-21"));
-        const weeks = Math.max(1, Math.ceil(days / 7));
-        const perWeek = Math.ceil(350 / weeks);
-        el.innerHTML = `<div><span class="hours-big">350h</span> <span class="stat-sub">Exam P · <strong>9/10–21</strong></span></div>
-        <p class="stat-sub" style="margin-top:0.5rem">D-${days} · ${weeks}주 · 주 ~<strong>${perWeek}h</strong> · 등록 <strong>8/12</strong> · 8/1 SAS·VEE 병행 · FM=5101 UEC.</p>`;
+        el.innerHTML = `<div><span class="hours-big">350h</span> <span class="stat-sub">Exam P · <strong>9/10–21</strong></span></div>`;
       } else if (getExamStatus("exam-pa") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108) 기반 복습</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;
@@ -1624,7 +1594,6 @@ let state;
       renderExamStudyGuide();
       renderExamDeadlines();
       renderContacts();
-      renderWeeklyLoad();
       renderStudyProviders();
     }
 

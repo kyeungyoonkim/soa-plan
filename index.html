@@ -84,6 +84,7 @@
     .journey-labels { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--muted); }
 
     .stat-num { font-family: "Instrument Serif", Georgia, serif; font-size: 2.2rem; line-height: 1; color: var(--accent); }
+    .milestone-row + .milestone-row { margin-top: 0.75rem; padding-top: 0.7rem; border-top: 1px solid var(--border); }
     .stat-sub { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
     .progress-wrap { height: 6px; background: var(--surface2); border-radius: 999px; overflow: hidden; margin-top: 0.5rem; }
     .progress-bar { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.4s; opacity: 0.85; }
@@ -490,8 +491,7 @@
         </div>
         <div class="card">
           <div class="card-title">다음 마일스톤</div>
-          <div class="stat-num" id="countdownDays" style="color:var(--accent2)">—</div>
-          <div class="stat-sub" id="countdownLabel">—</div>
+          <div id="nextMilestones"></div>
           <div class="progress-wrap"><div class="progress-bar" id="phaseBar" style="width:0%"></div></div>
           <div class="stat-sub" style="margin-top:0.4rem">현재 구간 <strong id="currentPhaseName" style="color:var(--accent)">—</strong> · 타임라인 <span id="phasePct">0%</span></div>
         </div>
@@ -521,7 +521,7 @@
       </div>
       <div class="grid grid-2" style="margin-bottom:0.9rem">
         <div class="card">
-          <div class="card-title">앞으로 할 것 (Top 5)</div>
+          <div class="card-title">앞으로 할 것 (Top 3)</div>
           <ul class="left-list" id="leftTodo"></ul>
         </div>
         <div class="card">
@@ -562,15 +562,11 @@
           </div>
         </div>
       </div>
-      <div class="link-note"><strong>SRM → PA:</strong> AS 5108(Fall Y2) 완료 → <strong>2028년 4월</strong> Exam PA · 10월은 5108과 겹침</div>
 
       <div class="grid grid-2" style="margin-top:0.9rem">
         <div class="card">
           <div class="card-title">오늘 수업 · 이번 주</div>
           <ul class="today-classes" id="todayClasses"></ul>
-          <div class="stat-sub" style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border)">
-            주당 수업 <strong id="weeklyClassHrs" style="color:var(--accent)">—</strong> · 공부 목표와 합쳐서 주간 시간 관리
-          </div>
         </div>
         <div class="card">
           <div class="card-title">이번 주 공부 목표</div>
@@ -1036,7 +1032,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="js/data.js?v=20260719g"></script>
-  <script defer src="js/app.js?v=20260719g"></script>
+  <script src="js/data.js?v=20260720b"></script>
+  <script defer src="js/app.js?v=20260720b"></script>
 </body>
 </html>
