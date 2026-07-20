@@ -69,13 +69,13 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ]},
       { id:"sem3", name:"3학기 (Fall Y2)", period:"2027년 8/24 ~ 12/15", start:"2027-08-24", end:"2027-12-15", tasks:[
         { id:"as-5108", text:"AS 5108 → SRM UEC", meta:"PA 기반 · Fall Y2", highlight:true },
+        { id:"prep-pa", text:"Exam PA 준비 (5108 병행)", meta:"가을 · ~500h", highlight:true },
+        { id:"exam-pa", text:"10월 Exam PA 합격", meta:"등록 ~9/7 (SOA 확인)", highlight:true },
         { id:"as-5114", text:"AS 5114 → ASTAM UEC", meta:"UEC" },
         { id:"fap-final", text:"FAP 최종 평가", meta:"FAP" },
         { id:"graduate", text:"Temple MS 졸업", meta:"2027.12", highlight:true }
       ]},
       { id:"post", name:"졸업 후 · ASA 마무리", period:"2028년 1월 ~ 6월", start:"2028-01-01", end:"2028-06-30", tasks:[
-        { id:"prep-pa", text:"Exam PA 본격 준비 (5108 기반)", meta:"1–3월 · 500h", highlight:true },
-        { id:"exam-pa", text:"4/14–17 Exam PA 합격", meta:"등록 ~3/9 (SOA 확인)", highlight:true },
         { id:"apc", text:"APC 참석", meta:"마지막" },
         { id:"asa", text:"ASA 완성", meta:"목표", highlight:true }
       ]}
@@ -84,7 +84,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const REQUIREMENTS = [
       { id:"as-5101", cat:"uec", name:"Exam FM", method:"AS 5101 UEC · SOA FM 시험 안 봄", when:"Fall Y1", order:0 },
       { id:"exam-p", cat:"exam", name:"Exam P", method:"9/20 응시 (등록 8/12)", when:"2026 여름", order:4 },
-      { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2028년 4/14–17 (5108 완료 후)", when:"졸업 후", order:11 },
+      { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2027년 10월 (5108 Fall Y2 · 졸업 전)", when:"Fall Y2", order:11 },
       { id:"sas-cert", cat:"career", name:"SAS Base Certification", method:"8/1 응시", when:"2026 여름", order:19 },
       { id:"vee-stats-check", cat:"vee", name:"VEE Math Statistics", method:"Purdue 학점 Temple 면제 확인", when:"1학기", order:1 },
       { id:"vee-macro", cat:"vee", name:"VEE Macroeconomics", method:"이미 수강 완료 (Economics VEE 1/2)", when:"완료", order:2 },
@@ -122,9 +122,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { date:"2026-08-24", label:"Temple 입학", taskId:"oncampus-job" },
       { date:"2026-09-20", label:"Exam P (9/20)", taskId:"exam-p" },
       { date:"2027-06-01", label:"CPT FT", taskId:"cpt-ft" },
+      { date:"2027-09-07", label:"Exam PA 등록 마감 (10월)", taskId:"exam-pa" },
+      { date:"2027-10-16", label:"Exam PA (10월)", taskId:"exam-pa" },
       { date:"2027-12-15", label:"Temple 졸업", taskId:"graduate" },
-      { date:"2028-03-09", label:"Exam PA 등록 마감 (4월 · 예상)", taskId:"exam-pa" },
-      { date:"2028-04-17", label:"Exam PA (4월 window)", taskId:"exam-pa" },
       { date:"2028-06-01", label:"ASA", taskId:"asa" }
     ];
 
@@ -256,18 +256,18 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         alt: "FoxMS@temple.edu에 FM UEC(5101) 플랜 확인"
       },
       {
-        when: "2028 · Exam PA (4월)",
-        tier: "later", tierLabel: "나중",
+        when: "2027 · Exam PA (10월)",
+        tier: "later", tierLabel: "Fall Y2",
         pick: "AS 5108(SRM) 수업 + CA PA + Mahler",
         cost: "~$500+",
-        costDetail: "5108 Fall Y2 완료 후 · PA는 그 다음 4월",
-        plan: "5108(8–12월)에서 R/Python·GLM 기반 → 겨울~봄 SOA PA sample projects → 4/14–17 응시 · 등록 ~3/9",
+        costDetail: "5108 Fall Y2 병행 · 2027.12 졸업 전 응시",
+        plan: "5108에서 R/Python·GLM 기반 → SOA PA sample projects → 10월 응시 · 등록 ~9/7",
         links: [
           { text: "CA PA", url: "https://www.coachingactuaries.com/exam-pa/pricing" },
           { text: "Mahler PA", url: "https://www.theinfiniteactuary.com/mahler/" },
           { text: "SOA PA", url: "https://www.soa.org/education/exam-req/edu-exam-pa-detail/" }
         ],
-        alt: "P→PA 직행 비추 — SRM(5108) 먼저가 Temple·SOA 플랜"
+        alt: "P→PA 직행 비추 — SRM(5108)과 함께 Temple·SOA 플랜"
       },
       {
         when: "학기별 · 모듈",
@@ -292,9 +292,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const EXAM_DEADLINES = [
       { exam:"Exam P (9/20 · 목표)", examDate:"2026-09-20", examEnd:"2026-09-20", regDeadline:"2026-08-12", note:"등록 8/12 12AM · SAS 8/1·VEE와 7–8월 병행" },
       { exam:"Exam P (11월 · fallback)", examDate:"2026-11-04", examEnd:"2026-11-15", regDeadline:"2026-09-30", note:"9월 불합격 시" },
-      { exam:"Exam FM", examDate:"2026-08-24", examEnd:"2026-12-15", regDeadline:null, note:"SOA 시험 안 봄 · AS 5101 UEC (Fall Y1)" },
-      { exam:"Exam PA (4월 · 권장)", examDate:"2028-04-14", examEnd:"2028-04-17", regDeadline:"2028-03-09", note:"5108(Fall Y2) 완료 후" },
-      { exam:"Exam PA (10월 · 비추)", examDate:"2027-10-13", examEnd:"2027-10-16", regDeadline:"2027-09-07", note:"5108과 동시 학기" }
+      { exam:"Exam PA (10월 · 2027)", examDate:"2027-10-13", examEnd:"2027-10-16", regDeadline:"2027-09-07", note:"5108 Fall Y2 · 12월 졸업 전" }
     ];
 
     const CONTACTS = [
@@ -306,11 +304,10 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     ];
 
     const STUDY_HOURS = [
-      { exam:"Exam FM (UEC)", min:0, max:0, typical:0, plan:"AS 5101 수업", tips:"SOA FM 시험 없음 · 5101 B- 이상 · 수업+숙제로 대체" },
       { exam:"Exam P", min:300, max:400, typical:350, plan:"9/20 · 지금부터", tips:"8/1 SAS·VEE와 겹침 · 8/12 등록 · TIA+Adapt EL 6+" },
       { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"8/1", tips:"Base SAS prep · P와 주간 시간 나누기" },
-      { exam:"Exam PA", min:400, max:600, typical:500, plan:"5108 후 · 4월", tips:"500h · 5108 끝난 뒤 1–3월 집중. 10월 PA는 5108과 겹침." },
-      { exam:"UEC (FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"별도 SOA 시험 없음. 수업 성적(B- 이상 등) 요건 확인." },
+      { exam:"Exam PA", min:400, max:600, typical:500, plan:"5108 병행 · 2027.10", tips:"500h · Fall Y2 5108과 함께 · 12월 졸업 전" },
+      { exam:"UEC (FM/FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"별도 SOA 시험 없음 · FM=5101 · FAM=5102+5104 · SRM=5108 · ASTAM=5114 · B- 이상 · 수업+숙제로 대체" },
       { exam:"PAF / ASF / FAP", min:20, max:40, typical:30, plan:"학기별 e-Learning", tips:"모듈당 대략 20~40시간. deadline 미리 확인." }
     ];
 
