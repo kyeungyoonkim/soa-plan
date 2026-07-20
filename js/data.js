@@ -39,7 +39,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"sas-cert", text:"SAS Base 시험 8/1", meta:"Base Programming", highlight:true },
         { id:"vee-macro", text:"VEE Macroeconomics ✓", meta:"Economics VEE · 이미 완료" },
         { id:"vee-econ", text:"VEE Microeconomics — CLEP", meta:"Modern States 무료 · 목표 8/10", highlight:true },
-        { id:"vee-acct", text:"VEE Accounting & Finance 완료", meta:"온라인", highlight:true },
+        { id:"vee-acct", text:"VEE Accounting & Finance ✓", meta:"이미 완료" },
         { id:"exam-p-reg", text:"Exam P 등록", meta:"마감 8/12 12AM CT · 응시는 9/10–21", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 지원 준비", meta:"8/24 입학 전" }
       ]},
@@ -96,7 +96,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"vee-stats-check", cat:"vee", name:"VEE Math Statistics", method:"Purdue 학점 Temple 면제 확인", when:"1학기", order:1 },
       { id:"vee-macro", cat:"vee", name:"VEE Macroeconomics", method:"이미 수강 완료 (Economics VEE 1/2)", when:"완료", order:2 },
       { id:"vee-econ", cat:"vee", name:"VEE Microeconomics", method:"Modern States → CLEP Principles of Microeconomics (무료) · 목표 8/10", when:"2026 여름", order:3 },
-      { id:"vee-acct", cat:"vee", name:"VEE Accounting & Finance", method:"2026 여름 온라인", when:"2026 여름", order:4 },
+      { id:"vee-acct", cat:"vee", name:"VEE Accounting & Finance", method:"이미 통과", when:"완료", order:4 },
       { id:"as-5102-5104", cat:"uec", name:"Exam FAM", method:"AS 5102 & 5104 UEC", when:"2학기", order:7 },
       { id:"as-5108", cat:"uec", name:"Exam SRM", method:"AS 5108 UEC", when:"3학기 (Fall Y2)", order:6 },
       { id:"as-5114", cat:"uec", name:"Exam ASTAM", method:"AS 5114 UEC", when:"3학기", order:10 },
