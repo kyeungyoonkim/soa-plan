@@ -12,12 +12,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"tc-rmi5104", name:"RMI 5104 Property & Liability", credits:3, group:"Selective · 2026 Fall", soa:"—" },
       { id:"tc-sel-1", name:"Selective: AS 5103 / 5114 / 5118 / 5190", credits:3, group:"Selective (1 of 2)", soa:"5114=ASTAM" },
       { id:"tc-sel-2", name:"Selective: AS 5103 / 5114 / 5118 / 5190", credits:3, group:"Selective (2 of 2)", soa:"—" },
-      { id:"tc-hcm5101", name:"HCM 5101 Health Systems Organization", credits:3, group:"Elective (1 of 2) · 2026 Fall", soa:"Non-Fox elective" },
-      { id:"tc-elec-2", name:"Elective (추가 1과목)", credits:3, group:"Elective (2 of 2)", soa:"AS 5001 대신" }
+      { id:"tc-hcm5101", name:"HCM 5101 Health Systems Organization", credits:3, group:"Elective (2과목 · 6 cr) · 2026 Fall", soa:"Non-Fox elective" },
+      { id:"tc-elec-2", name:"Elective (추가 1과목)", credits:3, group:"Elective (2과목 · 6 cr)", soa:"—" }
     ];
 
     // 2026 Fall 등록 시간표 (BA 5687 토요일 제외 — 학기 3회 중 1회만 대면)
-    // AS 5001 미수강 · RMI 5104 월수 11:00–12:15 온라인
+    // RMI 5104 월수 11:00–12:15 온라인
     const DEFAULT_FALL_2026_SCHEDULE = [
       { name:"AS 5101 Theory of Interest", day:1, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
       { name:"AS 5101 Theory of Interest", day:3, start:"09:30", end:"10:50", location:"", semester:"2026 Fall" },
