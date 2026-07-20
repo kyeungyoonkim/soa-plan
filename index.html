@@ -362,8 +362,6 @@
     .quick-links { display: flex; flex-wrap: wrap; gap: 0.4rem; }
     .budget-row { display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; }
     .budget-row:last-child { border-bottom: none; font-weight: 600; }
-    .gcal-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-    .gcal-list li:last-child { border-bottom: none; }
     .guide-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-top: 0.5rem; }
     .guide-table th { text-align: left; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding: 0.55rem 0.45rem; border-bottom: 1px solid var(--border); }
     .guide-table td { padding: 0.6rem 0.45rem; border-bottom: 1px solid var(--border); vertical-align: top; }
@@ -727,8 +725,7 @@
         <strong>2026 Fall 등록 시간표</strong> — AS 5101 · AS 5104 · <strong>RMI 5104</strong>(월·수 11:00–12:15 온라인) · HCM 5101(수 18:00 온라인). BA 5687 토요일 대면은 제외.
       </div>
 
-      <div class="grid grid-2">
-        <div class="card">
+      <div class="card">
           <div class="card-title">학교 시간표 추가</div>
           <input type="text" id="clsName" placeholder="수업명 (예: AS 5108)" />
           <div class="form-row">
@@ -746,16 +743,6 @@
           </div>
           <input type="text" id="clsSemester" placeholder="학기 (예: 2026 Fall)" value="2026 Fall" />
           <button class="btn-action primary" id="btnAddClass">수업 추가</button>
-        </div>
-        <div class="card">
-          <div class="card-title">Google Calendar 연동</div>
-          <p class="stat-sub" style="margin-bottom:0.65rem">한 번에 넣기: ICS 다운로드 → Google Calendar → 설정 → Import</p>
-          <div class="btn-row">
-            <button class="btn-action primary" id="btnExportIcs"> ICS 내보내기 (마일스톤+수업)</button>
-          </div>
-          <p class="stat-sub" style="margin:0.75rem 0 0.5rem">마일스톤 하나씩 추가:</p>
-          <ul class="gcal-list" id="gcalLinks"></ul>
-        </div>
       </div>
 
       <div class="card" style="margin-top:0.9rem">
@@ -1026,7 +1013,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="js/data.js?v=20260720g"></script>
-  <script defer src="js/app.js?v=20260720g"></script>
+  <script src="js/data.js?v=20260720h"></script>
+  <script defer src="js/app.js?v=20260720h"></script>
 </body>
 </html>

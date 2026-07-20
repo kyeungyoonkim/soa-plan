@@ -1332,84 +1332,6 @@ let state;
       return d;
     }
 
-    function pad(n) { return String(n).padStart(2,"0"); }
-
-    function toIcsDate(dateStr) {
-      return dateStr.replace(/-/g, "") + "T090000";
-    }
-
-    function toIcsDateEnd(dateStr) {
-      return dateStr.replace(/-/g, "") + "T170000";
-    }
-
-    function googleCalUrl(title, dateStr, details) {
-      const d = dateStr.replace(/-/g, "");
-      const end = (() => {
-        const dt = new Date(dateStr + "T00:00:00");
-        dt.setDate(dt.getDate() + 1);
-        return dt.getFullYear() + pad(dt.getMonth()+1) + pad(dt.getDate());
-      })();
-      const params = new URLSearchParams({
-        action: "TEMPLATE",
-        text: title,
-        dates: d + "/" + end,
-        details: details || "My ASA Plan"
-      });
-      return "https://calendar.google.com/calendar/render?" + params.toString();
-    }
-
-    function buildIcsContent() {
-      const lines = [
-        "BEGIN:VCALENDAR",
-        "VERSION:2.0",
-        "PRODID:-//My ASA Plan//KO",
-        "CALSCALE:GREGORIAN",
-        "METHOD:PUBLISH",
-        "X-WR-CALNAME:My ASA Plan"
-      ];
-      DDAYS.forEach(m => {
-        lines.push("BEGIN:VEVENT");
-        lines.push("UID:" + m.taskId + "@asa-plan");
-        lines.push("DTSTAMP:" + toIcsDate(new Date().toISOString().slice(0,10)));
-        lines.push("DTSTART;VALUE=DATE:" + m.date.replace(/-/g, ""));
-        lines.push("DTEND;VALUE=DATE:" + (() => {
-          const dt = new Date(m.date + "T00:00:00"); dt.setDate(dt.getDate()+1);
-          return dt.getFullYear() + pad(dt.getMonth()+1) + pad(dt.getDate());
-        })());
-        lines.push("SUMMARY:" + m.label);
-        lines.push("DESCRIPTION:ASA Plan milestone");
-        lines.push("END:VEVENT");
-      });
-      (state.schedule || []).forEach((c, i) => {
-        const dayMap = ["SU","MO","TU","WE","TH","FR","SA"];
-        const until = "20281231T235959Z";
-        const start = c.start.replace(":", "") + "00";
-        const end = c.end.replace(":", "") + "00";
-        lines.push("BEGIN:VEVENT");
-        lines.push("UID:class-" + i + "@asa-plan");
-        lines.push("DTSTAMP:" + toIcsDate(new Date().toISOString().slice(0,10)));
-        lines.push("DTSTART:" + "20260801T" + start);
-        lines.push("DTEND:" + "20260801T" + end);
-        lines.push("RRULE:FREQ=WEEKLY;BYDAY=" + dayMap[c.day] + ";UNTIL=" + until);
-        lines.push("SUMMARY:" + c.name);
-        lines.push("LOCATION:" + (c.location || ""));
-        lines.push("DESCRIPTION:" + (c.semester || ""));
-        lines.push("END:VEVENT");
-      });
-      lines.push("END:VCALENDAR");
-      return lines.join("\r\n");
-    }
-
-    function downloadIcs() {
-      const blob = new Blob([buildIcsContent()], { type: "text/calendar;charset=utf-8" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "my-asa-plan.ics";
-      a.click();
-      URL.revokeObjectURL(a.href);
-      toast("ICS 다운로드됨 → Google Calendar에서 Import");
-    }
-
     function renderExamStudyGuide() {
       const el = document.getElementById("examStudyGuide");
       const logged = getWeekStudyMinutes();
@@ -1467,11 +1389,6 @@ let state;
 
       const sems = [...new Set((state.schedule||[]).map(c => c.semester).filter(Boolean))];
       document.getElementById("scheduleSemester").textContent = sems[0] || "학기 미설정";
-
-      document.getElementById("gcalLinks").innerHTML = DDAYS.map(m =>
-        `<li><span>${m.label} <span style="color:var(--muted);font-size:0.75rem">${m.date}</span></span>
-        <a class="btn-action" href="${googleCalUrl(m.label, m.date, "ASA Plan")}" target="_blank" rel="noopener">+ Google</a></li>`
-      ).join("");
 
       // Today classes on dashboard
       const todayClasses = (state.schedule || []).filter(c => c.day === today)
@@ -1676,8 +1593,6 @@ let state;
 
       initCloudSync();
       bindCareerForm();
-
-      document.getElementById("btnExportIcs").onclick = downloadIcs;
 
       document.getElementById("studyGoalInput").addEventListener("change", e => {
         state.weeklyStudyGoal = Math.max(60, +e.target.value || 600);
