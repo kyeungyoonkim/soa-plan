@@ -703,7 +703,7 @@ let state;
       const cats = [
         { label:"시험 (P·PA)", ids: EXAM_IDS, cls:"cat-exam" },
         { label:"VEE", ids: VEE_IDS, cls:"cat-vee" },
-        { label:"UEC (FAM·SRM·ASTAM)", ids: UEC_IDS, cls:"cat-uec" },
+        { label:"UEC (FM·FAM·SRM·ASTAM)", ids: UEC_IDS, cls:"cat-uec" },
         { label:"모듈 & FAP", ids: MOD_IDS, cls:"cat-module" },
         { label:"커리어", ids: CAREER_IDS, cls:"cat-career" },
         { label:"행정", ids: ADMIN_IDS, cls:"cat-admin" }
