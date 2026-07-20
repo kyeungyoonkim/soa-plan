@@ -35,17 +35,19 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const PHASES = [
       { id:"pre", name:"입학 전 · 2026 여름", period:"~2026년 8월", start:"2025-01-01", end:"2026-08-23", tasks:[
-        { id:"prep-p", text:"Exam P 대비 본격 공부", meta:"지금부터 · 350h", highlight:true },
+        { id:"prep-p", text:"Exam P 대비 본격 공부", meta:"지금부터 · 350h · 9/10–21 window", highlight:true },
         { id:"sas-cert", text:"SAS Base 시험 8/1", meta:"Base Programming", highlight:true },
         { id:"vee-macro", text:"VEE Macroeconomics ✓", meta:"Economics VEE · 이미 완료" },
         { id:"vee-econ", text:"VEE Microeconomics — CLEP", meta:"Modern States 무료 · 목표 8/10", highlight:true },
         { id:"vee-acct", text:"VEE Accounting & Finance 완료", meta:"온라인", highlight:true },
-        { id:"exam-p", text:"Exam P 9/20 응시", meta:"등록 8/12 12AM", highlight:true },
+        { id:"exam-p-reg", text:"Exam P 등록", meta:"마감 8/12 12AM CT · 응시는 9/10–21", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 지원 준비", meta:"8/24 입학 전" }
       ]},
       { id:"sem1", name:"1학기 (Fall Y1)", period:"2026년 8/24 ~ 12/15", start:"2026-08-24", end:"2026-12-15", tasks:[
         { id:"as-5101", text:"AS 5101 → FM UEC", meta:"시험 대신 수업 · B- 이상", highlight:true },
+        { id:"as-5104", text:"AS 5104 Short-Term Modeling", meta:"FAM UEC 일부 · Fall 수강", highlight:true },
         { id:"rmi-5104", text:"RMI 5104 Property & Liability", meta:"Selective · 월수 온라인", highlight:true },
+        { id:"exam-p", text:"Exam P 응시 (목표 9/20)", meta:"window 9/10–21 · 등록 8/12", highlight:true },
         { id:"shi-research", text:"Dr. Shi 리서치 프로젝트", meta:"학기 시작 직후", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 바로 지원", meta:"입학 즉시" },
         { id:"vee-stats-check", text:"VEE Math Statistics — Purdue 학점 Temple 면제 확인", meta:"입학 직후!", highlight:true },
@@ -58,8 +60,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"winter-rest", text:"휴식", meta:"컨디션" }
       ]},
       { id:"sem2", name:"2학기 (Spring Y1)", period:"2027년 1/11 ~ 5/4", start:"2027-01-11", end:"2027-05-04", tasks:[
-        { id:"as-5104", text:"AS 5104 Short-Term Modeling", meta:"FAM UEC 일부" },
-        { id:"as-5102-5104", text:"AS 5102 추가 → FAM UEC 완성", meta:"Advisor와 일정 확인", highlight:true },
+        { id:"as-5102-5104", text:"AS 5102 → FAM UEC 완성", meta:"Fall 5104 이미 수강 · Advisor 확인", highlight:true },
         { id:"cpt-pt", text:"CPT 파트타임 인턴", meta:"커리어" },
         { id:"asf", text:"ASF Module", meta:"모듈" },
         { id:"fap-34", text:"FAP Module 3 & 4", meta:"FAP" }
@@ -72,7 +73,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"sem3", name:"3학기 (Fall Y2)", period:"2027년 8/24 ~ 12/15", start:"2027-08-24", end:"2027-12-15", tasks:[
         { id:"as-5108", text:"AS 5108 → SRM UEC", meta:"PA 기반 · Fall Y2", highlight:true },
         { id:"prep-pa", text:"Exam PA 준비 (5108 병행)", meta:"가을 · ~500h", highlight:true },
-        { id:"exam-pa", text:"10월 Exam PA 합격", meta:"등록 ~9/7 (SOA 확인)", highlight:true },
+        { id:"exam-pa", text:"Exam PA 응시 (2027년 10월)", meta:"날짜 SOA 발표 후 확정 · 등록 ~9월 초", highlight:true },
         { id:"as-5114", text:"AS 5114 → ASTAM UEC", meta:"UEC" },
         { id:"fap-final", text:"FAP 최종 평가", meta:"FAP" },
         { id:"graduate", text:"Temple MS 졸업", meta:"2027.12", highlight:true }
@@ -85,8 +86,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const REQUIREMENTS = [
       { id:"as-5101", cat:"uec", name:"Exam FM", method:"AS 5101 UEC · SOA FM 시험 안 봄", when:"Fall Y1", order:0 },
-      { id:"exam-p", cat:"exam", name:"Exam P", method:"9/20 응시 (등록 8/12)", when:"2026 여름", order:4 },
-      { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2027년 10월 (5108 Fall Y2 · 졸업 전)", when:"Fall Y2", order:11 },
+      { id:"exam-p", cat:"exam", name:"Exam P", method:"목표 9/20 (window 9/10–21) · 등록 8/12 12AM CT", when:"Fall Y1", order:4 },
+      { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2027년 10월 목표 (SOA 일정 발표 후 확정) · 5108 Fall Y2 병행", when:"Fall Y2", order:11 },
       { id:"sas-cert", cat:"career", name:"SAS Base Certification", method:"8/1 응시", when:"2026 여름", order:19 },
       { id:"vee-stats-check", cat:"vee", name:"VEE Math Statistics", method:"Purdue 학점 Temple 면제 확인", when:"1학기", order:1 },
       { id:"vee-macro", cat:"vee", name:"VEE Macroeconomics", method:"이미 수강 완료 (Economics VEE 1/2)", when:"완료", order:2 },
@@ -122,12 +123,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const DDAYS = [
       { date:"2026-08-01", label:"SAS Base 시험", taskId:"sas-cert" },
       { date:"2026-08-10", label:"CLEP Microeconomics", taskId:"vee-econ" },
-      { date:"2026-08-12", label:"Exam P 등록 마감 (9월)", taskId:"exam-p" },
+      { date:"2026-08-12", label:"Exam P 등록 마감", taskId:"exam-p" },
       { date:"2026-08-24", label:"Temple 입학", taskId:"oncampus-job" },
-      { date:"2026-09-20", label:"Exam P (9/20)", taskId:"exam-p" },
+      { date:"2026-09-20", label:"Exam P 목표일 (window 9/10–21)", taskId:"exam-p" },
       { date:"2027-06-01", label:"CPT FT", taskId:"cpt-ft" },
-      { date:"2027-09-07", label:"Exam PA 등록 마감 (10월)", taskId:"exam-pa" },
-      { date:"2027-10-16", label:"Exam PA (10월)", taskId:"exam-pa" },
+      { date:"2027-09-07", label:"Exam PA 등록 마감 (예상)", taskId:"exam-pa" },
+      { date:"2027-10-16", label:"Exam PA (2027.10 목표 · 예상)", taskId:"exam-pa" },
       { date:"2027-12-15", label:"Temple 졸업", taskId:"graduate" },
       { date:"2028-06-01", label:"ASA", taskId:"asa" }
     ];
@@ -308,9 +309,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     }
 
     const EXAM_DEADLINES = [
-      { exam:"Exam P (9/20 · 목표)", examDate:"2026-09-20", examEnd:"2026-09-20", regDeadline:"2026-08-12", note:"등록 8/12 12AM · SAS 8/1·VEE와 7–8월 병행" },
-      { exam:"Exam P (11월 · fallback)", examDate:"2026-11-04", examEnd:"2026-11-15", regDeadline:"2026-09-30", note:"9월 불합격 시" },
-      { exam:"Exam PA (10월 · 2027)", examDate:"2027-10-13", examEnd:"2027-10-16", regDeadline:"2027-09-07", note:"5108 Fall Y2 · 12월 졸업 전" }
+      { exam:"Exam P (9월 · 목표 9/20)", examDate:"2026-09-10", examEnd:"2026-09-21", regDeadline:"2026-08-12", note:"SOA 공식 window 9/10–21 · 등록 8/12 12AM CT · 목표일 9/20" },
+      { exam:"Exam P (11월 · fallback)", examDate:"2026-11-04", examEnd:"2026-11-15", regDeadline:"2026-09-30", note:"9월 불합격 시 · SOA 공식" },
+      { exam:"Exam PA (2027.10 · 목표)", examDate:"2027-10-13", examEnd:"2027-10-16", regDeadline:"2027-09-07", note:"2027 일정 미발표 · 2026.10(13–16)·등록 9/7 패턴으로 예상 · SOA 확인 필수" }
     ];
 
     const CONTACTS = [
