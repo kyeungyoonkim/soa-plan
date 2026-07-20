@@ -1276,9 +1276,9 @@ let state;
       bindTaskList(document.getElementById("focusTasks"), "timeline");
 
       const pri = [
-        { id:"prep-p", text:"Exam P 9월 대비", meta:fmtDday(daysUntil("2026-09-21")), highlight:true },
+        { id:"prep-p", text:"Exam P 대비", meta:fmtDday(daysUntil("2026-09-20")), highlight:true },
         { id:"sas-cert", text:"SAS Base 8/1", meta:fmtDday(daysUntil("2026-08-01")), highlight:true },
-        { id:"exam-p", text:"9/10–21 Exam P", meta:"등록 8/12", highlight:true },
+        { id:"exam-p", text:"Exam P 9/20", meta:"등록 8/12", highlight:true },
         { id:"vee-macro", text:"VEE Macro ✓ (완료)", meta:"Economics 1/2", highlight:false },
         { id:"vee-econ", text:"VEE Microeconomics — 2026 여름", meta:"Economics 2/2", highlight:true },
         { id:"vee-acct", text:"VEE Accounting & Finance — 2026 여름", meta:"온라인", highlight:true },
@@ -1407,7 +1407,7 @@ let state;
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 11월 또는 다음 window</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. FM은 Fall 5101 UEC로 진행.</p>`;
       } else if (getExamStatus("exam-p") !== "passed") {
-        el.innerHTML = `<div><span class="hours-big">350h</span> <span class="stat-sub">Exam P · <strong>9/10–21</strong></span></div>`;
+        el.innerHTML = `<div><span class="hours-big">350h</span> <span class="stat-sub">Exam P · <strong>9/20</strong></span></div>`;
       } else if (getExamStatus("exam-pa") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108) 기반 복습</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;
