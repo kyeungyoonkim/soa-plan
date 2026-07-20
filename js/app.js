@@ -1282,23 +1282,6 @@ let state;
     }
 
     function renderFocus() {
-      const phase = getCurrentPhase();
-      document.getElementById("focusTitle").textContent = `공부모드 · ${phase.name} (${phase.period})`;
-      document.getElementById("focusTasks").innerHTML = phase.tasks.map(timelineTaskLi).join("");
-      bindTaskList(document.getElementById("focusTasks"), "timeline");
-
-      const pri = [
-        { id:"prep-p", text:"Exam P 대비", meta:fmtDday(daysUntil("2026-09-20")), highlight:true },
-        { id:"sas-cert", text:"SAS Base 8/1", meta:fmtDday(daysUntil("2026-08-01")), highlight:true },
-        { id:"exam-p", text:"Exam P 목표 9/20", meta:"window 9/10–21 · 등록 8/12", highlight:true },
-        { id:"vee-macro", text:"VEE Macro ✓ (완료)", meta:"Economics 1/2", highlight:false },
-        { id:"vee-econ", text:"VEE Micro — CLEP 8/10", meta:fmtDday(daysUntil("2026-08-10")), highlight:true },
-        { id:"vee-acct", text:"VEE Accounting & Finance — 2026 여름", meta:"온라인", highlight:true },
-        { id:"as-5101", text:"Fall AS 5101 → FM UEC", meta:"시험 대신 수업", highlight:false },
-        { id:"vee-stats-check", text:"VEE Stats — Temple 면제 확인", meta:"입학 직후" }
-      ];
-      document.getElementById("priorityTasks").innerHTML = pri.map(timelineTaskLi).join("");
-      bindTaskList(document.getElementById("priorityTasks"), "timeline");
       bindFocusTools();
       renderPomodoro();
     }
