@@ -80,7 +80,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ]},
       { id:"post", name:"졸업 후 · ASA 마무리", period:"2028년 1월 ~ 6월", start:"2028-01-01", end:"2028-06-30", tasks:[
         { id:"apc", text:"APC 참석", meta:"마지막" },
-        { id:"asa", text:"ASA 완성", meta:"목표", highlight:true }
+        { id:"asa", text:"ASA 완성", meta:"목표", highlight:true },
+        { id:"sas-advanced", text:"SAS Advanced (선택)", meta:"인턴/실무 후 검토" },
+        { id:"sas-clinical", text:"SAS Clinical (선택)", meta:"제약·임상 진로 시" }
       ]}
     ];
 
@@ -89,6 +91,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"exam-p", cat:"exam", name:"Exam P", method:"목표 9/20 (window 9/10–21) · 등록 8/12 12AM CT", when:"Fall Y1", order:4 },
       { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2027년 10월 목표 (SOA 일정 발표 후 확정) · 5108 Fall Y2 병행", when:"Fall Y2", order:11 },
       { id:"sas-cert", cat:"career", name:"SAS Base Certification", method:"8/1 응시", when:"2026 여름", order:19 },
+      { id:"sas-advanced", cat:"career", name:"SAS Advanced Programming (선택)", method:"Base 이후 · 인턴/실무에서 SAS 쓸 때 검토", when:"선택", order:28 },
+      { id:"sas-clinical", cat:"career", name:"SAS Clinical Trials (선택)", method:"제약·임상 진로 시에만", when:"선택", order:29 },
       { id:"vee-stats-check", cat:"vee", name:"VEE Math Statistics", method:"Purdue 학점 Temple 면제 확인", when:"1학기", order:1 },
       { id:"vee-macro", cat:"vee", name:"VEE Macroeconomics", method:"이미 수강 완료 (Economics VEE 1/2)", when:"완료", order:2 },
       { id:"vee-econ", cat:"vee", name:"VEE Microeconomics", method:"Modern States → CLEP Principles of Microeconomics (무료) · 목표 8/10", when:"2026 여름", order:3 },
@@ -139,7 +143,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const VEE_IDS = ["vee-stats-check","vee-macro","vee-econ","vee-acct"];
     const MOD_IDS = ["paf","asf","fap-12","fap-34","fap-5","fap-final","atpa","apc"];
     const UEC_IDS = ["as-5101","as-5102-5104","as-5108","as-5114"];
-    const CAREER_IDS = ["sas-cert","shi-research","oncampus-job","intern-fall","intern-confirm","cpt-pt","cpt-ft","graduate","asa"];
+    const CAREER_IDS = ["sas-cert","sas-advanced","sas-clinical","shi-research","oncampus-job","intern-fall","intern-confirm","cpt-pt","cpt-ft","graduate","asa"];
     const ADMIN_IDS = ["soa-join","p-transcript","vee-submit","uec-grade","cpt-paperwork","pa-transcript"];
     const ASA_IDS = [...EXAM_IDS, ...VEE_IDS, ...UEC_IDS, ...MOD_IDS];
 
