@@ -865,17 +865,9 @@ let state;
     function startPomoTitleRun() {
       stopPomoTitleBlink();
       stopPomoTitleRun();
-      let flash = false;
       const tick = () => {
         if (!pomoRunning) return;
-        const text = runningTitleText();
-        // 다른 탭에 있을 때 더 잘 보이게 깜빡임
-        if (document.hidden) {
-          document.title = flash ? `▶ ${pomoMode === "work" ? "집중중" : "휴식중"}` : text;
-          flash = !flash;
-        } else {
-          document.title = text;
-        }
+        document.title = runningTitleText();
       };
       tick();
       pomoTitleRunInterval = setInterval(tick, 1000);
@@ -884,12 +876,7 @@ let state;
     function startPomoTitleBlink(msg) {
       stopPomoTitleRun();
       stopPomoTitleBlink();
-      let on = true;
       document.title = msg;
-      pomoTitleBlinkInterval = setInterval(() => {
-        document.title = on ? POMO_BASE_TITLE : msg;
-        on = !on;
-      }, 700);
     }
 
     function ensurePomodoro() {
