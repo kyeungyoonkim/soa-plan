@@ -60,6 +60,7 @@
     .grid-2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
     .grid-3 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
     .grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .grid-5 { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.25rem; box-shadow: var(--shadow); }
     .card-title { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
 
@@ -500,21 +501,10 @@
         <div class="dday-grid" id="ddayGrid"></div>
       </div>
 
-      <div class="grid grid-2" style="margin-bottom:0.9rem">
+      <div style="margin-bottom:0.9rem">
         <div class="card">
           <div class="card-title">카테고리별 진행 (체크리스트)</div>
           <div id="catBars"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Temple MS 학위</div>
-          <div class="ring-wrap">
-            <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringTempleDash" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringTempleDashTxt">0/30</text></svg>
-            <div>
-              <div class="stat-sub">30 credits · Path C</div>
-              <div id="templeDashSub" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">30 cr · 100% 남음</div>
-              <div class="stat-sub" style="margin-top:0.35rem;cursor:pointer;color:var(--accent)" onclick="switchTab('checklist')">수강 과목 체크 →</div>
-            </div>
-          </div>
         </div>
       </div>
       <div style="margin-bottom:0.9rem">
@@ -524,7 +514,14 @@
         </div>
       </div>
 
-      <div class="grid grid-4">
+      <div class="grid grid-5">
+        <div class="card">
+          <div class="card-title">Temple MS 학위</div>
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringTempleDash" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringTempleDashTxt">0/30</text></svg>
+            <div><div class="stat-sub">30 cr · Path C</div><div id="templeDashSub" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">30 cr · 100% 남음</div></div>
+          </div>
+        </div>
         <div class="card">
           <div class="card-title">시험</div>
           <div class="ring-wrap">
