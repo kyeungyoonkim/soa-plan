@@ -1461,8 +1461,10 @@ let state;
     }
 
     function renderTools() {
-      document.getElementById("weeklyMemo").value = state.weeklyMemo || "";
-      document.getElementById("adminMemo").value = state.adminMemo || "";
+      const weeklyMemoEl = document.getElementById("weeklyMemo");
+      if (weeklyMemoEl) weeklyMemoEl.value = state.weeklyMemo || "";
+      const adminMemoEl = document.getElementById("adminMemo");
+      if (adminMemoEl) adminMemoEl.value = state.adminMemo || "";
 
       const adminItems = REQUIREMENTS.filter(r => r.cat === "admin");
       document.getElementById("adminTasks").innerHTML = adminItems.map(r => `
@@ -1510,12 +1512,14 @@ let state;
         if (e.target.tagName === "BUTTON" && e.target.dataset.tab) switchTab(e.target.dataset.tab);
       });
 
-      document.getElementById("weeklyMemo").addEventListener("input", e => {
+      const weeklyMemoInput = document.getElementById("weeklyMemo");
+      if (weeklyMemoInput) weeklyMemoInput.addEventListener("input", e => {
         state.weeklyMemo = e.target.value;
         saveState(true);
       });
 
-      document.getElementById("adminMemo").addEventListener("input", e => {
+      const adminMemoInput = document.getElementById("adminMemo");
+      if (adminMemoInput) adminMemoInput.addEventListener("input", e => {
         state.adminMemo = e.target.value;
         saveState(true);
       });
