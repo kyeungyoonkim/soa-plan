@@ -644,6 +644,25 @@
           </div>
         </details>
       </div>
+
+      <div class="grid grid-2" style="margin-top:0.9rem">
+        <div class="card">
+          <div class="card-title">이번 주 공부 목표</div>
+          <div class="stat-num" id="studyGoalPct" style="font-size:1.8rem">0%</div>
+          <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">600</span>분</div>
+          <div class="progress-wrap"><div class="progress-bar" id="studyGoalBar" style="width:0%"></div></div>
+          <input type="number" id="studyGoalInput" min="60" max="3000" value="600" style="margin-top:0.5rem" />
+          <div class="stat-sub">기본 600분 = 10시간/주</div>
+        </div>
+        <div class="card">
+          <div class="card-title">오늘 공부 기록</div>
+          <input type="number" id="studyMin" placeholder="공부 시간 (분)" min="0" max="600" />
+          <input type="text" id="studyTopic" placeholder="오늘 한 내용 (예: FM annuity)" />
+          <button class="filter-btn active" id="btnLogStudy" style="margin-top:0.2rem">기록 추가</button>
+          <ul class="left-list" id="studyLogs" style="margin-top:0.75rem"></ul>
+          <div class="stat-sub" style="margin-top:0.5rem">이번 주 합계: <strong id="weekStudyTotal" style="color:var(--accent)">0</strong>분</div>
+        </div>
+      </div>
     </section>
 
     <!-- CAREER -->
@@ -774,21 +793,6 @@
       </div>
 
       <div class="card" style="margin-top:0.9rem">
-        <div class="card-title">Temple 진행 예시 (내 ASA 플랜)</div>
-        <table class="guide-table">
-          <thead><tr><th>시기</th><th>Temple (Path C)</th><th>SOA / ASA 플랜</th></tr></thead>
-          <tbody>
-            <tr><td>~2026년 8월</td><td>— (입학 전)</td><td><strong>SAS 8/1</strong> · <strong>CLEP Micro 8/10</strong> · <span style="text-decoration:line-through">VEE Acct</span> · <strong>P 9/20</strong> (등록 8/12)</td></tr>
-            <tr><td>Fall Y1 (2026)<br/><span style="color:var(--muted);font-size:0.78rem">8/24 ~ 12/15</span></td><td>5101, 5104, RMI 5104, HCM 5101</td><td><strong>Exam P 9/20</strong> (window 9/10–21) · <strong>FM UEC(5101)</strong> · FAM 일부(5104) · Selective RMI 5104</td></tr>
-            <tr><td>겨울방학<br/><span style="color:var(--muted);font-size:0.78rem">12/16 ~ 1/10</span></td><td>—</td><td><strong>PAF</strong> (P+FM credit 후) · FAP 1–2</td></tr>
-            <tr><td>Spring Y1 (2027)<br/><span style="color:var(--muted);font-size:0.78rem">1/11 ~ 5/4</span></td><td>AS 5102, RMI 5051, selective 등</td><td>FAP 3–4 · CPT PT · FAM UEC(5102+5104) 완성</td></tr>
-            <tr><td>Fall Y2 (2027)<br/><span style="color:var(--muted);font-size:0.78rem">8/24 ~ 12/15</span></td><td>AS 5108, AS 5114(selective) 등</td><td>SRM·ASTAM UEC · <strong>Exam PA 10월 목표</strong> · FAP final · <strong>12월 졸업</strong></td></tr>
-            <tr><td>2028 초<br/><span style="color:var(--muted);font-size:0.78rem">1 ~ 6월</span></td><td>— (졸업 후)</td><td><strong>ASF</strong> (SRM credit 후) · APC · ASA</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="card" style="margin-top:0.9rem">
         <div class="card-title">학습자료 · 플랫폼 추천</div>
         <div style="font-weight:700;margin-bottom:0.5rem">플랜별 학습자료 추천</div>
         <table class="guide-table" id="studyRecTable"></table>
@@ -811,25 +815,6 @@
             </ul>
             <p class="stat-sub" style="margin-top:0.5rem"><a href="https://www.soa.org/education/exam-req/syllabus-study-materials/exam-and-module-fees/" target="_blank" rel="noopener" style="color:var(--accent)">SOA 공식 요금표 →</a></p>
           </div>
-        </div>
-      </div>
-
-      <div class="grid grid-2" style="margin-top:1.25rem;margin-bottom:0.9rem">
-        <div class="card">
-          <div class="card-title">이번 주 공부 목표</div>
-          <div class="stat-num" id="studyGoalPct" style="font-size:1.8rem">0%</div>
-          <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">600</span>분</div>
-          <div class="progress-wrap"><div class="progress-bar" id="studyGoalBar" style="width:0%"></div></div>
-          <input type="number" id="studyGoalInput" min="60" max="3000" value="600" style="margin-top:0.5rem" />
-          <div class="stat-sub">기본 600분 = 10시간/주</div>
-        </div>
-        <div class="card">
-          <div class="card-title">오늘 공부 기록</div>
-          <input type="number" id="studyMin" placeholder="공부 시간 (분)" min="0" max="600" />
-          <input type="text" id="studyTopic" placeholder="오늘 한 내용 (예: FM annuity)" />
-          <button class="filter-btn active" id="btnLogStudy" style="margin-top:0.2rem">기록 추가</button>
-          <ul class="left-list" id="studyLogs" style="margin-top:0.75rem"></ul>
-          <div class="stat-sub" style="margin-top:0.5rem">이번 주 합계: <strong id="weekStudyTotal" style="color:var(--accent)">0</strong>분</div>
         </div>
       </div>
 
