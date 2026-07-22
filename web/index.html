@@ -375,6 +375,8 @@
     .today-classes { font-size: 0.84rem; }
     .today-classes li { padding: 0.35rem 0; color: var(--muted); }
     .today-classes strong { color: var(--text); }
+    .today-study-guide { margin-top: 0.9rem; padding-top: 0.85rem; border-top: 1px solid var(--border); }
+    .today-study-guide .card-subtitle { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
     .contact-row { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; flex-wrap: wrap; }
     .contact-row:last-child { border-bottom: none; }
     .contact-row a { color: var(--accent); text-decoration: none; }
@@ -565,6 +567,10 @@
         <div class="card">
           <div class="card-title">오늘 수업 · 이번 주</div>
           <ul class="today-classes" id="todayClasses"></ul>
+          <div class="today-study-guide" id="examStudyGuideCard">
+            <div class="card-subtitle">현재 시험 공부 가이드</div>
+            <div id="examStudyGuide"></div>
+          </div>
         </div>
         <div class="card">
           <div class="card-title">이번 주 공부 목표</div>
@@ -572,11 +578,6 @@
           <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">600</span>분</div>
           <div class="progress-wrap"><div class="progress-bar" id="studyGoalBar" style="width:0%"></div></div>
         </div>
-      </div>
-
-      <div class="card" style="margin-top:0.9rem" id="examStudyGuideCard">
-        <div class="card-title">현재 시험 공부 가이드</div>
-        <div id="examStudyGuide"></div>
       </div>
     </section>
 
@@ -1006,7 +1007,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="../js/data.js?v=20260720u"></script>
-  <script defer src="../js/app.js?v=20260720u"></script>
+  <script src="../js/data.js?v=20260722a"></script>
+  <script defer src="../js/app.js?v=20260722a"></script>
 </body>
 </html>
