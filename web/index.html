@@ -493,6 +493,10 @@
           <div id="nextMilestones"></div>
           <div class="progress-wrap"><div class="progress-bar" id="phaseBar" style="width:0%"></div></div>
           <div class="stat-sub" style="margin-top:0.4rem">현재 구간 <strong id="currentPhaseName" style="color:var(--accent)">—</strong> · 타임라인 <span id="phasePct">0%</span></div>
+          <div style="border-top:1px solid var(--border);margin-top:0.75rem;padding-top:0.65rem">
+            <div class="card-title">현재 시험 공부 가이드</div>
+            <div id="examStudyGuide"></div>
+          </div>
         </div>
       </div>
 
@@ -507,23 +511,13 @@
           <div id="catBars"></div>
         </div>
       </div>
-      <div class="grid grid-2" style="margin-bottom:0.9rem">
-        <div class="card">
-          <div class="card-title">현재 시험 공부 가이드</div>
-          <div id="examStudyGuide"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">앞으로 할 것 (Top 3)</div>
-          <ul class="left-list" id="leftTodo"></ul>
-        </div>
-      </div>
 
       <div class="grid grid-5">
         <div class="card">
           <div class="card-title">Temple MS 학위</div>
           <div class="ring-wrap">
             <svg class="ring" viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="30"/><circle class="fg" id="ringTempleDash" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/><text class="ring-text" x="38" y="41" text-anchor="middle" id="ringTempleDashTxt">0/30</text></svg>
-            <div><div class="stat-sub">30 cr · Path C</div><div id="templeDashSub" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">30 cr · 100% 남음</div></div>
+            <div><div class="stat-sub">30 credits</div><div id="templeDashSub" style="font-size:0.82rem;color:var(--accent2);margin-top:0.2rem">30 cr · 100% 남음</div></div>
           </div>
         </div>
         <div class="card">
@@ -794,29 +788,11 @@
         </table>
       </div>
 
-      <div style="margin-top:0.9rem">
-        <div class="card">
-          <div class="card-title">UEC 성적 요건 (Temple)</div>
-          <table class="guide-table">
-            <thead><tr><th>과목</th><th>UEC</th><th>최소 성적</th></tr></thead>
-            <tbody>
-              <tr><td>AS 5101</td><td>FM</td><td><strong>B-</strong> 이상 (Advisor 확인)</td></tr>
-              <tr><td>AS 5102 + 5104</td><td>FAM</td><td><strong>B-</strong> 이상 · 5101 선수</td></tr>
-              <tr><td>AS 5108</td><td>SRM</td><td><strong>B-</strong> 이상</td></tr>
-              <tr><td>AS 5114</td><td>ASTAM</td><td><strong>B-</strong> 이상 · 5104 선수</td></tr>
-            </tbody>
-          </table>
-          <p class="stat-sub" style="margin-top:0.5rem">성적 나오면 SOA Candidate Central에 UEC 자동/수동 반영 확인</p>
-        </div>
-      </div>
-
       <div class="card" style="margin-top:0.9rem">
-        <div class="card-title">플랜별 학습자료 추천 (Path C · Temple)</div>
+        <div class="card-title">학습자료 · 플랫폼 추천</div>
+        <div style="font-weight:700;margin-bottom:0.5rem">플랜별 학습자료 추천</div>
         <table class="guide-table" id="studyRecTable"></table>
-      </div>
-
-      <div class="card" style="margin-top:0.9rem">
-        <div class="card-title">공부 플랫폼 · 교재 (2026)</div>
+        <div style="font-weight:700;margin:1.1rem 0 0.5rem">공부 플랫폼 · 교재 (2026)</div>
         <table class="guide-table" id="studyProvidersTable"></table>
         <p class="stat-sub" style="margin-top:0.5rem"><strong>FM·P 추천 조합:</strong> TIA 무료 + CA Adapt · 또는 CA Learn+Practice ($618, 학생 할인 시 ~$216)</p>
       </div>

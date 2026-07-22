@@ -44,9 +44,11 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"oncampus-job", text:"온캠퍼스 잡 지원 준비", meta:"8/24 입학 전" }
       ]},
       { id:"sem1", name:"1학기 (Fall Y1)", period:"2026년 8/24 ~ 12/15", start:"2026-08-24", end:"2026-12-15", tasks:[
-        { id:"as-5101", text:"AS 5101 → FM UEC", meta:"시험 대신 수업 · B- 이상", highlight:true },
-        { id:"as-5104", text:"AS 5104 Short-Term Modeling", meta:"FAM UEC 일부 · Fall 수강", highlight:true },
-        { id:"rmi-5104", text:"RMI 5104 Property & Liability", meta:"Selective · 월수 온라인", highlight:true },
+        { id:"as-5101", text:"AS 5101 Theory of Interest → FM UEC", meta:"월수 09:30 · 시험 대신 수업 · B- 이상", highlight:true },
+        { id:"as-5104", text:"AS 5104 Short-Term Modeling", meta:"화목 09:30 · FAM UEC 일부", highlight:true },
+        { id:"rmi-5104", text:"RMI 5104 Property & Liability", meta:"Selective · 월수 11:00 온라인", highlight:true },
+        { id:"hcm-5101", text:"HCM 5101 Health Systems", meta:"Elective 1/2 · 수 18:00 온라인", highlight:true },
+        { id:"ba-5687", text:"BA 5687 Professional Dev", meta:"0 cr · 토 3회 (10/3·10/24·11/7)" },
         { id:"exam-p", text:"Exam P 응시 (목표 9/20)", meta:"window 9/10–21 · 등록 8/12", highlight:true },
         { id:"shi-research", text:"Dr. Shi 리서치 프로젝트", meta:"학기 시작 직후", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 바로 지원", meta:"입학 즉시" },
@@ -55,7 +57,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ]},
       { id:"winter", name:"겨울방학", period:"2026년 12/16 ~ 2027년 1/10", start:"2026-12-16", end:"2027-01-10", tasks:[
         { id:"intern-confirm", text:"인턴 확정", meta:"커리어" },
-        { id:"paf", text:"PAF Module", meta:"P+FM credit 반영 후 · 안 되면 Spring 초", highlight:true },
+        { id:"paf", text:"PAF Module (P+FM credit 후)", meta:"FM UEC 학점은 성적→SOA 확인메일→신청·납부→월1회(월말) 반영 → 보통 1월 말, 실제 등록은 Spring 초", highlight:true },
+        { id:"sas-advanced", text:"SAS Advanced (선택)", meta:"1학기 후 · Base 이후 선택 검토" },
         { id:"fap-12", text:"FAP Module 1 & 2", meta:"PAF 직후", highlight:true },
         { id:"winter-rest", text:"휴식", meta:"컨디션" }
       ]},
@@ -81,7 +84,6 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"asf", text:"ASF Module", meta:"SRM+FAM+PAF credit 반영 후", highlight:true },
         { id:"apc", text:"APC 참석", meta:"마지막" },
         { id:"asa", text:"ASA 완성", meta:"목표", highlight:true },
-        { id:"sas-advanced", text:"SAS Advanced (선택)", meta:"인턴/실무 후 검토" },
         { id:"sas-clinical", text:"SAS Clinical (선택)", meta:"제약·임상 진로 시" }
       ]}
     ];
@@ -91,7 +93,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"exam-p", cat:"exam", name:"Exam P", method:"목표 9/20 (window 9/10–21) · 등록 8/12 12AM CT", when:"Fall Y1", order:4 },
       { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2027년 10월 목표 (SOA 일정 발표 후 확정) · 5108 Fall Y2 병행", when:"Fall Y2", order:11 },
       { id:"sas-cert", cat:"career", name:"SAS Base Certification", method:"8/1 응시", when:"2026 여름", order:19 },
-      { id:"sas-advanced", cat:"career", name:"SAS Advanced Programming (선택)", method:"Base 이후 · 인턴/실무에서 SAS 쓸 때 검토", when:"선택", order:28 },
+      { id:"sas-advanced", cat:"career", name:"SAS Advanced Programming (선택)", method:"Base 이후 · 인턴/실무에서 SAS 쓸 때 검토", when:"겨울방학 (선택)", order:28 },
       { id:"sas-clinical", cat:"career", name:"SAS Clinical Trials (선택)", method:"제약·임상 진로 시에만", when:"선택", order:29 },
       { id:"vee-stats-check", cat:"vee", name:"VEE Math Statistics", method:"Purdue 학점 Temple 면제 확인", when:"1학기", order:1 },
       { id:"vee-macro", cat:"vee", name:"VEE Macroeconomics", method:"이미 수강 완료 (Economics VEE 1/2)", when:"완료", order:2 },

@@ -720,18 +720,21 @@ let state;
       document.getElementById("uecLeft").textContent = up.left + "개 남음 · " + (100-up.pct) + "%";
       document.getElementById("modLeft").textContent = mp.left + "개 남음 · " + (100-mp.pct) + "%";
 
-      // Left todo — Top 3 priority
-      const topTodoIds = ["sas-cert", "vee-econ", "exam-p"];
-      const leftItems = topTodoIds
-        .map(id => REQUIREMENTS.find(r => r.id === id))
-        .filter(r => r && !isReqDone(r.id));
-      document.getElementById("leftTodo").innerHTML = leftItems.length
-        ? leftItems.map(r => {
-            const st = r.cat === "exam" ? getExamStatus(r.id) : null;
-            const tag = st === "failed" ? " · 불합격" : "";
-            return `<li><span>${r.name}${tag}</span><span class="when">${r.when}</span></li>`;
-          }).join("")
-        : "<li><span style='color:var(--accent)'>전부 완료!</span></li>";
+      // Left todo — Top 3 priority (optional element)
+      const leftTodoEl = document.getElementById("leftTodo");
+      if (leftTodoEl) {
+        const topTodoIds = ["sas-cert", "vee-econ", "exam-p"];
+        const leftItems = topTodoIds
+          .map(id => REQUIREMENTS.find(r => r.id === id))
+          .filter(r => r && !isReqDone(r.id));
+        leftTodoEl.innerHTML = leftItems.length
+          ? leftItems.map(r => {
+              const st = r.cat === "exam" ? getExamStatus(r.id) : null;
+              const tag = st === "failed" ? " · 불합격" : "";
+              return `<li><span>${r.name}${tag}</span><span class="when">${r.when}</span></li>`;
+            }).join("")
+          : "<li><span style='color:var(--accent)'>전부 완료!</span></li>";
+      }
 
       // Alert — only critical reminders
       const alert = document.getElementById("urgentAlert");
