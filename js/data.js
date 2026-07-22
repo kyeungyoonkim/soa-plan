@@ -254,16 +254,6 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         alt: "원격 응시는 Windows PC 필수 · Mac이면 테스트센터"
       },
       {
-        when: "VEE Acct",
-        tier: "best", tierLabel: "완료",
-        pick: "VEE Accounting & Finance (완료)",
-        cost: "—",
-        costDetail: "이미 통과",
-        plan: "이미 통과 · SOA 제출만 확인",
-        links: [],
-        alt: null
-      },
-      {
         when: "Fall 2026 · FM UEC",
         tier: "budget", tierLabel: "수업=FM",
         pick: "AS 5101 Theory of Interest",

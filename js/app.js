@@ -1424,11 +1424,11 @@ let state;
         sum.innerHTML = `
           <table class="guide-table">
             <tbody>
-              <tr><td colspan="2" style="font-weight:600;color:var(--muted);font-size:0.75rem">시험 2개</td></tr>
+              <tr><td colspan="2" style="font-weight:700;font-size:0.8rem">시험 2개</td></tr>
               ${SOA_FEES.exams.map(x => `<tr><td>${x.name}</td><td>${fmt(x.fee)}</td></tr>`).join("")}
-              <tr><td colspan="2" style="font-weight:600;color:var(--muted);font-size:0.75rem;padding-top:0.5rem">VEE (SOA 제출 $92/과목)</td></tr>
+              <tr><td colspan="2" style="font-weight:700;font-size:0.8rem;padding-top:0.5rem">VEE (SOA 제출 $92/과목)</td></tr>
               ${SOA_FEES.vee.map(x => `<tr><td>${x.name}${x.optional ? " <span style='color:var(--accent2);font-size:0.75rem'>(" + x.optional + ")</span>" : ""}</td><td>${fmt(x.fee)}</td></tr>`).join("")}
-              <tr><td colspan="2" style="font-weight:600;color:var(--muted);font-size:0.75rem;padding-top:0.5rem">모듈 · FAP · APC</td></tr>
+              <tr><td colspan="2" style="font-weight:700;font-size:0.8rem;padding-top:0.5rem">모듈 · FAP · APC</td></tr>
               ${SOA_FEES.modules.map(x => `<tr><td>${x.name}</td><td>${fmt(x.fee)}</td></tr>`).join("")}
               <tr style="font-weight:700"><td>ASA SOA 합계</td><td style="color:var(--accent2)">${fmt(total)}</td></tr>
               <tr><td colspan="2" style="font-size:0.75rem;color:var(--muted);padding-top:0.35rem">${SOA_FEES.uecNote}</td></tr>
