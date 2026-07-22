@@ -158,7 +158,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ],
       vee: [
         { name: "VEE Economics (Micro 남음)", fee: 92, optional: "Macro 완료" },
-        { name: "VEE Accounting & Finance", fee: 92 },
+        { name: "VEE Accounting & Finance", fee: 92, optional: "완료" },
         { name: "VEE Math Statistics", fee: 92, optional: "Purdue 면제 가능" }
       ],
       modules: [
