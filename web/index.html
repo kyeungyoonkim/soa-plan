@@ -517,16 +517,10 @@
           </div>
         </div>
       </div>
-      <div class="grid grid-2" style="margin-bottom:0.9rem">
+      <div style="margin-bottom:0.9rem">
         <div class="card">
           <div class="card-title">앞으로 할 것 (Top 3)</div>
           <ul class="left-list" id="leftTodo"></ul>
-        </div>
-        <div class="card">
-          <div class="card-title">타임라인 (일정용)</div>
-          <div class="stat-sub">전체 타임라인 · <strong id="timelineDashPct" style="color:var(--accent)">0%</strong></div>
-          <div class="progress-wrap"><div class="progress-bar" id="timelineDashBar" style="width:0%"></div></div>
-          <div class="stat-sub" style="margin-top:0.4rem">체크해도 ASA %는 안 변함 · <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('checklist')">체크리스트 →</span></div>
         </div>
       </div>
 
@@ -567,16 +561,9 @@
           <ul class="today-classes" id="todayClasses"></ul>
         </div>
         <div class="card">
-          <div class="card-title">이번 주 공부 목표</div>
-          <div class="stat-num" id="studyGoalPct" style="font-size:1.8rem">0%</div>
-          <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">600</span>분</div>
-          <div class="progress-wrap"><div class="progress-bar" id="studyGoalBar" style="width:0%"></div></div>
+          <div class="card-title">현재 시험 공부 가이드</div>
+          <div id="examStudyGuide"></div>
         </div>
-      </div>
-
-      <div class="card" style="margin-top:0.9rem" id="examStudyGuideCard">
-        <div class="card-title">현재 시험 공부 가이드</div>
-        <div id="examStudyGuide"></div>
       </div>
     </section>
 
@@ -926,8 +913,11 @@
           <div class="stat-sub" style="margin-top:0.25rem;font-size:0.75rem">재응시·학습자료(CA/TIA)는 별도 · Stats Purdue 면제 시 VEE $184 (Econ+Acct)</div>
         </div>
         <div class="card">
-          <div class="card-title">주간 공부 목표 (분)</div>
-          <input type="number" id="studyGoalInput" min="60" max="3000" value="600" />
+          <div class="card-title">이번 주 공부 목표</div>
+          <div class="stat-num" id="studyGoalPct" style="font-size:1.8rem">0%</div>
+          <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">600</span>분</div>
+          <div class="progress-wrap"><div class="progress-bar" id="studyGoalBar" style="width:0%"></div></div>
+          <input type="number" id="studyGoalInput" min="60" max="3000" value="600" style="margin-top:0.5rem" />
           <div class="stat-sub">기본 600분 = 10시간/주</div>
         </div>
       </div>
