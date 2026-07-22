@@ -672,10 +672,6 @@ let state;
       document.getElementById("phasePct").textContent = pp.pct + "%";
       document.getElementById("phaseBar").style.width = pp.pct + "%";
 
-      const tlAll = getTimelineProgress(getAllTimelineIds());
-      document.getElementById("timelineDashPct").textContent = tlAll.pct + "%";
-      document.getElementById("timelineDashBar").style.width = tlAll.pct + "%";
-
       const milestones = getUpcomingMilestones(2);
       document.getElementById("nextMilestones").innerHTML = milestones.map((m, i) => {
         const days = daysUntil(m.date);
