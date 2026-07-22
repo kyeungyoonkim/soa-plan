@@ -254,17 +254,14 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         alt: "원격 응시는 Windows PC 필수 · Mac이면 테스트센터"
       },
       {
-        when: "2026 여름 · VEE Acct",
-        tier: "best", tierLabel: "1순위",
-        pick: "CA VEE — Accounting & Finance",
-        cost: "~$65–100",
-        costDetail: "학생 할인 · SOA 제출 $92 별도",
-        plan: "7–8월 Acct/Fin · Micro(CLEP)와 병행 가능 · 완료 후 SOA 제출",
-        links: [
-          { text: "CA VEE", url: "https://www.coachingactuaries.com/vee" },
-          { text: "ACTEX VEE", url: "https://www.actexlearning.com/search?q=VEE" }
-        ],
-        alt: "ACTEX VEE — CA와 비슷한 가격대"
+        when: "VEE Acct",
+        tier: "best", tierLabel: "완료",
+        pick: "VEE Accounting & Finance (완료)",
+        cost: "—",
+        costDetail: "이미 통과",
+        plan: "이미 통과 · SOA 제출만 확인",
+        links: [],
+        alt: null
       },
       {
         when: "Fall 2026 · FM UEC",

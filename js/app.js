@@ -1320,7 +1320,7 @@ let state;
 
     function renderGuide() {
       document.getElementById("studyHoursTable").innerHTML = STUDY_HOURS.map(s => {
-        const range = s.typical ? `${s.min}–${s.max}h (보통 ~${s.typical}h)` : "수업으로 대체";
+        const range = s.typical ? `${s.min}–${s.max}h` : "수업으로 대체";
         const weeks = s.typical ? `약 ${Math.ceil(s.typical/10)}주` : "—";
         return `<tr><td><strong>${s.exam}</strong></td><td>${range}</td><td>${weeks}</td><td>${s.plan}</td><td style="color:var(--muted);font-size:0.8rem">${s.tips}</td></tr>`;
       }).join("");
@@ -1466,13 +1466,16 @@ let state;
       const adminMemoEl = document.getElementById("adminMemo");
       if (adminMemoEl) adminMemoEl.value = state.adminMemo || "";
 
-      const adminItems = REQUIREMENTS.filter(r => r.cat === "admin");
-      document.getElementById("adminTasks").innerHTML = adminItems.map(r => `
-        <li class="${isReqChecked(r.id)?"checked":""}" data-id="${r.id}">
-          <input type="checkbox" ${isReqChecked(r.id)?"checked":""}/>
-          <div><div class="task-text">${r.name}</div><div class="task-meta">${r.method} · ${r.when}</div></div>
-        </li>`).join("");
-      bindTaskList(document.getElementById("adminTasks"), "req");
+      const adminTasksEl = document.getElementById("adminTasks");
+      if (adminTasksEl) {
+        const adminItems = REQUIREMENTS.filter(r => r.cat === "admin");
+        adminTasksEl.innerHTML = adminItems.map(r => `
+          <li class="${isReqChecked(r.id)?"checked":""}" data-id="${r.id}">
+            <input type="checkbox" ${isReqChecked(r.id)?"checked":""}/>
+            <div><div class="task-text">${r.name}</div><div class="task-meta">${r.method} · ${r.when}</div></div>
+          </li>`).join("");
+        bindTaskList(adminTasksEl, "req");
+      }
 
       const weekStart = getWeekStart();
       const logs = (state.studyLogs || []).slice().reverse().slice(0,8);
@@ -1578,7 +1581,8 @@ let state;
         saveState(true);
       });
 
-      document.getElementById("budgetSpent").addEventListener("input", e => {
+      const budgetSpentInput = document.getElementById("budgetSpent");
+      if (budgetSpentInput) budgetSpentInput.addEventListener("input", e => {
         state.budgetSpent = Math.max(0, +e.target.value || 0);
         saveState(true);
       });
