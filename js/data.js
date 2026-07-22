@@ -57,12 +57,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ]},
       { id:"winter", name:"겨울방학", period:"2026년 12/16 ~ 2027년 1/10", start:"2026-12-16", end:"2027-01-10", tasks:[
         { id:"intern-confirm", text:"인턴 확정", meta:"커리어" },
-        { id:"paf", text:"PAF Module (P+FM credit 후)", meta:"FM UEC 학점은 성적→SOA 확인메일→신청·납부→월1회(월말) 반영 → 보통 1월 말, 실제 등록은 Spring 초", highlight:true },
-        { id:"sas-advanced", text:"SAS Advanced (선택)", meta:"1학기 후 · Base 이후 선택 검토" },
-        { id:"fap-12", text:"FAP Module 1 & 2", meta:"PAF 직후", highlight:true },
+        { id:"sas-advanced", text:"SAS Advanced (선택)", meta:"겨울방학에 응시 · Base 이후", highlight:true },
         { id:"winter-rest", text:"휴식", meta:"컨디션" }
       ]},
       { id:"sem2", name:"2학기 (Spring Y1)", period:"2027년 1/11 ~ 5/4", start:"2027-01-11", end:"2027-05-04", tasks:[
+        { id:"paf", text:"PAF Module (P+FM credit 후)", meta:"FM UEC 학점 반영(보통 1월 말) 직후 · 2월 전 마무리 목표", highlight:true },
+        { id:"fap-12", text:"FAP Module 1 & 2", meta:"PAF 직후", highlight:true },
         { id:"as-5102-5104", text:"AS 5102 → FAM UEC 완성", meta:"Fall 5104 이미 수강 · Advisor 확인", highlight:true },
         { id:"cpt-pt", text:"CPT 파트타임 인턴", meta:"커리어" },
         { id:"fap-34", text:"FAP Module 3 & 4", meta:"수업·인턴 병행" }
@@ -102,9 +102,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"as-5102-5104", cat:"uec", name:"Exam FAM", method:"AS 5102 & 5104 UEC", when:"2학기", order:7 },
       { id:"as-5108", cat:"uec", name:"Exam SRM", method:"AS 5108 UEC", when:"3학기 (Fall Y2)", order:6 },
       { id:"as-5114", cat:"uec", name:"Exam ASTAM", method:"AS 5114 UEC", when:"3학기", order:10 },
-      { id:"paf", cat:"module", name:"PAF Module", method:"e-Learning · P+FM credit 후", when:"겨울 (또는 Spring 초)", order:5 },
+      { id:"paf", cat:"module", name:"PAF Module", method:"e-Learning · P+FM credit 후 · 2월 전 마무리", when:"Spring 초 (2월 전)", order:5 },
       { id:"asf", cat:"module", name:"ASF Module", method:"e-Learning · PAF+FAM+SRM credit 후", when:"Fall Y2 말~겨울", order:8 },
-      { id:"fap-12", cat:"module", name:"FAP 1-2", method:"e-Learning · PAF 직후", when:"겨울~Spring", order:12 },
+      { id:"fap-12", cat:"module", name:"FAP 1-2", method:"e-Learning · PAF 직후", when:"Spring 초", order:12 },
       { id:"fap-34", cat:"module", name:"FAP 3-4", method:"e-Learning", when:"Spring~여름", order:13 },
       { id:"fap-5", cat:"module", name:"FAP 5", method:"e-Learning", when:"여름~Fall Y2", order:14 },
       { id:"fap-final", cat:"module", name:"FAP 최종 평가", method:"e-Learning · 모듈 완료 후", when:"Fall Y2", order:15 },
