@@ -1366,12 +1366,14 @@ let state;
       // Today classes on dashboard
       const todayClasses = (state.schedule || []).filter(c => c.day === today)
         .sort((a, b) => String(a.start).localeCompare(String(b.start)));
-      document.getElementById("todayClasses").innerHTML = todayClasses.length
+      const classRows = todayClasses.length
         ? todayClasses.map(c => {
             const when = c.note || (c.start === "—" ? "" : `${c.start}-${c.end}`);
             return `<li>${when ? `<strong>${when}</strong> ` : ""}${c.name}${c.location ? " @ " + c.location : ""}</li>`;
           }).join("")
         : "<li>오늘 등록된 수업 없음 · <span style='cursor:pointer;color:var(--accent)' onclick=\"switchTab('schedule')\">시간표 추가</span></li>";
+      const examGuideRow = "<li><strong>현재 시험 공부 가이드:</strong> 350h Exam P · 목표 9/20 (window 9/10–21)</li>";
+      document.getElementById("todayClasses").innerHTML = classRows + examGuideRow;
     }
 
     function renderStudyGoal() {
