@@ -4,16 +4,16 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const TEMPLE_COURSES = [
       { id:"tc-5101", name:"AS 5101 Theory of Interest", credits:3, group:"Core · 2026 Fall", soa:"FM UEC" },
-      { id:"tc-5102", name:"AS 5102 Long-Term Actuarial Modeling", credits:3, group:"Core", soa:"FAM UEC" },
       { id:"tc-5104", name:"AS 5104 Short-Term Actuarial Modeling", credits:3, group:"Core · 2026 Fall", soa:"FAM UEC" },
-      { id:"tc-5108", name:"AS 5108 Actuarial Analytics", credits:3, group:"Core", soa:"SRM UEC" },
-      { id:"tc-rmi5051", name:"RMI 5051 Managing Risk", credits:3, group:"Core", soa:"—" },
-      { id:"tc-ba5687", name:"BA 5687 MS Professional Development", credits:0, group:"Core (0 cr · 토 3회: 10/3·10/24·11/7)", soa:"0 cr" },
+      { id:"tc-ba5687", name:"BA 5687 MS Professional Development", credits:0, group:"Core (0 cr · 2026 Fall · 토 3회: 10/3·10/24·11/7)", soa:"0 cr" },
       { id:"tc-rmi5104", name:"RMI 5104 Property & Liability", credits:3, group:"Selective (1/3) · 2026 Fall", soa:"—" },
-      { id:"tc-sel-1", name:"Selective: AS 5103 / 5114 / 5118 / 5190", credits:3, group:"Selective (2/3)", soa:"5114=ASTAM" },
-      { id:"tc-sel-2", name:"Selective: AS 5103 / 5114 / 5118 / 5190", credits:3, group:"Selective (3/3)", soa:"—" },
       { id:"tc-hcm5101", name:"HCM 5101 Health Systems Organization", credits:3, group:"Elective (1/2) · 3 cr · 2026 Fall", soa:"Non-Fox elective" },
-      { id:"tc-elec-2", name:"Elective (추가 1과목)", credits:3, group:"Elective (2/2) · 3 cr", soa:"—" }
+      { id:"tc-5102", name:"AS 5102 Long-Term Actuarial Modeling", credits:3, group:"Core · 2027 Spring", soa:"FAM UEC" },
+      { id:"tc-5108", name:"AS 5108 Actuarial Analytics", credits:3, group:"Core · 2027 Spring", soa:"SRM UEC" },
+      { id:"tc-rmi5051", name:"RMI 5051 Managing Risk", credits:3, group:"Core · 2027 Spring", soa:"—" },
+      { id:"tc-sel-1", name:"AS 5114 Advanced Short-Term Modeling", credits:3, group:"Selective (2/3) · 2027 Fall", soa:"ASTAM UEC" },
+      { id:"tc-sel-2", name:"AS 5118", credits:3, group:"Selective (3/3) · 2027 Fall", soa:"—" },
+      { id:"tc-elec-2", name:"Elective (추가 1과목)", credits:3, group:"Elective (2/2) · 3 cr · 2027 Fall", soa:"—" }
     ];
 
     // 2026 Fall 시간표 · BA 5687은 토요 3회 (10/3 대면, 10/24·11/7 온라인)
@@ -65,6 +65,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"fap-12", text:"FAP Module 1 & 2", meta:"PAF 직후", highlight:true },
         { id:"as-5102-5104", text:"AS 5102 → FAM UEC 완성", meta:"Fall 5104 이미 수강 · Advisor 확인", highlight:true },
         { id:"as-5108", text:"AS 5108 → SRM UEC", meta:"PA 기반 · Spring 2027 수강", highlight:true },
+        { id:"rmi-5051", text:"RMI 5051 Managing Risk", meta:"Core · Spring 2027" },
         { id:"prep-pa", text:"Exam PA 준비 (5108 병행)", meta:"봄학기 · ~500h", highlight:true },
         { id:"exam-pa", text:"Exam PA 응시 (2027년 4월)", meta:"5108 병행 · 등록 ~3월 초 · SOA 일정 확인", highlight:true },
         { id:"cpt-pt", text:"CPT 파트타임 인턴", meta:"커리어" },
@@ -76,7 +77,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"atpa", text:"ATPA Assessment", meta:"Assessment" }
       ]},
       { id:"sem3", name:"3학기 (Fall Y2)", period:"2027년 8/24 ~ 12/15", start:"2027-08-24", end:"2027-12-15", tasks:[
-        { id:"as-5114", text:"AS 5114 → ASTAM UEC", meta:"UEC" },
+        { id:"as-5114", text:"AS 5114 → ASTAM UEC", meta:"Selective 2 · Fall 2027", highlight:true },
+        { id:"as-5118", text:"AS 5118 (Selective)", meta:"Selective 3 · Fall 2027" },
+        { id:"elective-2", text:"Elective 2 (추가 1과목)", meta:"Elective 2/2 · Fall 2027" },
         { id:"fap-final", text:"FAP 최종 평가", meta:"모듈 완료 후", highlight:true },
         { id:"graduate", text:"Temple MS 졸업", meta:"2027.12", highlight:true }
       ]},
