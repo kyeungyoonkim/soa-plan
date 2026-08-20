@@ -31,7 +31,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const FALL_2026_SCHEDULE_VERSION = 4;
     const CIRC = 2 * Math.PI * 30;
     const JOURNEY_START = "2026-01-01";
-    const JOURNEY_END = "2028-06-01";
+    const JOURNEY_END = "2028-03-01";
 
     const PHASES = [
       { id:"pre", name:"입학 전 · 2026 여름", period:"~2026년 8월", start:"2025-01-01", end:"2026-08-23", tasks:[
@@ -73,6 +73,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ]},
       { id:"summer", name:"여름방학", period:"2027년 6월 ~ 8월", start:"2027-06-01", end:"2027-08-31", tasks:[
         { id:"cpt-ft", text:"CPT 풀타임 인턴", meta:"커리어", highlight:true },
+        { id:"asf", text:"ASF Module", meta:"FAM+SRM credit 반영 직후 · PAF 완료 후", highlight:true },
         { id:"fap-5", text:"FAP Module 5", meta:"Final 전 완료", highlight:true },
         { id:"atpa", text:"ATPA Assessment", meta:"Assessment" }
       ]},
@@ -83,10 +84,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"fap-final", text:"FAP 최종 평가", meta:"모듈 완료 후", highlight:true },
         { id:"graduate", text:"Temple MS 졸업", meta:"2027.12", highlight:true }
       ]},
-      { id:"post", name:"졸업 후 · ASA 마무리", period:"2028년 1월 ~ 6월", start:"2028-01-01", end:"2028-06-30", tasks:[
-        { id:"asf", text:"ASF Module", meta:"SRM+FAM+PAF credit 반영 후", highlight:true },
-        { id:"apc", text:"APC 참석", meta:"마지막" },
-        { id:"asa", text:"ASA 완성", meta:"목표", highlight:true },
+      { id:"post", name:"졸업 후 · ASA 마무리", period:"2028년 1월 ~ 3월", start:"2028-01-01", end:"2028-03-31", tasks:[
+        { id:"apc", text:"APC 참석", meta:"ASTAM UEC·FAP Final 등 전부 후 · 초대제", highlight:true },
+        { id:"asa", text:"ASA 완성", meta:"목표 2028년 1–3월", highlight:true },
         { id:"sas-clinical", text:"SAS Clinical (선택)", meta:"제약·임상 진로 시" }
       ]}
     ];
@@ -106,13 +106,13 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"as-5108", cat:"uec", name:"Exam SRM", method:"AS 5108 UEC", when:"2학기 (Spring 2027)", order:6 },
       { id:"as-5114", cat:"uec", name:"Exam ASTAM", method:"AS 5114 UEC", when:"3학기", order:10 },
       { id:"paf", cat:"module", name:"PAF Module", method:"e-Learning · P+FM credit 후 · 2월 전 마무리", when:"Spring 초 (2월 전)", order:5 },
-      { id:"asf", cat:"module", name:"ASF Module", method:"e-Learning · PAF+FAM+SRM credit 후", when:"Fall Y2 말~겨울", order:8 },
+      { id:"asf", cat:"module", name:"ASF Module", method:"e-Learning · PAF+FAM+SRM credit 후", when:"2027 여름", order:8 },
       { id:"fap-12", cat:"module", name:"FAP 1-2", method:"e-Learning · PAF 직후", when:"Spring 초", order:12 },
       { id:"fap-34", cat:"module", name:"FAP 3-4", method:"e-Learning", when:"Spring~여름", order:13 },
       { id:"fap-5", cat:"module", name:"FAP 5", method:"e-Learning", when:"여름~Fall Y2", order:14 },
       { id:"fap-final", cat:"module", name:"FAP 최종 평가", method:"e-Learning · 모듈 완료 후", when:"Fall Y2", order:15 },
       { id:"atpa", cat:"module", name:"ATPA Assessment", method:"SOA", when:"여름", order:9 },
-      { id:"apc", cat:"module", name:"APC", method:"Professionalism", when:"졸업 후", order:16 },
+      { id:"apc", cat:"module", name:"APC", method:"Professionalism · 나머지 요건 전부 후 초대", when:"2028년 1–3월", order:16 },
       { id:"shi-research", cat:"career", name:"Dr. Shi 리서치 프로젝트", method:"학기 시작 직후 · Dr. Tianxiang Shi", when:"1학기", order:20 },
       { id:"oncampus-job", cat:"career", name:"온캠퍼스 잡", method:"입학 즉시 지원", when:"1학기", order:21 },
       { id:"intern-fall", cat:"career", name:"가을 인턴 지원", method:"계리사 인턴 채용", when:"1학기", order:22 },
@@ -120,7 +120,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"cpt-pt", cat:"career", name:"CPT 파트타임", method:"2학기 인턴", when:"2학기", order:24 },
       { id:"cpt-ft", cat:"career", name:"CPT 풀타임", method:"여름 인턴", when:"여름", order:25 },
       { id:"graduate", cat:"career", name:"졸업", method:"Temple MS 완료", when:"2027.12", order:26 },
-      { id:"asa", cat:"career", name:"ASA 완성", method:"모든 요건 + APC", when:"2028", order:27 },
+      { id:"asa", cat:"career", name:"ASA 완성", method:"모든 요건 + APC", when:"2028년 1–3월", order:27 },
       { id:"soa-join", cat:"admin", name:"SOA Candidate 등록", method:"soa.org 가입", when:"P 전후", order:30 },
       { id:"p-transcript", cat:"admin", name:"P 합격 transcript", method:"SOA에 성적 제출", when:"합격 후", order:33 },
       { id:"vee-submit", cat:"admin", name:"VEE 학점 SOA 제출", method:"Econ(Micro)+Acct 완료 후 Candidate Central · Macro transcript 포함", when:"완료 시", order:34 },
@@ -137,7 +137,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { date:"2027-03-09", label:"Exam PA 등록 마감 (예상)", taskId:"exam-pa" },
       { date:"2027-04-15", label:"Exam PA (2027.4 목표 · 예상)", taskId:"exam-pa" },
       { date:"2027-12-15", label:"Temple 졸업", taskId:"graduate" },
-      { date:"2028-06-01", label:"ASA", taskId:"asa" }
+      { date:"2028-03-01", label:"ASA (목표)", taskId:"asa" }
     ];
 
     const MILESTONES = DDAYS;
@@ -288,7 +288,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         pick: "PAF → FAP → ASF → Final (SOA e-Learning)",
         cost: "SOA 요금 포함",
         costDetail: "별도 교재 거의 없음",
-        plan: "Spring 초 PAF(P+FM 후) → FAP 1–5 → Spring 2027 SRM 후 ASF → FAP Final · ATPA · APC. Candidate Central에서 enrollment",
+        plan: "Spring 초 PAF → FAP 1–5 · 2027 여름 ASF(FAM+SRM 후) → Fall FAP Final · 졸업 후 APC → 2028년 1–3월 ASA",
         links: [
           { text: "SOA FAP", url: "https://www.soa.org/education/general-info/fap/" },
           { text: "Candidate Central", url: "https://candidate.soa.org/" }
@@ -321,7 +321,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"8/23 응시 예정", tips:"Base SAS prep · 입학 전날 · P와 주간 시간 나누기" },
       { exam:"Exam PA", min:400, max:600, typical:500, plan:"5108 병행 · 2027.4", tips:"500h · Spring 2027 5108과 함께" },
       { exam:"UEC (FM/FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"별도 SOA 시험 없음 · FM=5101 · FAM=5102+5104 · SRM=5108 · ASTAM=5114 · B- 이상 · 수업+숙제로 대체" },
-      { exam:"PAF / ASF / FAP", min:20, max:40, typical:30, plan:"Spring 초 PAF → FAP → SRM(Spring 2027) 후 ASF", tips:"모듈당 대략 20–40시간. ASF는 SRM credit 필요." }
+      { exam:"PAF / ASF / FAP", min:20, max:40, typical:30, plan:"Spring 초 PAF → FAP · 2027 여름 ASF", tips:"모듈당 대략 20–40시간. ASF는 FAM+SRM credit 후 · ASA 목표는 2028년 1–3월." }
     ];
 
 const CAREER_COLUMNS = [
