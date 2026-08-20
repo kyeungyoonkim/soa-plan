@@ -36,7 +36,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const PHASES = [
       { id:"pre", name:"입학 전 · 2026 여름", period:"~2026년 8월", start:"2025-01-01", end:"2026-08-23", tasks:[
         { id:"prep-p", text:"Exam P 대비 본격 공부", meta:"지금부터 · 350h · 9/10–21 window", highlight:true },
-        { id:"sas-cert", text:"SAS Base 시험 8/10", meta:"Base Programming", highlight:true },
+        { id:"sas-cert", text:"SAS Base 시험 8/23", meta:"Base Programming · 응시 예정", highlight:true },
         { id:"vee-macro", text:"VEE Macroeconomics ✓", meta:"Economics VEE · 이미 완료" },
         { id:"vee-econ", text:"VEE Microeconomics — CLEP", meta:"Modern States 무료 · 목표 8/10", highlight:true },
         { id:"vee-acct", text:"VEE Accounting & Finance ✓", meta:"이미 완료" },
@@ -95,7 +95,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"as-5101", cat:"uec", name:"Exam FM", method:"AS 5101 UEC · SOA FM 시험 안 봄", when:"Fall Y1", order:0 },
       { id:"exam-p", cat:"exam", name:"Exam P", method:"목표 9/20 (window 9/10–21) · 등록 8/12 12AM CT", when:"Fall Y1", order:4 },
       { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2027년 4월 목표 (SOA 일정 확인) · 5108 Spring 2027 병행", when:"2학기 (Spring Y1)", order:11 },
-      { id:"sas-cert", cat:"career", name:"SAS Base Certification", method:"8/10 응시", when:"2026 여름", order:19 },
+      { id:"sas-cert", cat:"career", name:"SAS Base Certification", method:"8/23 응시 예정", when:"2026 여름", order:19 },
       { id:"sas-advanced", cat:"career", name:"SAS Advanced Programming (선택)", method:"Base 이후 · 인턴/실무에서 SAS 쓸 때 검토", when:"겨울방학 (선택)", order:28 },
       { id:"sas-clinical", cat:"career", name:"SAS Clinical Trials (선택)", method:"제약·임상 진로 시에만", when:"선택", order:29 },
       { id:"vee-stats-check", cat:"vee", name:"VEE Math Statistics", method:"Purdue 학점 Temple 면제 확인", when:"1학기", order:1 },
@@ -130,7 +130,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     ];
 
     const DDAYS = [
-      { date:"2026-08-10", label:"SAS Base 시험", taskId:"sas-cert" },
+      { date:"2026-08-23", label:"SAS Base 시험", taskId:"sas-cert" },
       { date:"2026-08-10", label:"CLEP Microeconomics", taskId:"vee-econ" },
       { date:"2026-08-12", label:"Exam P 등록 마감", taskId:"exam-p" },
       { date:"2026-08-24", label:"Temple 입학", taskId:"oncampus-job" },
@@ -225,7 +225,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         pick: "TIA P (무료) + CA Adapt",
         cost: "~$195",
         costDetail: "Adapt only · 8/12 등록 마감",
-        plan: "① 지금부터 TIA P ② Adapt EL 6+ ③ 9/20 응시 · 8/10 SAS·CLEP와 병행 시 주간 시간표 필수",
+        plan: "① 지금부터 TIA P ② Adapt EL 6+ ③ 9/20 응시 · 8/10 CLEP · 8/23 SAS와 병행 시 주간 시간표 필수",
         links: [
           { text: "TIA P", url: "https://www.theinfiniteactuary.com/exam-p/" },
           { text: "CA Adapt P", url: "https://www.coachingactuaries.com/exam-p/pricing" }
@@ -233,12 +233,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         alt: "CA Learn+Practice P — 학생 ~$216"
       },
       {
-        when: "2026년 8/10 · SAS",
-        tier: "best", tierLabel: "8/10",
+        when: "2026년 8/23 · SAS",
+        tier: "best", tierLabel: "8/23",
         pick: "SAS Base Programming Specialist",
         cost: "SAS 공식 요금",
-        costDetail: "8/10 시험 · 같은 날 CLEP Micro · P와 겹침 주의",
-        plan: "SAS 공식 prep → 8/10 Prometric/Pearson 응시 · 인턴·분석 직무에 유리",
+        costDetail: "8/23 응시 예정 · 입학(8/24) 직전 · P와 겹침 주의",
+        plan: "SAS 공식 prep → 8/23 Prometric/Pearson 응시 · 인턴·분석 직무에 유리",
         links: [
           { text: "SAS Certification", url: "https://www.sas.com/en_us/certification.html" }
         ],
@@ -319,8 +319,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     ];
 
     const STUDY_HOURS = [
-      { exam:"Exam P", min:300, max:400, typical:350, plan:"9/20 · 지금부터", tips:"8/10 SAS·CLEP와 겹침 · 8/12 등록 · TIA+Adapt EL 6+" },
-      { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"8/10", tips:"Base SAS prep · CLEP Micro와 같은 날 · P와 주간 시간 나누기" },
+      { exam:"Exam P", min:300, max:400, typical:350, plan:"9/20 · 지금부터", tips:"8/10 CLEP · 8/23 SAS와 겹침 · 8/12 등록 · TIA+Adapt EL 6+" },
+      { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"8/23 응시 예정", tips:"Base SAS prep · 입학 전날 · P와 주간 시간 나누기" },
       { exam:"Exam PA", min:400, max:600, typical:500, plan:"5108 병행 · 2027.4", tips:"500h · Spring 2027 5108과 함께" },
       { exam:"UEC (FM/FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"별도 SOA 시험 없음 · FM=5101 · FAM=5102+5104 · SRM=5108 · ASTAM=5114 · B- 이상 · 수업+숙제로 대체" },
       { exam:"PAF / ASF / FAP", min:20, max:40, typical:30, plan:"Spring 초 PAF → FAP → SRM(Spring 2027) 후 ASF", tips:"모듈당 대략 20–40시간. ASF는 SRM credit 필요." }
