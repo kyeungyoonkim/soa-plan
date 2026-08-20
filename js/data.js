@@ -35,12 +35,11 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const PHASES = [
       { id:"pre", name:"입학 전 · 2026 여름", period:"~2026년 8월", start:"2025-01-01", end:"2026-08-23", tasks:[
-        { id:"prep-p", text:"Exam P 대비 본격 공부", meta:"지금부터 · 350h · 9/10–21 window", highlight:true },
+        { id:"prep-p", text:"Exam P 대비 본격 공부", meta:"지금부터 · 350h · 목표 9/21 (window 9/10–21)", highlight:true },
         { id:"sas-cert", text:"SAS Base 시험 8/23", meta:"Base Programming · 응시 예정", highlight:true },
         { id:"vee-macro", text:"VEE Macroeconomics ✓", meta:"Economics VEE · 이미 완료" },
-        { id:"vee-econ", text:"VEE Microeconomics — CLEP", meta:"Modern States 무료 · 목표 8/10", highlight:true },
         { id:"vee-acct", text:"VEE Accounting & Finance ✓", meta:"이미 완료" },
-        { id:"exam-p-reg", text:"Exam P 등록", meta:"마감 8/12 12AM CT · 응시는 9/10–21", highlight:true },
+        { id:"exam-p-reg", text:"Exam P 등록", meta:"마감 8/12 12AM CT · 응시 목표 9/21", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 지원 준비", meta:"8/24 입학 전" }
       ]},
       { id:"sem1", name:"1학기 (Fall Y1)", period:"2026년 8/24 ~ 12/15", start:"2026-08-24", end:"2026-12-15", tasks:[
@@ -49,13 +48,14 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"rmi-5104", text:"RMI 5104 Property & Liability", meta:"Selective · 월수 11:00 온라인", highlight:true },
         { id:"hcm-5101", text:"HCM 5101 Health Systems", meta:"Elective 1/2 · 수 18:00 온라인", highlight:true },
         { id:"ba-5687", text:"BA 5687 Professional Dev", meta:"0 cr · 토 3회 (10/3·10/24·11/7)" },
-        { id:"exam-p", text:"Exam P 응시 (목표 9/20)", meta:"window 9/10–21 · 등록 8/12", highlight:true },
+        { id:"exam-p", text:"Exam P 응시 (목표 9/21)", meta:"window 9/10–21 · 등록 8/12", highlight:true },
         { id:"shi-research", text:"Dr. Shi 리서치 프로젝트", meta:"학기 시작 직후", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 바로 지원", meta:"입학 즉시" },
         { id:"vee-stats-check", text:"VEE Math Statistics — Purdue 학점 Temple 면제 확인", meta:"입학 직후!", highlight:true },
         { id:"intern-fall", text:"가을 계리사 인턴 지원", meta:"커리어" }
       ]},
       { id:"winter", name:"겨울방학", period:"2026년 12/16 ~ 2027년 1/10", start:"2026-12-16", end:"2027-01-10", tasks:[
+        { id:"vee-econ", text:"VEE Microeconomics — CLEP", meta:"Modern States 무료 · 목표 12/23", highlight:true },
         { id:"intern-confirm", text:"인턴 확정", meta:"커리어" },
         { id:"sas-advanced", text:"SAS Advanced (선택)", meta:"겨울방학에 응시 · Base 이후", highlight:true },
         { id:"winter-rest", text:"휴식", meta:"컨디션" }
@@ -93,14 +93,14 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const REQUIREMENTS = [
       { id:"as-5101", cat:"uec", name:"Exam FM", method:"AS 5101 UEC · SOA FM 시험 안 봄", when:"Fall Y1", order:0 },
-      { id:"exam-p", cat:"exam", name:"Exam P", method:"목표 9/20 (window 9/10–21) · 등록 8/12 12AM CT", when:"Fall Y1", order:4 },
+      { id:"exam-p", cat:"exam", name:"Exam P", method:"목표 9/21 (window 9/10–21) · 등록 8/12 12AM CT", when:"Fall Y1", order:4 },
       { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2027년 4월 목표 (SOA 일정 확인) · 5108 Spring 2027 병행", when:"2학기 (Spring Y1)", order:11 },
       { id:"sas-cert", cat:"career", name:"SAS Base Certification", method:"8/23 응시 예정", when:"2026 여름", order:19 },
       { id:"sas-advanced", cat:"career", name:"SAS Advanced Programming (선택)", method:"Base 이후 · 인턴/실무에서 SAS 쓸 때 검토", when:"겨울방학 (선택)", order:28 },
       { id:"sas-clinical", cat:"career", name:"SAS Clinical Trials (선택)", method:"제약·임상 진로 시에만", when:"선택", order:29 },
       { id:"vee-stats-check", cat:"vee", name:"VEE Math Statistics", method:"Purdue 학점 Temple 면제 확인", when:"1학기", order:1 },
       { id:"vee-macro", cat:"vee", name:"VEE Macroeconomics", method:"이미 수강 완료 (Economics VEE 1/2)", when:"완료", order:2 },
-      { id:"vee-econ", cat:"vee", name:"VEE Microeconomics", method:"Modern States → CLEP Principles of Microeconomics (무료) · 목표 8/10", when:"2026 여름", order:3 },
+      { id:"vee-econ", cat:"vee", name:"VEE Microeconomics", method:"Modern States → CLEP Principles of Microeconomics (무료) · 목표 12/23", when:"겨울방학", order:3 },
       { id:"vee-acct", cat:"vee", name:"VEE Accounting & Finance", method:"이미 통과", when:"완료", order:4 },
       { id:"as-5102-5104", cat:"uec", name:"Exam FAM", method:"AS 5102 & 5104 UEC", when:"2학기", order:7 },
       { id:"as-5108", cat:"uec", name:"Exam SRM", method:"AS 5108 UEC", when:"2학기 (Spring 2027)", order:6 },
@@ -131,10 +131,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const DDAYS = [
       { date:"2026-08-23", label:"SAS Base 시험", taskId:"sas-cert" },
-      { date:"2026-08-10", label:"CLEP Microeconomics", taskId:"vee-econ" },
-      { date:"2026-08-12", label:"Exam P 등록 마감", taskId:"exam-p" },
-      { date:"2026-08-24", label:"Temple 입학", taskId:"oncampus-job" },
-      { date:"2026-09-20", label:"Exam P 목표일 (window 9/10–21)", taskId:"exam-p" },
+      { date:"2026-09-21", label:"Exam P", taskId:"exam-p" },
+      { date:"2026-12-23", label:"CLEP Microeconomics", taskId:"vee-econ" },
       { date:"2027-06-01", label:"CPT FT", taskId:"cpt-ft" },
       { date:"2027-03-09", label:"Exam PA 등록 마감 (예상)", taskId:"exam-pa" },
       { date:"2027-04-15", label:"Exam PA (2027.4 목표 · 예상)", taskId:"exam-pa" },
@@ -220,12 +218,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const STUDY_RECOMMENDATIONS = [
       {
-        when: "지금 · Exam P (9/20)",
+        when: "지금 · Exam P (9/21)",
         tier: "best", tierLabel: "1순위",
         pick: "TIA P (무료) + CA Adapt",
         cost: "~$195",
         costDetail: "Adapt only · 8/12 등록 마감",
-        plan: "① 지금부터 TIA P ② Adapt EL 6+ ③ 9/20 응시 · 8/10 CLEP · 8/23 SAS와 병행 시 주간 시간표 필수",
+        plan: "① 지금부터 TIA P ② Adapt EL 6+ ③ 9/21 응시 · 8/23 SAS와 병행 시 주간 시간표 필수",
         links: [
           { text: "TIA P", url: "https://www.theinfiniteactuary.com/exam-p/" },
           { text: "CA Adapt P", url: "https://www.coachingactuaries.com/exam-p/pricing" }
@@ -245,12 +243,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         alt: null
       },
       {
-        when: "2026 여름 · VEE Micro",
+        when: "겨울방학 · VEE Micro (12/23)",
         tier: "free", tierLabel: "무료",
         pick: "Modern States → CLEP Principles of Microeconomics",
         cost: "$0 (바우처)",
         costDetail: "Modern States 수강 완료 → CLEP 바우처 · Macro는 이미 완료",
-        plan: "Modern States Micro 코스 완료 → CLEP 등록 · 목표 8/10 응시 · 원격(Proctortrack) 또는 테스트센터 · 통과 후 Macro와 합쳐 SOA VEE Economics 제출",
+        plan: "Modern States Micro 코스 완료 → CLEP 등록 · 목표 12/23 응시 · 원격(Proctortrack) 또는 테스트센터 · 통과 후 Macro와 합쳐 SOA VEE Economics 제출",
         links: [
           { text: "Modern States Micro", url: "https://www.modernstates.org/course/principles-of-microeconomics/" },
           { text: "CLEP Microeconomics", url: "https://clep.collegeboard.org/clep/principles-of-microeconomics" },
@@ -305,7 +303,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     }
 
     const EXAM_DEADLINES = [
-      { exam:"Exam P (9월 · 목표 9/20)", examDate:"2026-09-10", examEnd:"2026-09-21", regDeadline:"2026-08-12", note:"SOA 공식 window 9/10–21 · 등록 8/12 12AM CT · 목표일 9/20" },
+      { exam:"Exam P (9월 · 목표 9/21)", examDate:"2026-09-10", examEnd:"2026-09-21", regDeadline:"2026-08-12", note:"SOA 공식 window 9/10–21 · 등록 8/12 12AM CT · 목표일 9/21" },
       { exam:"Exam P (11월 · fallback)", examDate:"2026-11-04", examEnd:"2026-11-15", regDeadline:"2026-09-30", note:"9월 불합격 시 · SOA 공식" },
       { exam:"Exam PA (2027.4 · 목표)", examDate:"2027-04-13", examEnd:"2027-04-16", regDeadline:"2027-03-09", note:"2027 일정 미발표 · 4월 window 예상 · 5108(Spring 2027) 병행 · SOA 확인 필수" }
     ];
@@ -319,7 +317,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     ];
 
     const STUDY_HOURS = [
-      { exam:"Exam P", min:300, max:400, typical:350, plan:"9/20 · 지금부터", tips:"8/10 CLEP · 8/23 SAS와 겹침 · 8/12 등록 · TIA+Adapt EL 6+" },
+      { exam:"Exam P", min:300, max:400, typical:350, plan:"9/21 · 지금부터", tips:"8/23 SAS · 12/23 CLEP · 8/12 등록 · TIA+Adapt EL 6+" },
       { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"8/23 응시 예정", tips:"Base SAS prep · 입학 전날 · P와 주간 시간 나누기" },
       { exam:"Exam PA", min:400, max:600, typical:500, plan:"5108 병행 · 2027.4", tips:"500h · Spring 2027 5108과 함께" },
       { exam:"UEC (FM/FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"별도 SOA 시험 없음 · FM=5101 · FAM=5102+5104 · SRM=5108 · ASTAM=5114 · B- 이상 · 수업+숙제로 대체" },
