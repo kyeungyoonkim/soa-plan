@@ -337,13 +337,14 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const PROJECT_TOOL_GUIDE = {
       title: "툴 선택 가이드 (이 포폴 기준)",
       picks: [
-        { tool: "Python", when: "기본 추천 · EDA·GLM·ML·대시보드(Streamlit)까지 한 스택", libs: "pandas, numpy, statsmodels 또는 scikit-learn, matplotlib/plotly, jupyter" },
-        { tool: "R", when: "대안 · 계리·통계/GLM이 익숙하거나 5108이 R이면 통일", libs: "tidyverse, glm(), ggplot2, rmarkdown" },
-        { tool: "SQL", when: "데이터는 작아서 필수 아님 · 그래도 Health GLM에 집계 쿼리 몇 개 넣으면 면접에 좋음", libs: "DuckDB / SQLite + SELECT · GROUP BY" },
-        { tool: "Excel / Sheets", when: "Life 생명표·프리미엄 민감도를 먼저 손으로 검증할 때", libs: "할인·현가 표 · 시나리오" },
-        { tool: "GitHub", when: "모든 프로젝트 공통", libs: "README + notebook + PNG" }
+        { tool: "SAS", when: "강점 · Health/Life carrier·컨설팅 실무 언어 · Base 자격과 바로 연결", libs: "PROC IMPORT · PROC MEANS/FREQ · PROC GLM / GENMOD · ODS 그래프 · .sas + 로그/출력 PDF" },
+        { tool: "Python", when: "대시보드(Streamlit)·PA ML·포폴 배포용 · SAS와 병행 OK", libs: "pandas, statsmodels/sklearn, matplotlib/plotly, jupyter" },
+        { tool: "R", when: "대안 · 5108이 R이면 통일", libs: "tidyverse, glm(), ggplot2, rmarkdown" },
+        { tool: "SQL", when: "선택 · Health에 PROC SQL 또는 DuckDB 집계 몇 개", libs: "SELECT · GROUP BY · JOIN" },
+        { tool: "Excel / Sheets", when: "Life 생명표·프리미엄 민감도 손검증", libs: "할인·현가 표 · 시나리오" },
+        { tool: "GitHub", when: "모든 프로젝트 공통", libs: "README + .sas (또는 notebook) + PNG/PDF" }
       ],
-      rule: "하나만 고르면: Python + Jupyter. 이미 R이면 R로 통일. SQL은 Health 프로젝트에 짧은 쿼리 섹션만."
+      rule: "Health 핵심은 SAS로 간다 (자격·면접 스토리 일치). Python은 대시보드/PA용. R은 수업이 R일 때만."
     };
 
     const PERSONAL_PROJECTS = [
@@ -353,13 +354,14 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         priority: "1순위 · Health 포폴 핵심",
         when: "지금 ~ Fall Y1 (HCM 5101·면접 스토리)",
         tools: {
-          primary: "Python (Jupyter)",
-          also: "R도 가능 · SQL은 선택(연습용)",
+          primary: "SAS (Base · PROC GENMOD/GLM)",
+          also: "검증용 Python/R 가능 · PROC SQL 선택",
           detail: [
-            "Python: pandas 로드 → statsmodels GLM (계수 해석용) · 시각화는 matplotlib/seaborn",
-            "R 대안: glm(charges ~ ., family = Gamma(link='log')) 또는 log(charges) ~ .",
-            "SQL(선택): DuckDB에 csv 넣고 smoker/region별 AVG(charges) 쿼리 3개 → sql/eda.sql",
-            "비추: Spark, 무거운 DB, AutoML"
+            "메인: SAS — PROC IMPORT → PROC MEANS/FREQ/SGPLOT → PROC GENMOD (또는 GLM) log link · 계수 해석",
+            "PROC SQL(선택): smoker/region별 AVG(charges) 3쿼리",
+            "출력: ODS PDF/RTF 또는 PNG + .sas 스크립트를 GitHub에",
+            "Python/R은 숫자 크로스체크용으로만 (선택)",
+            "비추: Spark, AutoML, 딥러닝"
           ]
         },
         dataset: {
@@ -381,17 +383,17 @@ const STORAGE_KEY = "soa-asa-plan-v6";
           "Health actuarial 한 줄 결론 + 한계"
         ],
         steps: [
-          { id: "setup", text: "환경: Python venv + jupyter + pandas/statsmodels/matplotlib (또는 RStudio + tidyverse)" },
-          { id: "data", text: "Kaggle insurance.csv → data/raw/ · 결측·타입·중복 확인 노트" },
-          { id: "sql", text: "(선택) DuckDB/SQLite: smoker·region별 AVG(charges), COUNT(*) 쿼리 3개 → sql/eda.sql" },
-          { id: "eda", text: "charges 분포 · smoker boxplot · BMI 밴드 평균 · region 막대 · 인사이트 5불릿" },
-          { id: "split", text: "train/test 80/20 (seed 고정) · 타깃=charges · 범주형 인코딩 또는 R formula" },
-          { id: "glm", text: "메인 모델 1개 선택: log-linear 또는 Gamma(log) · age+bmi+children+smoker+sex+region" },
-          { id: "interpret", text: "exp(coef) relativity 표 (smoker 배율, 연령 +10세 등)" },
-          { id: "validate", text: "test 산점도 · 잔차 · 저/중/고비용 구간 오차 메모" },
-          { id: "readme", text: "README: 문제→방법→결과표→한계 · PNG 삽입 · 1페이지 PDF · Kaiser/Cigna용 30초 스크립트" }
+          { id: "setup", text: "SAS OnDemand/로컬 + insurance.csv → LIBNAME/PROC IMPORT (Base 시험 스택과 동일)" },
+          { id: "data", text: "PROC CONTENTS/MEANS/FREQ · 결측·타입·중복 확인 · 로그 깨끗이" },
+          { id: "sql", text: "(선택) PROC SQL: smoker·region별 AVG(charges), COUNT(*) 3개" },
+          { id: "eda", text: "SGPLOT: charges 분포 · smoker · BMI 밴드 · region · 인사이트 5불릿" },
+          { id: "split", text: "train/test 표시 변수 (또는 단순 홀드아웃) · seed 고정 문서화" },
+          { id: "glm", text: "PROC GENMOD/GLM: log(charges) 또는 Gamma(log) · age+bmi+children+smoker+sex+region" },
+          { id: "interpret", text: "exp(Estimate) relativity 표 (smoker 배율, 연령 효과 등) · ODS로 표 뽑기" },
+          { id: "validate", text: "예측 vs 실제 · 잔차/구간 오차 메모 · (선택) Python으로 숫자 한 번 대조" },
+          { id: "readme", text: "README: 문제→SAS 방법→결과표→한계 · Base 자격 연결 · Kaiser/Cigna용 30초 스크립트" }
         ],
-        portfolio: "GitHub + Health pricing 30초 스크립트",
+        portfolio: "GitHub (.sas + 출력) + Health pricing 30초 스크립트 · SAS Base와 한 스토리",
         refs: [
           { text: "Kaggle Medical Cost Personal Datasets", url: "https://www.kaggle.com/datasets/mirichoi0218/insurance" },
           { text: "statsmodels GLM", url: "https://www.statsmodels.org/stable/glm.html" }
@@ -403,12 +405,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         priority: "지금 바로 · 포폴 첫 링크",
         when: "입학 전 ~ Fall Y1 · GLM보다 먼저",
         tools: {
-          primary: "Python + Streamlit (또는 Tableau Public)",
-          also: "집계는 pandas 또는 SQL",
+          primary: "Python + Streamlit (또는 Tableau) · 집계는 SAS도 OK",
+          also: "KPI는 SAS PROC MEANS/SQL → csv → Streamlit",
           detail: [
-            "빠른 경로: pandas KPI → Streamlit 필터 → Streamlit Community Cloud 배포",
-            "GUI: Tableau Public / Power BI에 csv 연결 후 퍼블리시",
-            "R Shiny는 배움 비용 커서 비추"
+            "SAS로 KPI·집계 뽑고, 배포만 Streamlit/Tableau (라이브 링크용)",
+            "또는 전부 pandas — 시간 없으면 후자",
+            "R Shiny 비추"
           ]
         },
         dataset: {
@@ -447,12 +449,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         priority: "2순위 · Pacific Life / Milliman Life",
         when: "Fall Y1 AS 5101 (FM)과 병행",
         tools: {
-          primary: "Excel/Sheets 검증 + Python 또는 R 재현",
+          primary: "Excel/Sheets 검증 + SAS 또는 Python/R 재현",
           also: "FM 계산기로 현가 직관 확인",
           detail: [
-            "(1) Sheets에서 qx·할인·NSP 표 → (2) 같은 로직을 Python/R로 재현",
-            "Python: pandas 생명표 + numpy 할인 v**t",
-            "R: dplyr + 벡터 연산",
+            "(1) Sheets에서 qx·할인·NSP 표 → (2) 같은 로직을 SAS DATA step 또는 Python/R로 재현",
+            "SAS: DATA step으로 v**t · 생존·급부 현가 · PROC PRINT 민감도",
+            "Python/R: pandas/dplyr + 벡터 할인",
             "SQL 불필요"
           ]
         },
@@ -477,7 +479,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         steps: [
           { id: "fetch", text: "SSA Period Life Table → data/life_table.csv (성별 하나 또는 둘)" },
           { id: "sheet", text: "Sheets: x, qx, px, v=1/(1+i), 급부 현가 · 예: 35세 10년 만기" },
-          { id: "code", text: "Python/R 함수로 NSP·level premium · Sheets와 assert로 숫자 맞추기" },
+          { id: "code", text: "SAS DATA step 또는 Python/R로 NSP·level premium · Sheets와 숫자 맞추기" },
           { id: "sens", text: "i=3/4/5% · qx scale 0.9/1.0/1.1 표·차트" },
           { id: "write", text: "README + Pacific Life/Milliman용 30초 스크립트" }
         ],
@@ -493,13 +495,13 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         priority: "3순위 · AS 5108 · Exam PA 직전",
         when: "Spring 2027",
         tools: {
-          primary: "Python (statsmodels + scikit-learn)",
-          also: "5108이 R이면 R로 통일 (glm + randomForest/xgboost)",
+          primary: "SAS GLM + Python/R ML (또는 전부 한쪽)",
+          also: "5108이 R이면 R로 통일",
           detail: [
-            "Model1=기존 GLM · Model2=RandomForest 또는 HistGradientBoosting",
-            "metric 1개 고정 (MAE 추천)",
-            "해석: GLM 계수 vs permutation importance / PDP",
-            "딥러닝·AutoML 비추"
+            "Model1=기존 SAS GENMOD/GLM · Model2=Python sklearn RF/HGB (또는 R)",
+            "metric 1개 고정 (MAE)",
+            "해석: SAS 계수 vs permutation importance / PDP",
+            "딥러닝·AutoML 비추 · ‘요율은 SAS GLM, 스크리닝은 ML’ 스토리"
           ]
         },
         dataset: {
