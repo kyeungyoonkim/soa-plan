@@ -260,7 +260,11 @@ let state;
           </div>
           <div class="project-section">
             <div class="sec-label">포폴에 올릴 것</div>
-            <p class="stat-sub" style="margin:0;line-height:1.5">${escapeHtml(p.portfolio)}</p>
+            <p class="stat-sub" style="margin:0;line-height:1.5">${
+              /^https?:\/\//.test(p.portfolio || "")
+                ? `<a href="${p.portfolio}" target="_blank" rel="noopener" style="color:var(--accent)">${escapeHtml(p.portfolio)}</a>`
+                : escapeHtml(p.portfolio || "")
+            }</p>
           </div>
           ${refs ? `<div class="project-section"><div class="sec-label">참고 링크</div><div class="project-links">${refs}</div></div>` : ""}
         </div>`;

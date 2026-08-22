@@ -332,6 +332,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     ];
 
     // 포폴용 개인 프로젝트 (SOA · Life/Health · 서부 스폰 회사 면접용)
+    const PORTFOLIO_URL = "https://kyeungyoonkim.github.io/";
+
     const PROJECT_TOOL_GUIDE = {
       title: "툴 선택 가이드 (이 포폴 기준)",
       picks: [
@@ -533,36 +535,39 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       },
       {
         id: "proj-portfolio-site",
-        title: "포폴 허브 (서부 Life/Health · 스폰 타깃용)",
-        priority: "상시",
-        when: "프로젝트 1개 끝날 때마다",
+        title: "포폴 허브 업데이트 (kyeungyoonkim.github.io)",
+        priority: "상시 · URL 이미 있음",
+        when: "프로젝트 1개 끝날 때마다 사이트에 반영",
         tools: {
-          primary: "GitHub README",
-          also: "GitHub Pages / Notion public",
+          primary: "GitHub Pages (기존 포폴)",
+          also: "각 프로젝트 repo 링크를 포폴에서 연결",
           detail: [
-            "코드·문서는 GitHub · README만으로도 충분",
-            "사이트는 선택 (Pages)"
+            "공개 주소: https://kyeungyoonkim.github.io/",
+            "새 분석은 별도 repo 또는 /projects 폴더에 두고, 포폴 홈에서 카드로 링크",
+            "이력서·LinkedIn·지원서에 이 URL 고정"
           ]
         },
-        dataset: { name: "—", kaggle: "", note: "산출물 모음" },
-        why: "한 링크로 SOA Life/Health · 서부 · 스폰 스토리.",
+        dataset: { name: "—", kaggle: "", note: "산출물 모음 · 라이브: https://kyeungyoonkim.github.io/" },
+        why: "한 링크로 SOA Life/Health · 서부 · 스폰 스토리. recruiter에게 바로 전달.",
         approach: [
           "첫 화면 4요소: SOA · Life/Health · F-1/CPT–OPT · 서부.",
           "카드 순서: Health GLM → Life → PA.",
-          "각 카드: 문제/툴/결과/링크만."
+          "각 카드: 문제/툴/결과/GitHub 링크만."
         ],
         deliverables: [
-          "About",
-          "카드 3개",
-          "LinkedIn·이력서 URL"
+          "About에 포지셔닝 문구",
+          "프로젝트 카드 3개 (완료분부터)",
+          "LinkedIn Featured · 이력서에 https://kyeungyoonkim.github.io/"
         ],
         steps: [
-          { id: "repo", text: "portfolio repo · 포지셔닝 문구 고정" },
-          { id: "cards", text: "완료분부터 카드·스크린샷·링크" },
-          { id: "link", text: "LinkedIn Featured · 이력서 · 지원 첨부" }
+          { id: "about", text: "포폴 About에 SOA · Life/Health · F-1/CPT–OPT · 서부 희망 한 단락 반영" },
+          { id: "cards", text: "완료 프로젝트부터 카드·스크린샷·repo 링크 추가" },
+          { id: "link", text: "LinkedIn Featured · 이력서 · 스폰 타깃 지원서에 포폴 URL 첨부" }
         ],
-        portfolio: "최종 공개 URL",
-        refs: []
+        portfolio: "https://kyeungyoonkim.github.io/",
+        refs: [
+          { text: "내 포폴 (GitHub Pages)", url: "https://kyeungyoonkim.github.io/" }
+        ]
       }
     ];
 
