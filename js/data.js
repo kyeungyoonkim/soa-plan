@@ -344,7 +344,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
           kaggle: "https://www.kaggle.com/datasets/xiangshan1989/french-motor-insurance",
           note: "약 68만 증권 · ClaimNb / Exposure / BonusMalus 등 · severity 파일과 조인"
         },
-        why: "손해보험 pricing의 기본 구조(빈도×심도)를 한 번에 보여줄 수 있음. 인턴·P&C 인터뷰에서 바로 설명 가능.",
+        why: "손해보험 pricing의 기본 구조(빈도×심도)를 한 번에 보여줄 수 있음. Life/Health로 가도 GLM·요율 스토리는 동일하게 설명 가능.",
         deliverables: [
           "EDA: 노출·클레임 분포, zero-claim 비율, BonusMalus·연령·차종별 클레임률",
           "Frequency: Poisson / NegBin GLM (offset = log Exposure)",
@@ -478,54 +478,74 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       }
     ];
 
-    // 커리어: 컨퍼런스·세미나 찾는 법
+    // 커리어: SOA · Life/Health · 서부 · 스폰 위주
     const CAREER_EVENT_GUIDE = {
-      title: "계리 컨퍼런스 · 세미나 찾는 법",
-      intro: "학생 가격·virtual이 많은 편. ‘참석 → LinkedIn 정리 → 커피챗 1명’이 목표.",
+      title: "커리어 타깃 · 컨퍼런스 · 스폰 (내 기준)",
+      intro: "경로: SOA · Life/Health 선호 · CAS 안 함 · 유학생 스폰(CPT→OPT→H-1B) · 서부 정착. 이벤트는 ‘참석 → LinkedIn → 커피챗 1명’이 목표.",
       channels: [
         {
           name: "SOA (Society of Actuaries)",
-          how: "Events / Meetings 페이지 · Student/Candidate 할인 확인 · webinar·virtual session 먼저",
+          how: "Professional Development · Meetings · webcast. Life Insurance / Health Section 이벤트 우선",
           url: "https://www.soa.org/professional-development/",
-          tips: "Annual Meeting·Life Meeting 등은 비싸니, 무료/저가 webcast·section webinar부터."
+          tips: "Life Meeting·Health Meeting·무료 section webinar부터. Candidate/Student 할인 확인."
         },
         {
-          name: "CAS (Casualty Actuarial Society)",
-          how: "P&C 쪽 세미나·student programs · CAS Student Central",
-          url: "https://www.casact.org/",
-          tips: "자동차·재산보험 관심이면 CAS 이벤트가 SOA보다 핏이 맞을 수 있음."
-        },
-        {
-          name: "Temple / Fox · AS·RMI 학과",
-          how: "Dr. Shi·FoxMS 메일, Canvas 공지, Fox Career·보험클럽 이벤트",
-          url: "https://www.fox.temple.edu/",
-          tips: "교내 guest speaker·alumni panel이 가장 ROI 높음. 매 학기 초 메일링 구독."
-        },
-        {
-          name: "IABA / ASNA / 지역 actuarial club",
-          how: "International Association of Black Actuaries, Actuarial Students’ National Association, Philadelphia 지역 네트워킹",
-          url: "https://www.actuarialfoundation.org/",
-          tips: "학생 컨퍼런스는 등록비가 저렴하고 리크루터 부스 있는 경우 많음."
-        },
-        {
-          name: "LinkedIn · Eventbrite · Meetup",
-          how: "검색어: actuarial, insurance analytics, P&C pricing, predictive analytics insurance",
-          url: "https://www.linkedin.com/search/results/events/?keywords=actuarial",
-          tips: "‘Save’ 해두고 월 1회 캘린더에 넣는 습관. 회사 주최 webinar도 이력서에 기입 가능."
-        },
-        {
-          name: "보험사 · 컨설팅 공개 세션",
-          how: "Milliman, WTW, Aon, Gallagher, 지역 carrier careers 페이지 ‘events’",
+          name: "SOA Future Actuaries · Student events",
+          how: "학생·후보용 세션, career fair, virtual networking",
           url: "https://www.soa.org/future-actuaries/",
-          tips: "정보 세션·case workshop은 인턴 시즌(가을) 전후에 몰림."
+          tips: "CAS 이벤트는 스킵. SOA + 회사 info session만 캘린더에."
+        },
+        {
+          name: "Temple / Fox · AS·RMI",
+          how: "Dr. Shi·FoxMS 메일, Canvas, Fox Career, insurance/actuarial club",
+          url: "https://www.fox.temple.edu/",
+          tips: "교내 guest speaker·alumni panel ROI 최고. Life/Health alumni 있으면 꼭 잡기."
+        },
+        {
+          name: "LinkedIn Events · 회사 careers webinar",
+          how: "검색: actuarial intern life, health actuarial webinar, SOA student, Pacific Life / Milliman / Kaiser careers event",
+          url: "https://www.linkedin.com/search/results/events/?keywords=actuarial%20life%20health",
+          tips: "P&C·CAS·property 키워드는 필터에서 빼도 됨."
+        },
+        {
+          name: "서부 로컬 · health plan 세션",
+          how: "Kaiser, Blue Shield CA, Cigna/Evernorth Denver, Pacific Life OC 등 careers ‘events’",
+          url: "https://www.soa.org/future-actuaries/",
+          tips: "가을 인턴 시즌 전 virtual info session이 많음. 참석 후 recruiter에 서부 선호·스폰 필요를 솔직히."
         }
       ],
       searchTips: [
-        "키워드: actuarial student webinar, CAS seminar, SOA webcast, insurance data science meetup",
-        "필터: Virtual · Free · Student — 먼저 연 2–3개 참석해 보는 게 목표",
-        "참석 후: 발표자/리크루터 1명 LinkedIn + 감사 메시지 (프로젝트·시험 플랜 한 줄)",
-        "커리어 보드에 type=네트워킹으로 이벤트명·날짜· follow-up 메모 남기기"
-      ]
+        "키워드: SOA life actuarial intern, health actuarial analyst, H-1B actuarial, visa sponsorship actuarial",
+        "필터: Virtual · Free · Student · Life/Health — 연 2–3개만 해도 충분",
+        "지원서/메시지에: F-1 · CPT/OPT 가능 시기 · H-1B 스폰 필요 · 서부(CA/WA/CO 등) 선호 한 줄",
+        "스폰 확인: myvisajobs.com / h1bgrader · 회사명 + Actuarial LCA 검색 후 지원",
+        "커리어 보드에 이벤트·타깃 회사 추가 (type=네트워킹 또는 인턴)"
+      ],
+      westFocus: {
+        title: "서부 정착 허브 (Life / Health 위주)",
+        cities: [
+          "Seattle, WA — Milliman HQ · life/health consulting · tech+보험 교차",
+          "Orange County / LA, CA — Pacific Life(Newport Beach) · health plans · Corebridge 등 LA 쪽 오피스",
+          "Bay Area / Sacramento, CA — Kaiser · Blue Shield CA · health analytics",
+          "Denver / Greenwood Village, CO — Cigna·Evernorth health actuarial 채용·스폰 이력 있음",
+          "Phoenix, AZ · Portland, OR — health plan / Kaiser 계열 기회 (규모는 작을 수 있음)"
+        ]
+      },
+      sponsors: {
+        title: "유학생 스폰 위주 타깃 회사 (Life/Health · 서부 관련)",
+        note: "‘스폰한다’는 DOL LCA 이력 기준 참고. 매 채용마다 달라지니 지원 시 recruiter에 확인. CAS/P&C carrier는 의도적으로 제외.",
+        companies: [
+          { name: "Pacific Life", fit: "Life · Newport Beach CA · Seattle 쪽 이력도", why: "H-1B LCA 꾸준 · Assistant Actuary 등 · 서부 Life 대표 타깃", url: "https://www.pacificlife.com/home/careers.html" },
+          { name: "Milliman", fit: "Consulting · Seattle HQ · Life/Health practice", why: "서부 정착+스폰 현실적 · SOA 경로와 잘 맞음", url: "https://www.milliman.com/en/careers" },
+          { name: "Kaiser Permanente", fit: "Health · CA/OR/WA/CO", why: "헬스케어 핏 · 서부 네트워크 · 인턴/얼리커리어 채용 확인", url: "https://www.kaiserpermanentejobs.org/" },
+          { name: "Cigna / Evernorth", fit: "Health · Denver 등", why: "Health actuarial LCA·채용 이력 · 서부 거점", url: "https://jobs.thecignagroup.com/" },
+          { name: "Corebridge / AIG Life (American General)", fit: "Life · Woodland Hills CA 등", why: "Life + SoCal · H-1B 이력 있음", url: "https://www.corebridgefinancial.com/careers" },
+          { name: "UnitedHealthcare / Optum", fit: "Health · 전국 (서부 오피스 포함)", why: "규모 큰 health 채용 · 스폰 이력은 팀마다 확인", url: "https://careers.unitedhealthgroup.com/" },
+          { name: "Elevance (Anthem) / regional Blues", fit: "Health", why: "헬스케어 pricing·risk · 서부 plan 오픈 시 지원", url: "https://careers.elevancehealth.com/" },
+          { name: "Blue Shield of California", fit: "Health · CA", why: "CA 정착 시 우선 워치리스트", url: "https://www.blueshieldca.com/careers" },
+          { name: "WTW · Aon · Mercer (Life/Health teams)", fit: "Consulting · 서부 오피스", why: "스폰 비교적 익숙 · Life/Health practice로 지원 명시", url: "https://www.wtwco.com/en-us/careers" }
+        ]
+      }
     };
 
 const CAREER_COLUMNS = [

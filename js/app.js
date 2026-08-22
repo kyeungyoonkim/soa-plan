@@ -126,11 +126,29 @@ let state;
       const el = document.getElementById("careerEventGuide");
       if (!el || typeof CAREER_EVENT_GUIDE === "undefined") return;
       const g = CAREER_EVENT_GUIDE;
+      const west = g.westFocus ? `
+        <div class="project-section">
+          <div class="sec-label">${g.westFocus.title}</div>
+          <ul class="tip-list" style="margin:0">${g.westFocus.cities.map(t => `<li>${t}</li>`).join("")}</ul>
+        </div>` : "";
+      const sponsors = g.sponsors ? `
+        <div class="project-section">
+          <div class="sec-label">${g.sponsors.title}</div>
+          <p class="stat-sub" style="margin:0 0 0.55rem;line-height:1.45">${g.sponsors.note}</p>
+          ${g.sponsors.companies.map(c => `
+            <div style="margin-bottom:0.55rem;padding-bottom:0.45rem;border-bottom:1px solid var(--border)">
+              <div style="font-weight:600;font-size:0.88rem"><a href="${c.url}" target="_blank" rel="noopener" style="color:var(--accent)">${c.name}</a>
+                <span class="stat-sub"> · ${c.fit}</span></div>
+              <div class="stat-sub" style="margin-top:0.15rem;line-height:1.45">${c.why}</div>
+            </div>`).join("")}
+        </div>` : "";
       el.innerHTML = `
         <div class="card-title">${g.title}</div>
         <p class="stat-sub" style="margin:0 0 0.65rem;line-height:1.5">${g.intro}</p>
+        ${west}
+        ${sponsors}
         <div class="project-section">
-          <div class="sec-label">어디서 찾나</div>
+          <div class="sec-label">이벤트 · 어디서 찾나 (SOA 위주)</div>
           ${g.channels.map(c => `
             <div style="margin-bottom:0.65rem;padding-bottom:0.55rem;border-bottom:1px solid var(--border)">
               <div style="font-weight:600;font-size:0.88rem"><a href="${c.url}" target="_blank" rel="noopener" style="color:var(--accent)">${c.name}</a></div>
@@ -139,7 +157,7 @@ let state;
             </div>`).join("")}
         </div>
         <div class="project-section">
-          <div class="sec-label">검색 · 활용 팁</div>
+          <div class="sec-label">검색 · 지원 팁</div>
           <ul class="tip-list" style="margin:0">${g.searchTips.map(t => `<li>${t}</li>`).join("")}</ul>
         </div>`;
     }
