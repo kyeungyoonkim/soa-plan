@@ -139,6 +139,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { date:"2026-08-23", label:"SAS Base 시험", taskId:"sas-cert" },
       { date:"2026-08-24", label:"Fall 2026 개강" },
       { date:"2026-09-21", label:"Exam P", taskId:"exam-p" },
+      { date:"2026-09-22", label:"Health rate memo 시작 (P 후)", taskId:"proj-health" },
+      { date:"2026-10-15", label:"SAS Student Hackathon (10월 중)", taskId:"sas-hackathon" },
       { date:"2026-12-15", label:"Fall 2026 종강 (기말 종료)" },
       { date:"2026-12-23", label:"CLEP Microeconomics", taskId:"vee-econ" },
       { date:"2027-01-11", label:"Spring 2027 개강" },
@@ -353,7 +355,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       {
         id: "proj-health-rate-memo",
         title: "Health · 의료비 리스크 relativity + rate memo (SAS)",
-        priority: "1순위 · 지금 시작",
+        priority: "1순위 · P 이후 (해커톤과 묶기)",
         when: "P 직후 9/22~ · 10월 SAS 해커톤 = 이 프로젝트 스프린트 · 11월 memo 마무리",
         tools: {
           primary: "SAS (PROC GENMOD/GLM + ODS)",
