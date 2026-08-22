@@ -26,7 +26,7 @@ let state;
 
     function defaultState() {
       return {
-        reqChecked:{}, timelineChecked:{}, templeChecked:{}, examStatus:{}, projectChecked:{},
+        reqChecked:{}, timelineChecked:{}, templeChecked:{}, examStatus:{}, projectChecked:{}, researchChecked:{},
         weeklyMemo:"", adminMemo:"",
         studyLogs:[], checklistFilter:"all", schedule:[],
         weeklyStudyGoal:600, budgetSpent:0, pomoLogRange:"week",
@@ -755,6 +755,7 @@ let state;
         templeChecked: p.templeChecked || {},
         examStatus: migrateExamStatus(reqChecked, p.examStatus),
         projectChecked: p.projectChecked || {},
+        researchChecked: p.researchChecked || {},
         schedule: (p.schedule && p.schedule.length) ? p.schedule : applyFall2026Schedule(),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -1664,6 +1665,7 @@ let state;
       renderFocus();
       renderCareer();
       renderProjects();
+      renderResearch();
       renderGuide();
       renderSchedule();
       renderStudyGoal();

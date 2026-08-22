@@ -52,7 +52,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"proj-health", text:"Health rate memo (SAS) start", meta:"after P (9/22~) · same work as Oct hackathon", highlight:true },
         { id:"sas-hackathon", text:"SAS Student Hackathon", meta:"10/1 시작 · 10/30 마감 · Health rate memo와 동일 작업", highlight:true },
         { id:"proj-life", text:"Life term memo (assumption memo)", meta:"with 5101 (FM) · after hackathon deadline 10/30", highlight:true },
-        { id:"shi-research", text:"Dr. Shi 리서치 프로젝트", meta:"학기 시작 직후", highlight:true },
+        { id:"shi-research", text:"Dr. Shi research track", meta:"disability/equity · Research 탭 · P 이후 미팅", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 바로 지원", meta:"입학 즉시" },
         { id:"vee-stats-check", text:"VEE Math Statistics — Purdue 학점 Temple 면제 확인", meta:"입학 직후!", highlight:true },
         { id:"intern-fall", text:"가을 계리사 인턴 지원", meta:"커리어" }
@@ -117,7 +117,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"fap-final", cat:"module", name:"FAP 최종 평가", method:"e-Learning · 모듈 완료 후", when:"Fall Y2", order:15 },
       { id:"atpa", cat:"module", name:"ATPA Assessment", method:"SOA", when:"여름", order:9 },
       { id:"apc", cat:"module", name:"APC", method:"Professionalism · 나머지 요건 전부 후 초대", when:"2028년 1–3월", order:16 },
-      { id:"shi-research", cat:"career", name:"Dr. Shi 리서치 프로젝트", method:"학기 시작 직후 · Dr. Tianxiang Shi", when:"1학기", order:20 },
+      { id:"shi-research", cat:"career", name:"Dr. Shi research track", method:"disability / equity · Life or Health · see Research tab · meet after Exam P", when:"Fall Y1 (after P)", order:20 },
       { id:"oncampus-job", cat:"career", name:"온캠퍼스 잡", method:"입학 즉시 지원", when:"1학기", order:21 },
       { id:"intern-fall", cat:"career", name:"가을 인턴 지원", method:"계리사 인턴 채용", when:"1학기", order:22 },
       { id:"intern-confirm", cat:"career", name:"인턴 확정", method:"겨울방학 전", when:"겨울", order:23 },
@@ -465,6 +465,150 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         ]
       }
     ];
+
+    // Separate from portfolio: research track (disability · equity · SOA Life/Health)
+    const RESEARCH_TRACK = {
+      title: "Research track (separate from portfolio)",
+      intro: "Portfolio = interview artifacts. This tab = possible Dr. Shi / paper-shaped work. Theme: disability, equity, fairer access — still SOA Life/Health (not CAS). Start after Exam P; bring a 1-page question to Shi, not a finished Kaggle notebook.",
+      vsPortfolio: [
+        "Projects tab = Health rate memo + Life assumption memo (hackathon OK).",
+        "Research tab = literature + real question + better data → possible RA / working paper.",
+        "Do not ask Shi to ‘turn the Kaggle GLM into a paper.’ Ask which equity/disability question is researchable with his lab."
+      ],
+      howToPitchShi: {
+        title: "How to ask Dr. Shi",
+        bullets: [
+          "Timing: after Exam P (late Sep) · 20–30 min · bring 1-pager.",
+          "Say: interested in disability / equity in Life or Health actuarial work; want a research question, not portfolio polish.",
+          "Show: short list of 2–3 topics below · ask which fits his agenda / available data.",
+          "Offer: lit review + SAS/R coding help · F-1 / CPT later if RA exists.",
+          "Avoid: ‘I already have a paper idea on Kaggle medical cost.’"
+        ]
+      },
+      topics: [
+        {
+          id: "res-di-equity",
+          title: "Disability insurance (DI / LTD): fairness, access, claim outcomes",
+          fit: "Life · group benefits · Pacific Life / Milliman / carrier DI teams",
+          paperPotential: "Medium–high if you get claim or public DI-related data + a sharp question",
+          question: "How do underwriting rules, occupation class, or benefit design affect access and claim duration for people with disabilities — and where does ‘risk’ vs unfair exclusion show up?",
+          whyYou: "Directly matches disability + equity interest; still classic actuarial (incidence, termination, RTW).",
+          approach: [
+            "Lit: SOA DI / group LTD papers · NAIC disability tables · RTW literature.",
+            "Methods: survival / multi-state (healthy–disabled–recovered) or GLM on incidence/duration.",
+            "Equity angle: which rating factors are predictive vs exclusionary; transparency of assumptions.",
+            "Data path: public summaries first; ask Shi / Temple about proprietary or partnership data."
+          ],
+          firstSteps: [
+            { id: "lit1", text: "Read 2–3 SOA DI/LTD overview papers · 10 bullet notes" },
+            { id: "q1", text: "Write 5 candidate research questions · pick top 2 with Shi" },
+            { id: "data1", text: "List feasible data (public vs need-intro) · one page" }
+          ],
+          refs: [
+            { text: "SOA research (search disability / LTD)", url: "https://www.soa.org/" },
+            { text: "SOA PD Edge", url: "https://www.soa.org/prof-dev/pd-edge/" }
+          ]
+        },
+        {
+          id: "res-health-disability",
+          title: "Health actuarial + disability / chronic conditions (access & benefit design)",
+          fit: "Health · Kaiser / Blues / Cigna · HCM 5101 overlap",
+          paperPotential: "Medium · stronger with claims or MEPS/Medicare disability cohorts",
+          question: "How do plan design and risk adjustment treat members with disabilities or high chronic burden — and what are the equity tradeoffs in premiums, cost-sharing, or network access?",
+          whyYou: "Health path + fairness; can connect to disability status / functional limitation measures in survey data.",
+          approach: [
+            "Start with public survey data (e.g. MEPS, BRFSS, ACS disability questions) — not Kaggle toy.",
+            "Focus: utilization, OOP, unmet need, or risk-score residuals by disability marker.",
+            "Actuarial hook: risk adjustment fairness, benefit design, high-cost prediction with fairness constraints.",
+            "Write as Health equity + pricing/risk memo that can grow into empirical paper."
+          ],
+          firstSteps: [
+            { id: "data2", text: "Pick one public dataset (MEPS or similar) · document disability variables" },
+            { id: "eda2", text: "Descriptive equity gaps table (utilization / OOP / access) — no fancy ML yet" },
+            { id: "shi2", text: "Ask Shi if Health equity + actuarial framing fits his supervision" }
+          ],
+          refs: [
+            { text: "MEPS (AHRQ)", url: "https://meps.ahrq.gov/mepsweb/" },
+            { text: "CDC disability & health", url: "https://www.cdc.gov/ncbddd/disabilityandhealth/index.html" }
+          ]
+        },
+        {
+          id: "res-ltc-aging",
+          title: "Long-term care / aging with disability",
+          fit: "Life · LTC · Health crossover",
+          paperPotential: "Medium · crowded field; need a narrow angle (e.g. underinsurance, informal care, Medicaid spend-down)",
+          question: "Who is left underinsured for LTC needs related to disability, and how do product / public program designs create unequal protection?",
+          whyYou: "Disability across the life course; strong social-impact story for SOA Life/Health.",
+          approach: [
+            "Lit: SOA LTC experience studies · Medicaid LTC · informal caregiving.",
+            "Possible angle: transition probabilities, product take-up by disability/income, or fairness of underwriting.",
+            "Only pursue if Shi has LTC interest or data path."
+          ],
+          firstSteps: [
+            { id: "lit3", text: "Skim 1 SOA LTC study + 1 Medicaid LTC explainer · notes" },
+            { id: "fit3", text: "Ask Shi: LTC in his lab? yes/no gate" }
+          ],
+          refs: [
+            { text: "SOA.org search: long-term care", url: "https://www.soa.org/" }
+          ]
+        },
+        {
+          id: "res-mh-parity",
+          title: "Mental health parity & actuarial costing (equity lens)",
+          fit: "Health · group benefits",
+          paperPotential: "Medium · policy-relevant; data access is the bottleneck",
+          question: "After parity rules, where do residual disparities remain in MH utilization or plan cost — and how should actuaries measure ‘parity’ beyond legal checklists?",
+          whyYou: "Equity / stigma / access; still Health actuarial language (utilization, unit cost, trend).",
+          approach: [
+            "Policy baseline: MHPAEA · then actuarial measurement gaps.",
+            "Empirical only if claims or strong public proxy available.",
+            "Otherwise: structured lit + measurement framework paper with Shi (methods contribution)."
+          ],
+          firstSteps: [
+            { id: "pol4", text: "One-page MHPAEA summary for actuaries" },
+            { id: "gap4", text: "List measurable parity metrics an actuary could track" }
+          ],
+          refs: [
+            { text: "DOL MHPAEA", url: "https://www.dol.gov/agencies/ebsa/laws-and-regulations/laws/mental-health-and-substance-use-disorder-parity" }
+          ]
+        },
+        {
+          id: "res-fair-rating",
+          title: "Fairness in actuarial rating (protected attributes vs risk)",
+          fit: "Cross Life/Health · interview + research",
+          paperPotential: "High interest area · hard to publish without careful ethics + data; good lit-review entry",
+          question: "When is a risk factor actuarially justified vs socially unacceptable for pricing or underwriting — especially for disability-related information?",
+          whyYou: "Ties portfolio language (fairness, causality) to a real research program.",
+          approach: [
+            "Lit: actuarial fairness, anti-discrimination insurance law, proxy discrimination.",
+            "Possible project: simulation / conceptual framework first; empirics later.",
+            "Portfolio Health memo can cite this lit; research goes deeper than the memo."
+          ],
+          firstSteps: [
+            { id: "lit5", text: "Collect 5 papers/notes on insurance fairness & disability" },
+            { id: "map5", text: "Map: rating · underwriting · claims · which stage equity bites" }
+          ],
+          refs: [
+            { text: "SOA Candidate Events / research culture", url: "https://www.soa.org/future-actuaries/candidate-events/" }
+          ]
+        }
+      ],
+      timeline: [
+        { when: "Now → 9/21", what: "Exam P only · optional: skim 1 DI or health-equity article" },
+        { when: "9/22 → 10/30", what: "Portfolio Health + SAS hackathon · Research = only Shi 1-pager draft (don’t compete with hackathon)" },
+        { when: "Nov–Dec", what: "Meet Shi · pick 1 topic · start lit review · confirm data path" },
+        { when: "Spring 2027", what: "If matched: RA-style empirics with 5108/PA skills · draft working paper outline" }
+      ],
+      processSteps: [
+        { id: "sep", text: "Keep portfolio vs research mentally separate (this tab vs Projects)" },
+        { id: "onepager", text: "Write 1-pager: theme (disability/equity) + top 2 topics + what you can offer (SAS, hours/week)" },
+        { id: "email", text: "Email Dr. Shi for meeting (after P) · attach 1-pager" },
+        { id: "pick", text: "Leave meeting with ONE topic + next deliverable date" },
+        { id: "lit", text: "4–6 week lit review memo (not code-first)" },
+        { id: "data", text: "Data feasibility check with Shi before modeling" },
+        { id: "scope", text: "Only then: analysis plan → possible working paper" }
+      ]
+    };
 
     // 커리어: SOA · Life/Health · 서부 · 스폰 위주
     const CAREER_EVENT_GUIDE = {
