@@ -211,41 +211,41 @@ let state;
         const ds = p.dataset || {};
         const tools = p.tools || {};
         const kaggleLink = ds.kaggle
-          ? `<a href="${ds.kaggle}" target="_blank" rel="noopener">데이터 링크</a>`
+          ? `<a href="${ds.kaggle}" target="_blank" rel="noopener">Dataset link</a>`
           : "";
         const refs = (p.refs || []).map(r => `<a href="${r.url}" target="_blank" rel="noopener">${r.text}</a>`).join("");
         const toolDetail = (tools.detail || []).map(t => `<li>${escapeHtml(t)}</li>`).join("");
         const approach = (p.approach || []).map(t => `<li>${escapeHtml(t)}</li>`).join("");
         const stackLine = tools.primary
-          ? `주 툴: <strong style="color:var(--text)">${escapeHtml(tools.primary)}</strong>${tools.also ? " · " + escapeHtml(tools.also) : ""}`
+          ? `Primary: <strong style="color:var(--text)">${escapeHtml(tools.primary)}</strong>${tools.also ? " · " + escapeHtml(tools.also) : ""}`
           : escapeHtml(p.stack || "");
         return `<div class="card project-card" data-project="${p.id}">
           <h3>${escapeHtml(p.title)}</h3>
           <div class="project-meta">
             <strong style="color:var(--accent2)">${escapeHtml(p.priority)}</strong><br/>
-            시기: ${escapeHtml(p.when)}<br/>
+            When: ${escapeHtml(p.when)}<br/>
             ${stackLine}<br/>
-            진행: ${stepsDone}/${stepsTotal} steps
+            Progress: ${stepsDone}/${stepsTotal} steps
           </div>
           <div class="project-section">
-            <div class="sec-label">왜 하나</div>
+            <div class="sec-label">Why</div>
             <p class="stat-sub" style="margin:0;line-height:1.5">${escapeHtml(p.why)}</p>
           </div>
           <div class="project-section">
-            <div class="sec-label">툴 · 어떻게 쓸지</div>
+            <div class="sec-label">Tools · how to use</div>
             <ul class="tip-list" style="margin:0">${toolDetail || "<li>—</li>"}</ul>
           </div>
           ${approach ? `<div class="project-section">
-            <div class="sec-label">접근 방법</div>
+            <div class="sec-label">Approach</div>
             <ul class="tip-list" style="margin:0">${approach}</ul>
           </div>` : ""}
           <div class="project-section">
-            <div class="sec-label">데이터</div>
+            <div class="sec-label">Data</div>
             <p class="stat-sub" style="margin:0;line-height:1.5"><strong>${escapeHtml(ds.name || "—")}</strong> — ${escapeHtml(ds.note || "")}</p>
             <div class="project-links" style="margin-top:0.35rem">${kaggleLink}</div>
           </div>
           <div class="project-section">
-            <div class="sec-label">산출물</div>
+            <div class="sec-label">Deliverables</div>
             <ul class="tip-list" style="margin:0">${(p.deliverables || []).map(d => `<li>${escapeHtml(d)}</li>`).join("")}</ul>
           </div>
           <div class="project-section">
@@ -259,14 +259,14 @@ let state;
             }).join("")}</ul>
           </div>
           <div class="project-section">
-            <div class="sec-label">포폴에 올릴 것</div>
+            <div class="sec-label">Portfolio</div>
             <p class="stat-sub" style="margin:0;line-height:1.5">${
               /^https?:\/\//.test(p.portfolio || "")
                 ? `<a href="${p.portfolio}" target="_blank" rel="noopener" style="color:var(--accent)">${escapeHtml(p.portfolio)}</a>`
                 : escapeHtml(p.portfolio || "")
             }</p>
           </div>
-          ${refs ? `<div class="project-section"><div class="sec-label">참고 링크</div><div class="project-links">${refs}</div></div>` : ""}
+          ${refs ? `<div class="project-section"><div class="sec-label">References</div><div class="project-links">${refs}</div></div>` : ""}
         </div>`;
       }).join("");
 

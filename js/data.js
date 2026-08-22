@@ -49,9 +49,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"hcm-5101", text:"HCM 5101 Health Systems", meta:"Elective 1/2 · 수 18:00 온라인", highlight:true },
         { id:"ba-5687", text:"BA 5687 Professional Dev", meta:"0 cr · 토 3회 (10/3·10/24·11/7)" },
         { id:"exam-p", text:"Exam P 응시 (목표 9/21)", meta:"window 9/10–21 · 등록 8/12", highlight:true },
-        { id:"proj-health", text:"Health rate memo (SAS) 시작", meta:"P 끝난 뒤(9/22~) · 10월 해커톤과 동일 작업으로", highlight:true },
+        { id:"proj-health", text:"Health rate memo (SAS) start", meta:"after P (9/22~) · same work as Oct hackathon", highlight:true },
         { id:"sas-hackathon", text:"SAS Student Hackathon", meta:"10/1 시작 · 10/30 마감 · Health rate memo와 동일 작업", highlight:true },
-        { id:"proj-life", text:"Life term memo (가정 문서)", meta:"5101(FM) 진도와 병행 · 해커톤 마감(10/30) 이후 본격", highlight:true },
+        { id:"proj-life", text:"Life term memo (assumption memo)", meta:"with 5101 (FM) · after hackathon deadline 10/30", highlight:true },
         { id:"shi-research", text:"Dr. Shi 리서치 프로젝트", meta:"학기 시작 직후", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 바로 지원", meta:"입학 즉시" },
         { id:"vee-stats-check", text:"VEE Math Statistics — Purdue 학점 Temple 면제 확인", meta:"입학 직후!", highlight:true },
@@ -139,7 +139,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { date:"2026-08-23", label:"SAS Base 시험", taskId:"sas-cert" },
       { date:"2026-08-24", label:"Fall 2026 개강" },
       { date:"2026-09-21", label:"Exam P", taskId:"exam-p" },
-      { date:"2026-09-22", label:"Health rate memo 시작 (P 후)", taskId:"proj-health" },
+      { date:"2026-09-22", label:"Health rate memo start (post-P)", taskId:"proj-health" },
       { date:"2026-10-01", label:"SAS Hackathon 시작", taskId:"sas-hackathon" },
       { date:"2026-10-30", label:"SAS Hackathon 마감", taskId:"sas-hackathon" },
       { date:"2026-12-15", label:"Fall 2026 종강 (기말 종료)" },
@@ -342,126 +342,126 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const PORTFOLIO_URL = "https://kyeungyoonkim.github.io/";
 
     const PROJECT_TOOL_GUIDE = {
-      title: "툴 선택 가이드 (압축 포폴 · 2개만)",
+      title: "Tool guide (2 projects only)",
       picks: [
-        { tool: "SAS", when: "Health 메인 · Life 재현 · Base 자격과 동일 스토리", libs: "PROC IMPORT · MEANS/FREQ/SQL · GENMOD/GLM · SGPLOT · DATA step · ODS PDF" },
-        { tool: "Excel / Sheets", when: "Life 가정·NSP 손검증 (필수)", libs: "qx·할인·현가 · 시나리오 표" },
-        { tool: "Python", when: "선택 · Health에 세그먼트 MAE / 가벼운 ML 비교·미니 대시보드", libs: "pandas, sklearn(얕게), streamlit(선택)" },
-        { tool: "GitHub + Pages", when: "산출물 + https://kyeungyoonkim.github.io/ 카드 2장", libs: ".sas · PDF rate memo · README" }
+        { tool: "SAS", when: "Main for Health · reproduce Life · same story as Base cert", libs: "PROC IMPORT · MEANS/FREQ/SQL · GENMOD/GLM · SGPLOT · DATA step · ODS PDF" },
+        { tool: "Excel / Sheets", when: "Life assumptions + NSP hand-check (required)", libs: "qx · discount factors · PV · scenario table" },
+        { tool: "Python", when: "Optional · segment MAE / light ML compare · mini dashboard", libs: "pandas, sklearn (shallow), streamlit (optional)" },
+        { tool: "GitHub + Pages", when: "Deliverables + 2 cards on https://kyeungyoonkim.github.io/", libs: ".sas · PDF rate memo · README" }
       ],
-      rule: "프로젝트는 Health 1 · Life 1만. 대시보드/PA ML은 Health 안에 흡수. 면접 점수는 모델 화려함이 아니라 가정·검증·배포 판단."
+      rule: "Only Health + Life. Dashboard / PA ML fold into Health. Interview score = assumptions, validation, deploy judgment — not flashy models."
     };
 
     const PERSONAL_PROJECTS = [
       {
         id: "proj-health-rate-memo",
-        title: "Health · 의료비 리스크 relativity + rate memo (SAS)",
-        priority: "1순위 · P 이후 · 해커톤 10/1–10/30",
-        when: "9/22~ 골격 · 10/1–10/30 해커톤 스프린트(=이 프로젝트) · 11월 memo 다듬기",
+        title: "Health · medical cost risk relativities + rate memo (SAS)",
+        priority: "P1 · after Exam P · hackathon 10/1–10/30",
+        when: "9/22~ skeleton · 10/1–10/30 hackathon sprint (= this project) · Nov polish memo",
         tools: {
           primary: "SAS (PROC GENMOD/GLM + ODS)",
-          also: "선택: Python으로 세그먼트 MAE·얕은 ML 비교 · Streamlit 1페이지",
+          also: "Optional: Python for segment MAE · light ML compare · Streamlit 1-pager",
           detail: [
-            "메인 산출물 = 요율 memo (1–2p PDF): 문제 → 데이터 한계 → GLM relativity → 검증 → 배포 결정 → 공정성/인과",
-            "SAS: IMPORT → QC → EDA → GENMOD/GLM → ODS 표/그래프",
-            "깊이: 세그먼트별 오차 · 소표본 셀 credibility/shrinkage 메모 · ‘요율용 vs 스크리닝용’ 한 줄 결정",
-            "(선택) 같은 split으로 RF/HGB MAE만 비교 — AutoML·딥러닝 금지",
-            "(선택) Streamlit은 memo 숫자 3개만 보여주는 미니 뷰"
+            "Main deliverable = rate memo (1–2p PDF): problem → data limits → GLM relativities → validation → deploy decision → fairness / causality",
+            "SAS: IMPORT → QC → EDA → GENMOD/GLM → ODS tables/plots",
+            "Depth: segment error · small-sample cells → credibility / shrinkage note · one-line rating vs screening decision",
+            "(Optional) Same split: RF/HGB MAE compare only — no AutoML / deep learning",
+            "(Optional) Streamlit: mini view of 3 memo numbers only"
           ]
         },
         dataset: {
           name: "Medical Cost Personal Dataset (Kaggle)",
           kaggle: "https://www.kaggle.com/datasets/mirichoi0218/insurance",
-          note: "toy 데이터라도 rate-memo 깊이로 차별화 · age/sex/bmi/children/smoker/region → charges"
+          note: "Toy data OK if rate-memo depth is real · age/sex/bmi/children/smoker/region → charges"
         },
-        why: "Kaiser·Cigna·Blue Shield·UHC·Milliman Health 면접용. SAS Base + Health pricing 언어를 한 링크에.",
+        why: "Kaiser / Cigna / Blue Shield / UHC / Milliman Health interviews. One link = SAS Base + Health pricing language.",
         approach: [
-          "성공 기준: Kaggle 점수 아니라 ‘이 relativity를 요율에 넣겠는가?’에 답할 수 있는가.",
-          "GLM 계수 → exp(β) relativity 표가 핵심 산출물.",
-          "검증: 전체 MAE만이 아니라 smoker/age band/region 등 세그먼트 오차.",
-          "소표본·극단 셀은 raw relativity 대신 축소(credibility) 아이디어를 문장으로라도.",
-          "명시: 인과≠상관, 성별·지역 등 규제·공정성 이슈, 누수/타깃 정의 한계.",
-          "결정문 1줄: 요율·설명 = SAS GLM / 고비용 플래그 스크리닝 = (선택) ML."
+          "Success = can you answer: would you put this relativity into a rate? (not Kaggle score).",
+          "Core output: GLM coeffs → exp(β) relativity table.",
+          "Validate overall MAE and segment error (smoker / age band / region).",
+          "Small-sample / extreme cells: prefer credibility / shrinkage toward the grand mean over raw relativities.",
+          "Call out: causality ≠ correlation; fairness / regulatory issues (e.g. sex, region); leakage; target definition limits.",
+          "One decision line: rating + explainability = SAS GLM · high-cost screening flag = (optional) ML."
         ],
         deliverables: [
-          "rate memo PDF 1–2p (가정·표·검증·결정·한계)",
-          "SAS .sas + 로그/ODS 출력",
-          "relativity 표 + 세그먼트 검증 표",
-          "30초 스크립트 (Health · 스폰 타깃)",
-          "포폴 카드 → https://kyeungyoonkim.github.io/"
+          "rate memo PDF 1–2p (assumptions · tables · validation · decision · limitations)",
+          "SAS .sas + log / ODS output",
+          "relativity table + segment validation table",
+          "30-sec script (Health · sponsorship targets)",
+          "portfolio card → https://kyeungyoonkim.github.io/"
         ],
         steps: [
-          { id: "setup", text: "SAS + insurance.csv IMPORT · LIBNAME · Base 시험과 동일 환경" },
-          { id: "qc", text: "CONTENTS/MEANS/FREQ · 결측·이상치 · 타깃=charges 정의 한 줄" },
-          { id: "eda", text: "업무 질문 3개만 (흡연 uplift / 고비용 꼬리 / 지역) · SGPLOT 3–4장 · 인사이트 불릿" },
-          { id: "split", text: "train/test (seed 문서화) · 누수 체크리스트 (타깃 파생변수 금지)" },
-          { id: "glm", text: "PROC GENMOD/GLM: log 또는 Gamma(log) · 핵심 리스크 팩터만" },
-          { id: "relativity", text: "exp(Estimate) relativity 표 · ‘요율에 쓸 후보 / 설명용만’ 열 구분" },
-          { id: "segment", text: "세그먼트별 예측 vs 실제·오차 · 약한 셀 표시" },
-          { id: "credibility", text: "소표본 셀: raw vs 축소(전체 평균 쪽으로) 아이디어 표 또는 문단" },
-          { id: "decision", text: "결정문: 요율용 GLM vs 스크리닝용 (선택 ML) · 성별/공정성·인과 한계 명시" },
-          { id: "optional-ml", text: "(선택) 같은 split MAE만 RF/HGB와 비교 표 1장 — 하이퍼파라미터 깊게 안 감" },
-          { id: "optional-dash", text: "(선택) Streamlit/Tableau: KPI 3개 + relativity 요약만 배포" },
-          { id: "memo", text: "rate memo PDF + README · SAS Base 연결 · Kaiser/Cigna 30초 스크립트" },
-          { id: "publish", text: "GitHub 공개 + 포폴(kyeungyoonkim.github.io) Health 카드 · LinkedIn Featured" }
+          { id: "setup", text: "SAS + insurance.csv IMPORT · LIBNAME · same env as Base exam" },
+          { id: "qc", text: "CONTENTS/MEANS/FREQ · missing / outliers · one-line target definition (charges)" },
+          { id: "eda", text: "Only 3 business Qs (smoker uplift / high-cost tail / region) · SGPLOT 3–4 · insight bullets" },
+          { id: "split", text: "train/test (document seed) · leakage checklist (no target-derived features)" },
+          { id: "glm", text: "PROC GENMOD/GLM: log or Gamma(log) · core risk factors only" },
+          { id: "relativity", text: "exp(Estimate) relativity table · columns: rating candidate vs explain-only" },
+          { id: "segment", text: "Segment predicted vs actual / error · flag weak cells" },
+          { id: "credibility", text: "Small-sample cells: raw vs shrunk (toward overall mean) — table or short paragraph" },
+          { id: "decision", text: "Decision: rating GLM vs screening ML (optional) · state fairness + causality limits" },
+          { id: "optional-ml", text: "(Optional) Same-split MAE table vs RF/HGB only — shallow hyperparameters" },
+          { id: "optional-dash", text: "(Optional) Streamlit/Tableau: 3 KPIs + relativity summary deploy" },
+          { id: "memo", text: "rate memo PDF + README · tie to SAS Base · Kaiser/Cigna 30-sec script" },
+          { id: "publish", text: "Public GitHub + portfolio Health card (kyeungyoonkim.github.io) · LinkedIn Featured" }
         ],
         portfolio: "https://kyeungyoonkim.github.io/ · Health rate memo + .sas",
         refs: [
           { text: "Kaggle Medical Cost Personal Datasets", url: "https://www.kaggle.com/datasets/mirichoi0218/insurance" },
-          { text: "내 포폴", url: "https://kyeungyoonkim.github.io/" },
+          { text: "My portfolio", url: "https://kyeungyoonkim.github.io/" },
           { text: "SAS Certification", url: "https://www.sas.com/en_us/certification.html" }
         ]
       },
       {
         id: "proj-life-term-memo",
         title: "Life · term net premium + assumption memo",
-        priority: "2순위 · Fall Y1 (AS 5101 FM과 병행)",
-        when: "해커톤 마감(10/30) 이후 · 5101(FM)과 병행 · 기말 전 1p memo",
+        priority: "P2 · Fall Y1 (with AS 5101 FM)",
+        when: "After hackathon deadline (10/30) · with 5101 (FM) · 1p memo before finals",
         tools: {
-          primary: "Sheets 손검증 → SAS DATA step 재현",
-          also: "Python/R 재현도 OK · FM 계산기 직관 확인",
+          primary: "Sheets hand-check → SAS DATA step reproduce",
+          also: "Python/R reproduce OK · FM calculator for intuition",
           detail: [
-            "산출물 = pricing assumption memo (1p) + 계산 표",
-            "범위 고정: n-year term · net premium only (expense·reserve·tax 제외) — 왜 제외했는지 memo에 필수",
-            "Sheets로 한 케이스 완전 수작업 → SAS로 동일 숫자 assert",
-            "시나리오: i 격자 + qx scale + (선택) 가입연령/만기 하나 더"
+            "Deliverable = pricing assumption memo (1p) + calc tables",
+            "Scope lock: n-year term · net premium only (no expense / reserve / tax) — memo must say why excluded",
+            "Full hand calc in Sheets for one case → SAS assert same numbers",
+            "Scenarios: i grid + qx scale + (optional) one more issue age or term"
           ]
         },
         dataset: {
-          name: "SSA Period Life Table (공개)",
+          name: "SSA Period Life Table (public)",
           kaggle: "https://www.ssa.gov/oact/STATS/table4c6.html",
-          note: "csv를 repo에 포함 · 표 연도·성별·period 가정 명시"
+          note: "Keep csv in repo · document table year, sex, period assumptions"
         },
-        why: "Pacific Life·Corebridge·Milliman Life 면접용. FM과 직결 · ‘가정 문서화’가 차별점.",
+        why: "Pacific Life / Corebridge / Milliman Life interviews. Ties to FM · assumption documentation is the differentiator.",
         approach: [
-          "성공 기준: 숫자 맞추기 + ‘실무 gross premium이 되려면 뭐가 더 필요한지’를 말할 수 있는가.",
-          "base: 예) 35세 · 10년 만기 · i=4% · 급부 1.",
-          "민감도: i=3/4/5% · qx×0.9/1.0/1.1 — 표 하나로 끝.",
-          "한계: select/ultimate·개선·비용·준비금·유배당 미반영.",
-          "스크립트: 문제→가정→NSP→민감도→실무 확장 한 줄."
+          "Success = numbers match + you can say what else is needed for a real-world gross premium.",
+          "Base case e.g. age 35 · 10-year term · i=4% · benefit = 1.",
+          "Sensitivity: i=3/4/5% · qx×0.9/1.0/1.1 — one table.",
+          "Limitations: no select/ultimate, mortality improvement, expenses, reserves, participating features.",
+          "Script: problem → assumptions → NSP → sensitivity → one-line real-world extension."
         ],
         deliverables: [
-          "assumption memo 1p (가정·범위·한계·실무 갭)",
-          "Sheets + SAS (숫자 일치)",
-          "이자·사망률 민감도 표",
-          "30초 스크립트 (Pacific Life / Milliman)",
-          "포폴 Life 카드"
+          "assumption memo 1p (assumptions · scope · limitations · practice gap)",
+          "Sheets + SAS (numbers match)",
+          "interest + mortality sensitivity table",
+          "30-sec script (Pacific Life / Milliman)",
+          "portfolio Life card"
         ],
         steps: [
-          { id: "fetch", text: "SSA 표 → data/life_table.csv · 출처·연도·성별 메타 기록" },
-          { id: "assume", text: "가정 고정: x, n, i, 급부, period table, net only — memo 초안 먼저" },
-          { id: "sheet", text: "Sheets: qx→px→v^t→급부현가→NSP/level premium 한 케이스 수작업" },
-          { id: "sas", text: "SAS DATA step으로 동일 로직 · Sheets와 자릿수 맞추기" },
-          { id: "sens", text: "i·qx scale 격자 표 (+ 선택: x 또는 n 하나 변경)" },
-          { id: "gap", text: "memo에 실무 갭: expense loading, reserve, mortality improvement, underwriting" },
-          { id: "write", text: "assumption memo PDF + README · Pacific Life/Milliman 30초 스크립트" },
-          { id: "publish", text: "GitHub + 포폴 Life 카드 · 이력서 한 줄" }
+          { id: "fetch", text: "SSA table → data/life_table.csv · record source / year / sex meta" },
+          { id: "assume", text: "Lock assumptions: x, n, i, benefit, period table, net only — draft memo first" },
+          { id: "sheet", text: "Sheets: qx→px→v^t→PV of benefits→NSP/level premium · one case by hand" },
+          { id: "sas", text: "SAS DATA step same logic · match Sheets to digit precision" },
+          { id: "sens", text: "i · qx scale grid (+ optional: change x or n once)" },
+          { id: "gap", text: "Memo practice gap: expense loading, reserve, mortality improvement, underwriting" },
+          { id: "write", text: "assumption memo PDF + README · Pacific Life/Milliman 30-sec script" },
+          { id: "publish", text: "GitHub + portfolio Life card · one resume line" }
         ],
         portfolio: "https://kyeungyoonkim.github.io/ · Life assumption memo + Sheets/SAS",
         refs: [
           { text: "SSA Actuarial Life Tables", url: "https://www.ssa.gov/oact/STATS/table4c6.html" },
           { text: "Human Mortality Database", url: "https://www.mortality.org/" },
-          { text: "내 포폴", url: "https://kyeungyoonkim.github.io/" }
+          { text: "My portfolio", url: "https://kyeungyoonkim.github.io/" }
         ]
       }
     ];
