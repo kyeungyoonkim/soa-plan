@@ -297,8 +297,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         costDetail: "별도 교재 거의 없음",
         plan: "Spring 초 PAF → FAP 1–5 · 2027 여름 ASF(FAM+SRM 후) → Fall FAP Final · 졸업 후 APC → 2028년 1–3월 ASA",
         links: [
-          { text: "SOA FAP", url: "https://www.soa.org/education/general-info/fap/" },
-          { text: "Candidate Central", url: "https://candidate.soa.org/" }
+          { text: "SOA FAP", url: "https://www.soa.org/education/exam-req/edu-module-fap-detail/" },
+          { text: "My SOA (login)", url: "https://engage.soa.org/login" }
         ],
         alt: null
       }
@@ -318,7 +318,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const CONTACTS = [
       { role:"Actuarial Academic Director", name:"Dr. Tianxiang Shi", email:"tshi@temple.edu" },
       { role:"Fox MS Programs", email:"FoxMS@temple.edu", note:"Path·VEE·UEC 문의" },
-      { role:"SOA Candidate Central", url:"https://candidate.soa.org/", note:"transcript·VEE·모듈" },
+      { role:"My SOA", url:"https://engage.soa.org/login", note:"transcript·VEE·모듈·시험 등록" },
       { role:"Temple ISSS", url:"https://educationabroad.temple.edu/isss", note:"CPT·OPT·SSN" },
       { role:"Temple Careers", url:"https://careers.temple.edu/", note:"온캠·인턴" }
     ];
@@ -577,15 +577,15 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       intro: "경로: SOA · Life/Health 선호 · CAS 안 함 · 유학생 스폰(CPT→OPT→H-1B) · 서부 정착. 이벤트는 ‘참석 → LinkedIn → 커피챗 1명’이 목표.",
       channels: [
         {
-          name: "SOA (Society of Actuaries)",
-          how: "Professional Development · Meetings · webcast. Life Insurance / Health Section 이벤트 우선",
-          url: "https://www.soa.org/professional-development/",
-          tips: "Life Meeting·Health Meeting·무료 section webinar부터. Candidate/Student 할인 확인."
+          name: "SOA Professional Development (PD Edge)",
+          how: "Health / Life·ValAct / ImpACT meeting · webcast. Life Insurance / Health 이벤트 우선",
+          url: "https://www.soa.org/prof-dev/pd-edge/",
+          tips: "Health Meeting·Life/ValAct·무료 section webinar부터. Candidate/Student 할인 확인."
         },
         {
-          name: "SOA Future Actuaries · Student events",
+          name: "SOA Candidate Events (Candidate Connect)",
           how: "학생·후보용 세션, career fair, virtual networking",
-          url: "https://www.soa.org/future-actuaries/",
+          url: "https://www.soa.org/future-actuaries/candidate-events/",
           tips: "CAS 이벤트는 스킵. SOA + 회사 info session만 캘린더에."
         },
         {
@@ -603,7 +603,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         {
           name: "서부 로컬 · health plan 세션",
           how: "Kaiser, Blue Shield CA, Cigna/Evernorth Denver, Pacific Life OC 등 careers ‘events’",
-          url: "https://www.soa.org/future-actuaries/",
+          url: "https://www.kaiserpermanentejobs.org/",
           tips: "가을 인턴 시즌 전 virtual info session이 많음. 참석 후 recruiter에 서부 선호·스폰 필요를 솔직히."
         }
       ],
