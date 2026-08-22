@@ -332,6 +332,17 @@
     .career-card-actions button { font: inherit; font-size: 0.68rem; padding: 0.2rem 0.45rem; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; }
     .career-card-actions button:hover { color: var(--text); }
     .career-stat-num { font-family: "Instrument Serif", Georgia, serif; font-size: 1.6rem; color: var(--accent2); line-height: 1; }
+    .project-card { margin-bottom: 0.9rem; }
+    .project-card h3 { font-size: 1.05rem; font-weight: 600; margin: 0 0 0.35rem; line-height: 1.35; }
+    .project-meta { font-size: 0.78rem; color: var(--muted); line-height: 1.45; margin-bottom: 0.55rem; }
+    .project-section { margin-top: 0.65rem; }
+    .project-section .sec-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    .project-steps { list-style: none; padding: 0; margin: 0; }
+    .project-steps li { display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.35rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; line-height: 1.4; }
+    .project-steps li:last-child { border-bottom: none; }
+    .project-steps input { margin-top: 0.2rem; flex-shrink: 0; }
+    .project-steps.checked-step span { text-decoration: line-through; color: var(--muted); }
+    .project-links a { font-size: 0.78rem; color: var(--accent); margin-right: 0.75rem; }
     .btn-action {
       font: inherit; font-size: 0.78rem; font-weight: 600; padding: 0.5rem 0.85rem;
       border-radius: 9px; border: 1px solid var(--border); background: var(--surface2);
@@ -466,6 +477,7 @@
       <button data-tab="focus">공부모드</button>
       <button data-tab="schedule">시간표 · 캘린더</button>
       <button data-tab="guide">가이드 · 메모</button>
+      <button data-tab="projects">개인 프로젝트</button>
       <button data-tab="career">커리어</button>
       <button data-tab="backup">백업</button>
     </nav>
@@ -665,14 +677,26 @@
       </div>
     </section>
 
+    <!-- PROJECTS -->
+    <section class="panel" id="panel-projects">
+      <div class="card" style="margin-bottom:0.9rem">
+        <div class="card-title">포폴용 개인 프로젝트</div>
+        <p class="stat-sub" style="margin:0;line-height:1.5">손실 모델링 · 보험료 산정 · 데이터 분석. Kaggle 보험 데이터(특히 French Motor TPL) 기준으로 정리함. 체크하면 진행률이 저장돼요.</p>
+        <div class="stat-sub" style="margin-top:0.45rem">전체 진행 <strong id="projectProgressLabel" style="color:var(--accent2)">0%</strong></div>
+        <div class="progress-wrap" style="margin-top:0.35rem"><div class="progress-bar" id="projectProgressBar" style="width:0%"></div></div>
+      </div>
+      <div id="projectsList"></div>
+    </section>
+
     <!-- CAREER -->
     <section class="panel" id="panel-career">
+      <div class="card" style="margin-bottom:0.9rem" id="careerEventGuide"></div>
       <div class="grid grid-4" style="margin-bottom:0.9rem" id="careerStats"></div>
       <div class="card" style="margin-bottom:0.9rem">
         <div class="card-title">항목 추가</div>
         <div class="form-row">
-          <div><input type="text" id="careerCompany" placeholder="회사 / 기관" /></div>
-          <div><input type="text" id="careerRole" placeholder="직무 / 포지션" /></div>
+          <div><input type="text" id="careerCompany" placeholder="회사 / 기관 / 이벤트명" /></div>
+          <div><input type="text" id="careerRole" placeholder="직무 / 포지션 / 세션명" /></div>
         </div>
         <div class="form-row">
           <div>
@@ -680,7 +704,7 @@
             <select id="careerType">
               <option value="job">온캠 / 파트타임</option>
               <option value="intern">인턴</option>
-              <option value="networking">네트워킹</option>
+              <option value="networking">네트워킹 · 컨퍼런스</option>
             </select>
           </div>
           <div>
@@ -819,7 +843,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="../js/data.js?v=20260822b"></script>
-  <script defer src="../js/app.js?v=20260822b"></script>
+  <script src="../js/data.js?v=20260822c"></script>
+  <script defer src="../js/app.js?v=20260822c"></script>
 </body>
 </html>

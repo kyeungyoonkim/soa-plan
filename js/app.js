@@ -26,7 +26,7 @@ let state;
 
     function defaultState() {
       return {
-        reqChecked:{}, timelineChecked:{}, templeChecked:{}, examStatus:{},
+        reqChecked:{}, timelineChecked:{}, templeChecked:{}, examStatus:{}, projectChecked:{},
         weeklyMemo:"", adminMemo:"",
         studyLogs:[], checklistFilter:"all", schedule:[],
         weeklyStudyGoal:600, budgetSpent:0, pomoLogRange:"week",
@@ -119,6 +119,116 @@ let state;
         ? closed.map(careerCardHtml).join("")
         : `<div class="meta">탈락·철회 항목 없음</div>`;
       bindCareerActions(closedEl);
+      renderCareerEventGuide();
+    }
+
+    function renderCareerEventGuide() {
+      const el = document.getElementById("careerEventGuide");
+      if (!el || typeof CAREER_EVENT_GUIDE === "undefined") return;
+      const g = CAREER_EVENT_GUIDE;
+      el.innerHTML = `
+        <div class="card-title">${g.title}</div>
+        <p class="stat-sub" style="margin:0 0 0.65rem;line-height:1.5">${g.intro}</p>
+        <div class="project-section">
+          <div class="sec-label">어디서 찾나</div>
+          ${g.channels.map(c => `
+            <div style="margin-bottom:0.65rem;padding-bottom:0.55rem;border-bottom:1px solid var(--border)">
+              <div style="font-weight:600;font-size:0.88rem"><a href="${c.url}" target="_blank" rel="noopener" style="color:var(--accent)">${c.name}</a></div>
+              <div class="stat-sub" style="margin-top:0.2rem;line-height:1.45">${c.how}</div>
+              <div class="stat-sub" style="margin-top:0.15rem;line-height:1.45;color:var(--accent2)">${c.tips}</div>
+            </div>`).join("")}
+        </div>
+        <div class="project-section">
+          <div class="sec-label">검색 · 활용 팁</div>
+          <ul class="tip-list" style="margin:0">${g.searchTips.map(t => `<li>${t}</li>`).join("")}</ul>
+        </div>`;
+    }
+
+    function projectStepKey(pid, sid) { return pid + "::" + sid; }
+
+    function isProjectStepDone(pid, sid) {
+      return !!(state.projectChecked && state.projectChecked[projectStepKey(pid, sid)]);
+    }
+
+    function getProjectProgress() {
+      const projects = typeof PERSONAL_PROJECTS !== "undefined" ? PERSONAL_PROJECTS : [];
+      let total = 0, done = 0;
+      projects.forEach(p => {
+        (p.steps || []).forEach(s => {
+          total++;
+          if (isProjectStepDone(p.id, s.id)) done++;
+        });
+      });
+      const pct = total ? Math.round(done / total * 100) : 0;
+      return { done, total, pct };
+    }
+
+    function renderProjects() {
+      const list = document.getElementById("projectsList");
+      if (!list || typeof PERSONAL_PROJECTS === "undefined") return;
+      if (!state.projectChecked) state.projectChecked = {};
+      const prog = getProjectProgress();
+      const label = document.getElementById("projectProgressLabel");
+      const bar = document.getElementById("projectProgressBar");
+      if (label) label.textContent = prog.pct + "% · " + prog.done + " / " + prog.total;
+      if (bar) bar.style.width = prog.pct + "%";
+
+      list.innerHTML = PERSONAL_PROJECTS.map(p => {
+        const stepsDone = (p.steps || []).filter(s => isProjectStepDone(p.id, s.id)).length;
+        const stepsTotal = (p.steps || []).length;
+        const ds = p.dataset || {};
+        const kaggleLink = ds.kaggle
+          ? `<a href="${ds.kaggle}" target="_blank" rel="noopener">Kaggle 데이터</a>`
+          : "";
+        const refs = (p.refs || []).map(r => `<a href="${r.url}" target="_blank" rel="noopener">${r.text}</a>`).join("");
+        return `<div class="card project-card" data-project="${p.id}">
+          <h3>${escapeHtml(p.title)}</h3>
+          <div class="project-meta">
+            <strong style="color:var(--accent2)">${escapeHtml(p.priority)}</strong><br/>
+            시기: ${escapeHtml(p.when)} · 스택: ${escapeHtml(p.stack)}<br/>
+            진행: ${stepsDone}/${stepsTotal} steps
+          </div>
+          <div class="project-section">
+            <div class="sec-label">왜 하나</div>
+            <p class="stat-sub" style="margin:0;line-height:1.5">${escapeHtml(p.why)}</p>
+          </div>
+          <div class="project-section">
+            <div class="sec-label">데이터</div>
+            <p class="stat-sub" style="margin:0;line-height:1.5"><strong>${escapeHtml(ds.name || "—")}</strong> — ${escapeHtml(ds.note || "")}</p>
+            <div class="project-links" style="margin-top:0.35rem">${kaggleLink}</div>
+          </div>
+          <div class="project-section">
+            <div class="sec-label">산출물</div>
+            <ul class="tip-list" style="margin:0">${(p.deliverables || []).map(d => `<li>${escapeHtml(d)}</li>`).join("")}</ul>
+          </div>
+          <div class="project-section">
+            <div class="sec-label">체크리스트</div>
+            <ul class="project-steps">${(p.steps || []).map(s => {
+              const checked = isProjectStepDone(p.id, s.id);
+              return `<li class="${checked ? "checked-step" : ""}">
+                <input type="checkbox" data-proj="${p.id}" data-step="${s.id}" ${checked ? "checked" : ""}/>
+                <span>${escapeHtml(s.text)}</span>
+              </li>`;
+            }).join("")}</ul>
+          </div>
+          <div class="project-section">
+            <div class="sec-label">포폴에 올릴 것</div>
+            <p class="stat-sub" style="margin:0;line-height:1.5">${escapeHtml(p.portfolio)}</p>
+          </div>
+          ${refs ? `<div class="project-section"><div class="sec-label">참고 링크</div><div class="project-links">${refs}</div></div>` : ""}
+        </div>`;
+      }).join("");
+
+      list.querySelectorAll("input[data-proj]").forEach(inp => {
+        inp.onchange = () => {
+          const key = projectStepKey(inp.dataset.proj, inp.dataset.step);
+          if (!state.projectChecked) state.projectChecked = {};
+          if (inp.checked) state.projectChecked[key] = true;
+          else delete state.projectChecked[key];
+          saveState();
+          renderProjects();
+        };
+      });
     }
 
     function bindCareerForm() {
@@ -593,6 +703,7 @@ let state;
         timelineChecked: p.timelineChecked || {},
         templeChecked: p.templeChecked || {},
         examStatus: migrateExamStatus(reqChecked, p.examStatus),
+        projectChecked: p.projectChecked || {},
         schedule: (p.schedule && p.schedule.length) ? p.schedule : applyFall2026Schedule(),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -1501,6 +1612,7 @@ let state;
       renderTemple();
       renderFocus();
       renderCareer();
+      renderProjects();
       renderGuide();
       renderSchedule();
       renderStudyGoal();

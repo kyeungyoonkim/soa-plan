@@ -331,6 +331,203 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { exam:"PAF / ASF / FAP", min:20, max:40, typical:30, plan:"Spring 초 PAF → FAP · 2027 여름 ASF", tips:"모듈당 대략 20–40시간. ASF는 FAM+SRM credit 후 · ASA 목표는 2028년 1–3월." }
     ];
 
+    // 포폴용 개인 프로젝트 (Kaggle / CAS 보험 데이터 기준)
+    const PERSONAL_PROJECTS = [
+      {
+        id: "proj-pricing-fremtpl",
+        title: "자동차 TPL 보험료 산정 (Frequency–Severity GLM)",
+        priority: "1순위 · 포폴 핵심",
+        when: "Fall Y1 ~ Spring Y1 (5104·5108 병행)",
+        stack: "R 또는 Python · GLM · tidyverse / pandas · ggplot / plotly",
+        dataset: {
+          name: "French Motor TPL (freMTPL2)",
+          kaggle: "https://www.kaggle.com/datasets/xiangshan1989/french-motor-insurance",
+          note: "약 68만 증권 · ClaimNb / Exposure / BonusMalus 등 · severity 파일과 조인"
+        },
+        why: "손해보험 pricing의 기본 구조(빈도×심도)를 한 번에 보여줄 수 있음. 인턴·P&C 인터뷰에서 바로 설명 가능.",
+        deliverables: [
+          "EDA: 노출·클레임 분포, zero-claim 비율, BonusMalus·연령·차종별 클레임률",
+          "Frequency: Poisson / NegBin GLM (offset = log Exposure)",
+          "Severity: Gamma GLM (클레임 있는 증권만) · 대형 손실 캡핑 실험",
+          "Pure premium = frequency × severity · rating factor relativity 표",
+          "검증: actual vs expected, lift chart, Gini (단순 R²만 쓰지 않기)"
+        ],
+        steps: [
+          { id: "data", text: "Kaggle freMTPL2freq (+ sev) 다운로드 · 조인 · Exposure/ClaimNb 이상치 처리" },
+          { id: "eda", text: "EDA 노트북 + 핵심 차트 3–5장 (포폴용)" },
+          { id: "freq", text: "빈도 GLM 적합 · 계수·relativities 해석" },
+          { id: "sev", text: "심도 GLM · 99.5% 캡핑 vs 미캡핑 비교" },
+          { id: "rate", text: "요율표 / pure premium 산출 · 검증 플롯" },
+          { id: "readme", text: "GitHub README (문제→방법→결과→한계) · 1페이지 요약 PDF" }
+        ],
+        portfolio: "GitHub repo + README 스크린샷 · 면접용 ‘이 모델이 요율에 어떻게 쓰이는지’ 30초 스크립트",
+        refs: [
+          { text: "Kaggle French Motor Insurance", url: "https://www.kaggle.com/datasets/xiangshan1989/french-motor-insurance" },
+          { text: "Swiss ADS tutorials (같은 데이터)", url: "https://www.actuarialdatascience.org/ADS-Tutorials/" },
+          { text: "Kaggle: GLM / NN / XGBoost pricing", url: "https://www.kaggle.com/code/floser/glm-neural-nets-and-xgboost-for-insurance-pricing" }
+        ]
+      },
+      {
+        id: "proj-loss-severity",
+        title: "손실 모델링 · 대형 클레임 심도 분포",
+        priority: "2순위 · FAM/ASTAM 연계",
+        when: "Spring Y1 (5102) ~ Fall Y2 (5114)",
+        stack: "R/Python · SciPy/fitdistrplus · QQ plot · VaR/TVaR",
+        dataset: {
+          name: "freMTPL2 severity (+ 필요 시 공개 클레임 금액 데이터)",
+          kaggle: "https://www.kaggle.com/datasets/xiangshan1989/french-motor-insurance",
+          note: "ClaimAmount 분포 · 꼬리 두꺼움 · 재보험/대형손실 관점"
+        },
+        why: "손실분포·꼬리위험은 계리 포폴에서 차별화 포인트. ASTAM/Short-term modeling과 스토리가 맞음.",
+        deliverables: [
+          "로그정규 / Gamma / Pareto(또는 GPD) 적합 비교",
+          "QQ·PP plot · AIC/BIC · KS 등 적합도",
+          "캡핑·재보험 한도 시나리오에서 평균·VaR·TVaR 변화",
+          "‘왜 GLM severity에 Gamma를 쓰는지’ 한 단락 설명"
+        ],
+        steps: [
+          { id: "clean", text: "severity 데이터 정리 · 0·극단값 처리 규칙 문서화" },
+          { id: "fit", text: "후보 분포 적합 · 진단 플롯" },
+          { id: "tail", text: "꼬리 지표(VaR/TVaR) · 캡핑 민감도" },
+          { id: "write", text: "포폴 섹션: 비즈니스 해석 (재보험·요율 로딩)" }
+        ],
+        portfolio: "짧은 리포트(5–8p) 또는 노트북 + 핵심 플롯만 랜딩에",
+        refs: [
+          { text: "Kaggle French Motor Insurance", url: "https://www.kaggle.com/datasets/xiangshan1989/french-motor-insurance" }
+        ]
+      },
+      {
+        id: "proj-claims-eda",
+        title: "보험 클레임 데이터 분석 대시보드",
+        priority: "빠른 윈 · 지금 시작 가능",
+        when: "입학 전 ~ Fall Y1",
+        stack: "Python · pandas · plotly / Tableau Public · Streamlit(선택)",
+        dataset: {
+          name: "Insurance Claim / Auto Insurance claims (Kaggle 검색)",
+          kaggle: "https://www.kaggle.com/datasets?search=insurance+claims",
+          note: "예: Auto Insurance Claims Data, Insurance Claim Analysis 등 · 최신·라이선스 확인 후 1개 고정"
+        },
+        why: "분석·시각화 스킬을 빠르게 포폴에 올리는용. 나중에 GLM 프로젝트의 ‘프롤로그’로도 재사용.",
+        deliverables: [
+          "클레임 빈도·금액·지역·연령대 요약 KPI",
+          "이상치·결측 리포트",
+          "‘비즈니스 질문 3개 → 차트 3개 → 인사이트’ 구조",
+          "공개 링크 (GitHub Pages / Streamlit / Tableau Public)"
+        ],
+        steps: [
+          { id: "pick", text: "Kaggle에서 데이터셋 1개 확정 · 컬럼 사전 작성" },
+          { id: "kpi", text: "KPI·차트 초안 · 인사이트 메모" },
+          { id: "dash", text: "대시보드 배포 · README에 질문→답 정리" }
+        ],
+        portfolio: "라이브 링크 + 1분 데모 GIF",
+        refs: [
+          { text: "Kaggle: insurance claims 검색", url: "https://www.kaggle.com/datasets?search=insurance+claims" },
+          { text: "Kaggle: insurance 검색", url: "https://www.kaggle.com/datasets?search=insurance" }
+        ]
+      },
+      {
+        id: "proj-pa-ml",
+        title: "예측분석 미니 프로젝트 (SRM/PA 연습)",
+        priority: "3순위 · 5108·PA 직전",
+        when: "Spring 2027 (AS 5108) ~ PA 전",
+        stack: "R/Python · GLM · tree / GBM · train-test · calibration",
+        dataset: {
+          name: "freMTPL2 또는 Kaggle insurance / Porto Seguro(참고)",
+          kaggle: "https://www.kaggle.com/c/porto-seguro-safe-driver-prediction",
+          note: "pricing은 freMTPL 권장 · ‘클레임 발생 예측’은 Porto Seguro 등 분류 과제도 가능"
+        },
+        why: "SRM·PA와 같은 언어(train/test, lift, overfitting)로 포폴을 맞춤.",
+        deliverables: [
+          "Baseline GLM vs tree/GBM 비교",
+          "성능·해석 트레이드오프 표 (계리 실무 관점)",
+          "과적합·누수 체크리스트",
+          "PA sample project 스타일로 결과 서술"
+        ],
+        steps: [
+          { id: "split", text: "학습/검증 분할 · 타깃·노출 정의" },
+          { id: "base", text: "GLM baseline" },
+          { id: "ml", text: "ML 모델 1–2개 · 비교표" },
+          { id: "story", text: "‘실무에선 무엇을 택할지’ 결론 작성" }
+        ],
+        portfolio: "노트북 + 1페이지 executive summary",
+        refs: [
+          { text: "Porto Seguro (Kaggle competition)", url: "https://www.kaggle.com/c/porto-seguro-safe-driver-prediction" },
+          { text: "French Motor Insurance", url: "https://www.kaggle.com/datasets/xiangshan1989/french-motor-insurance" }
+        ]
+      },
+      {
+        id: "proj-portfolio-site",
+        title: "포폴 허브 정리 (GitHub / 1페이지 사이트)",
+        priority: "상시",
+        when: "프로젝트 1개 끝날 때마다 업데이트",
+        stack: "GitHub · Notion 또는 단순 HTML",
+        dataset: { name: "—", kaggle: "", note: "프로젝트 산출물 모음" },
+        why: "개별 노트북만 있으면 안 보임. ‘한 링크’로 면접관에게 보여줘야 함.",
+        deliverables: [
+          "About + 스킬 + 프로젝트 카드 3개",
+          "각 프로젝트: 문제 / 데이터 / 방법 / 결과 / 한계",
+          "이력서·LinkedIn에 동일 링크"
+        ],
+        steps: [
+          { id: "repo", text: "GitHub profile README 또는 portfolio repo 생성" },
+          { id: "cards", text: "완료 프로젝트부터 카드 추가" },
+          { id: "link", text: "LinkedIn Featured · 이력서에 URL" }
+        ],
+        portfolio: "최종 공개 URL",
+        refs: []
+      }
+    ];
+
+    // 커리어: 컨퍼런스·세미나 찾는 법
+    const CAREER_EVENT_GUIDE = {
+      title: "계리 컨퍼런스 · 세미나 찾는 법",
+      intro: "학생 가격·virtual이 많은 편. ‘참석 → LinkedIn 정리 → 커피챗 1명’이 목표.",
+      channels: [
+        {
+          name: "SOA (Society of Actuaries)",
+          how: "Events / Meetings 페이지 · Student/Candidate 할인 확인 · webinar·virtual session 먼저",
+          url: "https://www.soa.org/professional-development/",
+          tips: "Annual Meeting·Life Meeting 등은 비싸니, 무료/저가 webcast·section webinar부터."
+        },
+        {
+          name: "CAS (Casualty Actuarial Society)",
+          how: "P&C 쪽 세미나·student programs · CAS Student Central",
+          url: "https://www.casact.org/",
+          tips: "자동차·재산보험 관심이면 CAS 이벤트가 SOA보다 핏이 맞을 수 있음."
+        },
+        {
+          name: "Temple / Fox · AS·RMI 학과",
+          how: "Dr. Shi·FoxMS 메일, Canvas 공지, Fox Career·보험클럽 이벤트",
+          url: "https://www.fox.temple.edu/",
+          tips: "교내 guest speaker·alumni panel이 가장 ROI 높음. 매 학기 초 메일링 구독."
+        },
+        {
+          name: "IABA / ASNA / 지역 actuarial club",
+          how: "International Association of Black Actuaries, Actuarial Students’ National Association, Philadelphia 지역 네트워킹",
+          url: "https://www.actuarialfoundation.org/",
+          tips: "학생 컨퍼런스는 등록비가 저렴하고 리크루터 부스 있는 경우 많음."
+        },
+        {
+          name: "LinkedIn · Eventbrite · Meetup",
+          how: "검색어: actuarial, insurance analytics, P&C pricing, predictive analytics insurance",
+          url: "https://www.linkedin.com/search/results/events/?keywords=actuarial",
+          tips: "‘Save’ 해두고 월 1회 캘린더에 넣는 습관. 회사 주최 webinar도 이력서에 기입 가능."
+        },
+        {
+          name: "보험사 · 컨설팅 공개 세션",
+          how: "Milliman, WTW, Aon, Gallagher, 지역 carrier careers 페이지 ‘events’",
+          url: "https://www.soa.org/future-actuaries/",
+          tips: "정보 세션·case workshop은 인턴 시즌(가을) 전후에 몰림."
+        }
+      ],
+      searchTips: [
+        "키워드: actuarial student webinar, CAS seminar, SOA webcast, insurance data science meetup",
+        "필터: Virtual · Free · Student — 먼저 연 2–3개 참석해 보는 게 목표",
+        "참석 후: 발표자/리크루터 1명 LinkedIn + 감사 메시지 (프로젝트·시험 플랜 한 줄)",
+        "커리어 보드에 type=네트워킹으로 이벤트명·날짜· follow-up 메모 남기기"
+      ]
+    };
+
 const CAREER_COLUMNS = [
   { id:"target", label:"타겟" },
   { id:"applied", label:"지원" },
