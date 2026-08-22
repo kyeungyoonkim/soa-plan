@@ -682,11 +682,13 @@ let state;
         </div>`;
       }).join("");
 
-      // D-day grid
-      document.getElementById("ddayGrid").innerHTML = DDAYS.map(d => {
+      // D-day grid (날짜순)
+      document.getElementById("ddayGrid").innerHTML = [...DDAYS]
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map(d => {
         const dd = daysUntil(d.date);
-        const examSt = isExamReq(d.taskId) ? getExamStatus(d.taskId) : null;
-        const done = isReqDone(d.taskId);
+        const examSt = d.taskId && isExamReq(d.taskId) ? getExamStatus(d.taskId) : null;
+        const done = d.taskId ? isReqDone(d.taskId) : false;
         const failed = examSt === "failed";
         const urgent = !done && !failed && dd >= 0 && dd <= 30;
         const dNum = done ? "" : failed ? "재응시" : fmtDday(dd);
