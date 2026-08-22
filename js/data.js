@@ -332,123 +332,200 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     ];
 
     // 포폴용 개인 프로젝트 (SOA · Life/Health · 서부 스폰 회사 면접용)
+    const PROJECT_TOOL_GUIDE = {
+      title: "툴 선택 가이드 (이 포폴 기준)",
+      picks: [
+        { tool: "Python", when: "기본 추천 · EDA·GLM·ML·대시보드(Streamlit)까지 한 스택", libs: "pandas, numpy, statsmodels 또는 scikit-learn, matplotlib/plotly, jupyter" },
+        { tool: "R", when: "대안 · 계리·통계/GLM이 익숙하거나 5108이 R이면 통일", libs: "tidyverse, glm(), ggplot2, rmarkdown" },
+        { tool: "SQL", when: "데이터는 작아서 필수 아님 · 그래도 Health GLM에 집계 쿼리 몇 개 넣으면 면접에 좋음", libs: "DuckDB / SQLite + SELECT · GROUP BY" },
+        { tool: "Excel / Sheets", when: "Life 생명표·프리미엄 민감도를 먼저 손으로 검증할 때", libs: "할인·현가 표 · 시나리오" },
+        { tool: "GitHub", when: "모든 프로젝트 공통", libs: "README + notebook + PNG" }
+      ],
+      rule: "하나만 고르면: Python + Jupyter. 이미 R이면 R로 통일. SQL은 Health 프로젝트에 짧은 쿼리 섹션만."
+    };
+
     const PERSONAL_PROJECTS = [
       {
         id: "proj-health-cost-glm",
         title: "건강보험 의료비 · 리스크 팩터 GLM (요율 스토리)",
         priority: "1순위 · Health 포폴 핵심",
         when: "지금 ~ Fall Y1 (HCM 5101·면접 스토리)",
-        stack: "R 또는 Python · GLM (Gamma/log) · pandas / tidyverse · ggplot / plotly",
+        tools: {
+          primary: "Python (Jupyter)",
+          also: "R도 가능 · SQL은 선택(연습용)",
+          detail: [
+            "Python: pandas 로드 → statsmodels GLM (계수 해석용) · 시각화는 matplotlib/seaborn",
+            "R 대안: glm(charges ~ ., family = Gamma(link='log')) 또는 log(charges) ~ .",
+            "SQL(선택): DuckDB에 csv 넣고 smoker/region별 AVG(charges) 쿼리 3개 → sql/eda.sql",
+            "비추: Spark, 무거운 DB, AutoML"
+          ]
+        },
         dataset: {
           name: "Medical Cost Personal Dataset (Kaggle)",
           kaggle: "https://www.kaggle.com/datasets/mirichoi0218/insurance",
-          note: "age, sex, bmi, children, smoker, region → charges · Health pricing 입문에 가장 흔히 쓰임"
+          note: "age, sex, bmi, children, smoker, region → charges"
         },
-        why: "Kaiser·Cigna·Blue Shield·UHC 면접에서 ‘무엇을 보고 프리미엄/리스크를 설명할지’를 바로 보여줄 수 있음. SOA Health 경로와 맞춤.",
+        why: "Kaiser·Cigna·Blue Shield·UHC 면접용 Health pricing 스토리. SOA Health 경로와 맞춤.",
+        approach: [
+          "목표를 예측 대회 1등이 아니라 ‘요율/리스크 스토리’로 고정한다.",
+          "EDA로 smoker·bmi·age 패턴을 본 뒤 GLM으로 relativity(계수)를 뽑는다.",
+          "train/test는 나누되, 면접 점수는 계수 해석·한계 설명이다.",
+          "README에 ‘보험료에 어떻게 쓰일 수 있는지 + 쓰면 안 되는 이유(인과·공정성)’를 쓴다."
+        ],
         deliverables: [
-          "EDA: smoker·BMI·연령대별 평균 charges · 지역 차이",
-          "Baseline: log(charges) 또는 Gamma GLM · 계수 해석 (상대위험/relativities)",
-          "세그먼트별 predicted vs actual · residual 진단",
-          "비즈니스 한 줄: ‘흡연·고BMI가 요율에 어떻게 들어가는지’ (HIPAA·공정성 한계도 명시)"
+          "EDA 차트 4장",
+          "log(charges) 또는 Gamma GLM + relativity 표",
+          "test predicted vs actual · 잔차",
+          "Health actuarial 한 줄 결론 + 한계"
         ],
         steps: [
-          { id: "data", text: "Kaggle insurance.csv 다운로드 · 컬럼 사전 · train/test 분할" },
-          { id: "eda", text: "EDA 노트북 + 포폴용 차트 4장" },
-          { id: "glm", text: "GLM 적합 · smoker/bmi/age 효과 해석표" },
-          { id: "check", text: "잔차·과대예측 구간 점검 · 한계(관측 데이터·인과 아님) 작성" },
-          { id: "readme", text: "README: Health actuarial 맥락으로 서술 · 1페이지 PDF" }
+          { id: "setup", text: "환경: Python venv + jupyter + pandas/statsmodels/matplotlib (또는 RStudio + tidyverse)" },
+          { id: "data", text: "Kaggle insurance.csv → data/raw/ · 결측·타입·중복 확인 노트" },
+          { id: "sql", text: "(선택) DuckDB/SQLite: smoker·region별 AVG(charges), COUNT(*) 쿼리 3개 → sql/eda.sql" },
+          { id: "eda", text: "charges 분포 · smoker boxplot · BMI 밴드 평균 · region 막대 · 인사이트 5불릿" },
+          { id: "split", text: "train/test 80/20 (seed 고정) · 타깃=charges · 범주형 인코딩 또는 R formula" },
+          { id: "glm", text: "메인 모델 1개 선택: log-linear 또는 Gamma(log) · age+bmi+children+smoker+sex+region" },
+          { id: "interpret", text: "exp(coef) relativity 표 (smoker 배율, 연령 +10세 등)" },
+          { id: "validate", text: "test 산점도 · 잔차 · 저/중/고비용 구간 오차 메모" },
+          { id: "readme", text: "README: 문제→방법→결과표→한계 · PNG 삽입 · 1페이지 PDF · Kaiser/Cigna용 30초 스크립트" }
         ],
-        portfolio: "GitHub + ‘Health pricing interview 30초’ 스크립트 (Kaiser/Cigna용)",
+        portfolio: "GitHub + Health pricing 30초 스크립트",
         refs: [
           { text: "Kaggle Medical Cost Personal Datasets", url: "https://www.kaggle.com/datasets/mirichoi0218/insurance" },
-          { text: "Kaggle Health Insurance Cost & Risk", url: "https://www.kaggle.com/datasets/mjawad17/health-insurance-cost-and-risk-dataset" }
+          { text: "statsmodels GLM", url: "https://www.statsmodels.org/stable/glm.html" }
         ]
       },
       {
         id: "proj-health-eda-dash",
-        title: "Health claims / cost 대시보드 (빠른 윈)",
+        title: "Health cost 대시보드 (빠른 윈)",
         priority: "지금 바로 · 포폴 첫 링크",
-        when: "입학 전 ~ Fall Y1",
-        stack: "Python · pandas · plotly / Tableau Public · Streamlit(선택)",
-        dataset: {
-          name: "Medical Cost 또는 Health Insurance Cost & Risk (Kaggle)",
-          kaggle: "https://www.kaggle.com/datasets/mirichoi0218/insurance",
-          note: "의료비·리스크 팩터 KPI를 헬스케어 actuarial 언어로 정리"
+        when: "입학 전 ~ Fall Y1 · GLM보다 먼저",
+        tools: {
+          primary: "Python + Streamlit (또는 Tableau Public)",
+          also: "집계는 pandas 또는 SQL",
+          detail: [
+            "빠른 경로: pandas KPI → Streamlit 필터 → Streamlit Community Cloud 배포",
+            "GUI: Tableau Public / Power BI에 csv 연결 후 퍼블리시",
+            "R Shiny는 배움 비용 커서 비추"
+          ]
         },
-        why: "서부 health plan 지원 시 ‘분석 결과물 링크’가 있으면 강함. GLM 전에 완성 가능.",
+        dataset: {
+          name: "Medical Cost Personal Dataset (Kaggle)",
+          kaggle: "https://www.kaggle.com/datasets/mirichoi0218/insurance",
+          note: "같은 데이터로 KPI 대시보드"
+        },
+        why: "서부 health plan에 ‘라이브 링크’를 바로 보여줄 수 있음.",
+        approach: [
+          "질문 3개만: 흡연 uplift / 고비용 상위 10% / 지역 차이.",
+          "차트도 3개만. UI보다 숫자·한 줄 인사이트.",
+          "배포 URL을 LinkedIn Featured에 올린다."
+        ],
         deliverables: [
-          "KPI: 평균/중앙 charges, smoker uplift, high-cost 상위 10%",
-          "차트 3–5: 연령×흡연, BMI 밴드, region",
-          "질문→인사이트 3세트 (채용 담당자가 30초에 읽게)",
-          "공개 URL (Streamlit / Tableau / GitHub Pages)"
+          "KPI 카드",
+          "차트 3장",
+          "질문→인사이트 3세트",
+          "공개 URL"
         ],
         steps: [
-          { id: "pick", text: "데이터 확정 · KPI 초안" },
-          { id: "dash", text: "대시보드 배포" },
-          { id: "copy", text: "README에 Health/SOA 맥락 카피 + LinkedIn Featured" }
+          { id: "kpi", text: "mean/median charges, smoker vs non 비율, p90 cut 공식 확정" },
+          { id: "charts", text: "차트 3장만 (연령×흡연, BMI 밴드, region)" },
+          { id: "app", text: "Streamlit: 사이드바(region/smoker) + KPI + 차트 · 또는 Tableau 1 대시보드" },
+          { id: "deploy", text: "Streamlit Cloud / Tableau Public 배포" },
+          { id: "copy", text: "README 3문장(Health/SOA) + LinkedIn Featured" }
         ],
         portfolio: "라이브 링크 + 1분 데모 GIF",
         refs: [
           { text: "Medical Cost Personal Datasets", url: "https://www.kaggle.com/datasets/mirichoi0218/insurance" },
-          { text: "Health insurance datasets on Kaggle", url: "https://www.kaggle.com/datasets?search=health+insurance" }
+          { text: "Streamlit docs", url: "https://docs.streamlit.io/" }
         ]
       },
       {
         id: "proj-life-mortality",
-        title: "Life · 사망률/종신 상품 간단 프라이싱 일러스트",
-        priority: "2순위 · Pacific Life / Milliman Life용",
-        when: "Fall Y1 (5101 FM) ~ Spring Y1",
-        stack: "R/Python · 생명표 · 현가(이자이론) · Excel/Sheets도 OK",
-        dataset: {
-          name: "공개 생명표 (SSA / Human Mortality Database) + 가정 시나리오",
-          kaggle: "https://www.kaggle.com/datasets?search=mortality+life+table",
-          note: "실제 회사 데이터 없이 ‘term life net premium’ 흐름을 보여 주는 일러스트 프로젝트"
+        title: "Life · 사망률/term 프라이싱 일러스트",
+        priority: "2순위 · Pacific Life / Milliman Life",
+        when: "Fall Y1 AS 5101 (FM)과 병행",
+        tools: {
+          primary: "Excel/Sheets 검증 + Python 또는 R 재현",
+          also: "FM 계산기로 현가 직관 확인",
+          detail: [
+            "(1) Sheets에서 qx·할인·NSP 표 → (2) 같은 로직을 Python/R로 재현",
+            "Python: pandas 생명표 + numpy 할인 v**t",
+            "R: dplyr + 벡터 연산",
+            "SQL 불필요"
+          ]
         },
-        why: "Pacific Life·Milliman Life 면접에서 auto GLM보다 Life 스토리가 훨씬 핏. FM(5101)·이자이론과 바로 연결.",
+        dataset: {
+          name: "SSA Actuarial Life Table (공개)",
+          kaggle: "https://www.kaggle.com/datasets?search=mortality+life+table",
+          note: "SSA 표를 csv로 repo에 포함 · 이자율 i 가정 명시"
+        },
+        why: "Pacific Life·Milliman Life 면접용. FM(5101)과 직결.",
+        approach: [
+          "범위: n-year term life net premium only (expense/reserve 제외).",
+          "base i=4% · ±0.5%p 민감도.",
+          "사망률 시나리오 qx×0.9 하나.",
+          "스크립트: 문제→표→현가→프리미엄→민감도→한계."
+        ],
         deliverables: [
-          "선택 생명표로 qx 정리 · 간단 생존곡선",
-          "n-year term life: net single premium / level premium (이자 가정 명시)",
-          "민감도: 이자율·사망률 개선/악화 시 프리미엄 변화",
-          "한계: 비용·이익·준비금·규정은 범위 밖임을 README에 명시"
+          "qx·생존곡선",
+          "NSP / level premium",
+          "이자·사망률 민감도",
+          "한계 명시"
         ],
         steps: [
-          { id: "table", text: "공개 생명표 1개 확보 · 연령 구간 정리" },
-          { id: "prem", text: "term life net premium 계산 노트북/시트" },
-          { id: "sens", text: "이자·사망률 민감도 표·차트" },
-          { id: "story", text: "Pacific Life / Milliman용 면접 스크립트 작성" }
+          { id: "fetch", text: "SSA Period Life Table → data/life_table.csv (성별 하나 또는 둘)" },
+          { id: "sheet", text: "Sheets: x, qx, px, v=1/(1+i), 급부 현가 · 예: 35세 10년 만기" },
+          { id: "code", text: "Python/R 함수로 NSP·level premium · Sheets와 assert로 숫자 맞추기" },
+          { id: "sens", text: "i=3/4/5% · qx scale 0.9/1.0/1.1 표·차트" },
+          { id: "write", text: "README + Pacific Life/Milliman용 30초 스크립트" }
         ],
-        portfolio: "짧은 리포트(5p) 또는 노트북 + ‘Life pricing 한 장’ 요약",
+        portfolio: "노트북/시트 + Life pricing 한 장",
         refs: [
           { text: "SSA Actuarial Life Tables", url: "https://www.ssa.gov/oact/STATS/table4c6.html" },
-          { text: "Human Mortality Database", url: "https://www.mortality.org/" },
-          { text: "Kaggle mortality / life table 검색", url: "https://www.kaggle.com/datasets?search=life+table" }
+          { text: "Human Mortality Database", url: "https://www.mortality.org/" }
         ]
       },
       {
         id: "proj-health-pa-ml",
         title: "Health cost 예측분석 (SRM/PA 연습)",
-        priority: "3순위 · 5108·Exam PA 직전",
-        when: "Spring 2027 (AS 5108) ~ PA 전",
-        stack: "R/Python · GLM vs tree/GBM · train-test · calibration",
-        dataset: {
-          name: "Medical Cost Personal Dataset (동일 데이터 심화)",
-          kaggle: "https://www.kaggle.com/datasets/mirichoi0218/insurance",
-          note: "Health  orthogonality: 해석 가능한 GLM vs 성능 ML 비교"
+        priority: "3순위 · AS 5108 · Exam PA 직전",
+        when: "Spring 2027",
+        tools: {
+          primary: "Python (statsmodels + scikit-learn)",
+          also: "5108이 R이면 R로 통일 (glm + randomForest/xgboost)",
+          detail: [
+            "Model1=기존 GLM · Model2=RandomForest 또는 HistGradientBoosting",
+            "metric 1개 고정 (MAE 추천)",
+            "해석: GLM 계수 vs permutation importance / PDP",
+            "딥러닝·AutoML 비추"
+          ]
         },
-        why: "SOA Exam PA·5108 언어로 Health 포폴을 맞춤. 서부 health plan analytics 팀에도 설명 쉬움.",
+        dataset: {
+          name: "Medical Cost Personal Dataset (GLM과 동일)",
+          kaggle: "https://www.kaggle.com/datasets/mirichoi0218/insurance",
+          note: "해석 GLM vs 성능 ML 비교가 포인트"
+        },
+        why: "SOA PA·5108 언어로 Health 포폴.",
+        approach: [
+          "결론은 ‘실무에서 무엇을 배포할지’.",
+          "예: 요율·설명엔 GLM, 스크리닝엔 ML.",
+          "누수·과적합 체크리스트 필수.",
+          "PA 톤: 목적→데이터→방법→결과→권고."
+        ],
         deliverables: [
-          "GLM baseline vs Random Forest/GBM",
-          "성능·해석 트레이드오프 표 (실무에선 무엇을 택할지)",
-          "과적합·누수 체크 · partial dependence (smoker/bmi)",
-          "PA sample project 톤으로 write-up"
+          "비교표 (MAE·해석·추천)",
+          "PDP/중요도",
+          "executive summary 1p"
         ],
         steps: [
-          { id: "split", text: "학습/검증 분할 · 타깃=charges 정의" },
-          { id: "base", text: "GLM baseline 재사용·정리" },
-          { id: "ml", text: "ML 1–2개 · 비교표" },
-          { id: "story", text: "Health actuarial 결론 (규제·설명가능성)" }
+          { id: "reuse", text: "Health GLM pipeline·split seed 재사용" },
+          { id: "metric", text: "MAE 고정 · log 학습 시 역변환 후 비교" },
+          { id: "ml", text: "RF 또는 HGB · 하이퍼파라미터는 얕게만" },
+          { id: "compare", text: "표: MAE · 해석가능성 · 배포 추천" },
+          { id: "explain", text: "smoker/bmi PDP · GLM 방향과 일치 확인" },
+          { id: "write", text: "PA 스타일 write-up + Health 권고" }
         ],
-        portfolio: "노트북 + 1페이지 executive summary (Health)",
+        portfolio: "노트북 + executive summary",
         refs: [
           { text: "Medical Cost Personal Datasets", url: "https://www.kaggle.com/datasets/mirichoi0218/insurance" },
           { text: "SOA Exam PA", url: "https://www.soa.org/education/exam-req/edu-exam-pa-detail/" }
@@ -458,19 +535,31 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         id: "proj-portfolio-site",
         title: "포폴 허브 (서부 Life/Health · 스폰 타깃용)",
         priority: "상시",
-        when: "프로젝트 1개 끝날 때마다 업데이트",
-        stack: "GitHub · Notion 또는 단순 페이지",
+        when: "프로젝트 1개 끝날 때마다",
+        tools: {
+          primary: "GitHub README",
+          also: "GitHub Pages / Notion public",
+          detail: [
+            "코드·문서는 GitHub · README만으로도 충분",
+            "사이트는 선택 (Pages)"
+          ]
+        },
         dataset: { name: "—", kaggle: "", note: "산출물 모음" },
-        why: "Pacific Life·Milliman·Kaiser·Cigna recruiter에게 ‘한 링크’로 SOA Life/Health 스토리를 보여줘야 함.",
+        why: "한 링크로 SOA Life/Health · 서부 · 스폰 스토리.",
+        approach: [
+          "첫 화면 4요소: SOA · Life/Health · F-1/CPT–OPT · 서부.",
+          "카드 순서: Health GLM → Life → PA.",
+          "각 카드: 문제/툴/결과/링크만."
+        ],
         deliverables: [
-          "About: SOA · Life/Health · F-1/CPT–OPT · 서부 정착 희망 (한 단락)",
-          "프로젝트 카드 3개 (Health GLM · Life illustration · PA mini)",
-          "이력서·LinkedIn Featured에 동일 URL"
+          "About",
+          "카드 3개",
+          "LinkedIn·이력서 URL"
         ],
         steps: [
-          { id: "repo", text: "portfolio README에 타깃 포지셔닝 문구 고정" },
-          { id: "cards", text: "Health → Life → PA 순으로 카드 배치" },
-          { id: "link", text: "LinkedIn Featured · 이력서 URL · 스폰 타깃 회사 지원 시 첨부" }
+          { id: "repo", text: "portfolio repo · 포지셔닝 문구 고정" },
+          { id: "cards", text: "완료분부터 카드·스크린샷·링크" },
+          { id: "link", text: "LinkedIn Featured · 이력서 · 지원 첨부" }
         ],
         portfolio: "최종 공개 URL",
         refs: []

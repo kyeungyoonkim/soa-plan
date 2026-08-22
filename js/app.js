@@ -191,25 +191,54 @@ let state;
       if (label) label.textContent = prog.pct + "% · " + prog.done + " / " + prog.total;
       if (bar) bar.style.width = prog.pct + "%";
 
+      const toolEl = document.getElementById("projectToolGuide");
+      if (toolEl && typeof PROJECT_TOOL_GUIDE !== "undefined") {
+        const g = PROJECT_TOOL_GUIDE;
+        toolEl.innerHTML = `
+          <div class="card-title">${g.title}</div>
+          <p class="stat-sub" style="margin:0 0 0.55rem;line-height:1.5">${escapeHtml(g.rule)}</p>
+          ${g.picks.map(p => `
+            <div style="margin-bottom:0.55rem;padding-bottom:0.45rem;border-bottom:1px solid var(--border)">
+              <div style="font-weight:600;font-size:0.88rem">${escapeHtml(p.tool)}</div>
+              <div class="stat-sub" style="margin-top:0.15rem;line-height:1.45">${escapeHtml(p.when)}</div>
+              <div class="stat-sub" style="margin-top:0.1rem;line-height:1.45;color:var(--accent2)">${escapeHtml(p.libs)}</div>
+            </div>`).join("")}`;
+      }
+
       list.innerHTML = PERSONAL_PROJECTS.map(p => {
         const stepsDone = (p.steps || []).filter(s => isProjectStepDone(p.id, s.id)).length;
         const stepsTotal = (p.steps || []).length;
         const ds = p.dataset || {};
+        const tools = p.tools || {};
         const kaggleLink = ds.kaggle
-          ? `<a href="${ds.kaggle}" target="_blank" rel="noopener">Kaggle 데이터</a>`
+          ? `<a href="${ds.kaggle}" target="_blank" rel="noopener">데이터 링크</a>`
           : "";
         const refs = (p.refs || []).map(r => `<a href="${r.url}" target="_blank" rel="noopener">${r.text}</a>`).join("");
+        const toolDetail = (tools.detail || []).map(t => `<li>${escapeHtml(t)}</li>`).join("");
+        const approach = (p.approach || []).map(t => `<li>${escapeHtml(t)}</li>`).join("");
+        const stackLine = tools.primary
+          ? `주 툴: <strong style="color:var(--text)">${escapeHtml(tools.primary)}</strong>${tools.also ? " · " + escapeHtml(tools.also) : ""}`
+          : escapeHtml(p.stack || "");
         return `<div class="card project-card" data-project="${p.id}">
           <h3>${escapeHtml(p.title)}</h3>
           <div class="project-meta">
             <strong style="color:var(--accent2)">${escapeHtml(p.priority)}</strong><br/>
-            시기: ${escapeHtml(p.when)} · 스택: ${escapeHtml(p.stack)}<br/>
+            시기: ${escapeHtml(p.when)}<br/>
+            ${stackLine}<br/>
             진행: ${stepsDone}/${stepsTotal} steps
           </div>
           <div class="project-section">
             <div class="sec-label">왜 하나</div>
             <p class="stat-sub" style="margin:0;line-height:1.5">${escapeHtml(p.why)}</p>
           </div>
+          <div class="project-section">
+            <div class="sec-label">툴 · 어떻게 쓸지</div>
+            <ul class="tip-list" style="margin:0">${toolDetail || "<li>—</li>"}</ul>
+          </div>
+          ${approach ? `<div class="project-section">
+            <div class="sec-label">접근 방법</div>
+            <ul class="tip-list" style="margin:0">${approach}</ul>
+          </div>` : ""}
           <div class="project-section">
             <div class="sec-label">데이터</div>
             <p class="stat-sub" style="margin:0;line-height:1.5"><strong>${escapeHtml(ds.name || "—")}</strong> — ${escapeHtml(ds.note || "")}</p>
@@ -220,12 +249,12 @@ let state;
             <ul class="tip-list" style="margin:0">${(p.deliverables || []).map(d => `<li>${escapeHtml(d)}</li>`).join("")}</ul>
           </div>
           <div class="project-section">
-            <div class="sec-label">체크리스트</div>
-            <ul class="project-steps">${(p.steps || []).map(s => {
+            <div class="sec-label">Step by step</div>
+            <ul class="project-steps">${(p.steps || []).map((s, i) => {
               const checked = isProjectStepDone(p.id, s.id);
               return `<li class="${checked ? "checked-step" : ""}">
                 <input type="checkbox" data-proj="${p.id}" data-step="${s.id}" ${checked ? "checked" : ""}/>
-                <span>${escapeHtml(s.text)}</span>
+                <span><strong style="color:var(--muted)">${i + 1}.</strong> ${escapeHtml(s.text)}</span>
               </li>`;
             }).join("")}</ul>
           </div>
