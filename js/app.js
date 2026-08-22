@@ -282,6 +282,114 @@ let state;
       });
     }
 
+    function researchStepKey(scope, sid) { return scope + "::" + sid; }
+
+    function isResearchStepDone(scope, sid) {
+      return !!(state.researchChecked && state.researchChecked[researchStepKey(scope, sid)]);
+    }
+
+    function getResearchProgress() {
+      if (typeof RESEARCH_TRACK === "undefined") return { done: 0, total: 0, pct: 0 };
+      let total = 0, done = 0;
+      (RESEARCH_TRACK.processSteps || []).forEach(s => {
+        total++;
+        if (isResearchStepDone("process", s.id)) done++;
+      });
+      (RESEARCH_TRACK.topics || []).forEach(t => {
+        (t.firstSteps || []).forEach(s => {
+          total++;
+          if (isResearchStepDone(t.id, s.id)) done++;
+        });
+      });
+      const pct = total ? Math.round(done / total * 100) : 0;
+      return { done, total, pct };
+    }
+
+    function researchStepsHtml(scope, steps) {
+      return `<ul class="project-steps">${(steps || []).map((s, i) => {
+        const checked = isResearchStepDone(scope, s.id);
+        return `<li class="${checked ? "checked-step" : ""}">
+          <input type="checkbox" data-rscope="${scope}" data-rstep="${s.id}" ${checked ? "checked" : ""}/>
+          <span><strong style="color:var(--muted)">${i + 1}.</strong> ${escapeHtml(s.text)}</span>
+        </li>`;
+      }).join("")}</ul>`;
+    }
+
+    function renderResearch() {
+      const root = document.getElementById("researchRoot");
+      if (!root || typeof RESEARCH_TRACK === "undefined") return;
+      if (!state.researchChecked) state.researchChecked = {};
+      const g = RESEARCH_TRACK;
+      const prog = getResearchProgress();
+      const label = document.getElementById("researchProgressLabel");
+      const bar = document.getElementById("researchProgressBar");
+      if (label) label.textContent = prog.pct + "% · " + prog.done + " / " + prog.total;
+      if (bar) bar.style.width = prog.pct + "%";
+
+      const topicsHtml = (g.topics || []).map(t => {
+        const refs = (t.refs || []).map(r => `<a href="${r.url}" target="_blank" rel="noopener">${escapeHtml(r.text)}</a>`).join(" · ");
+        return `<div class="card project-card" style="margin-bottom:0.9rem" data-research="${t.id}">
+          <h3>${escapeHtml(t.title)}</h3>
+          <div class="project-meta">
+            <strong style="color:var(--accent2)">Paper potential: ${escapeHtml(t.paperPotential)}</strong><br/>
+            Fit: ${escapeHtml(t.fit)}
+          </div>
+          <div class="project-section">
+            <div class="sec-label">Research question</div>
+            <p class="stat-sub" style="margin:0;line-height:1.5">${escapeHtml(t.question)}</p>
+          </div>
+          <div class="project-section">
+            <div class="sec-label">Why this fits you</div>
+            <p class="stat-sub" style="margin:0;line-height:1.5">${escapeHtml(t.whyYou)}</p>
+          </div>
+          <div class="project-section">
+            <div class="sec-label">Approach</div>
+            <ul class="tip-list" style="margin:0">${(t.approach || []).map(a => `<li>${escapeHtml(a)}</li>`).join("")}</ul>
+          </div>
+          <div class="project-section">
+            <div class="sec-label">First steps</div>
+            ${researchStepsHtml(t.id, t.firstSteps)}
+          </div>
+          ${refs ? `<div class="project-section"><div class="sec-label">References</div><div class="project-links">${refs}</div></div>` : ""}
+        </div>`;
+      }).join("");
+
+      root.innerHTML = `
+        <div class="card" style="margin-bottom:0.9rem">
+          <div class="card-title">${escapeHtml(g.title)}</div>
+          <p class="stat-sub" style="margin:0 0 0.55rem;line-height:1.5">${escapeHtml(g.intro)}</p>
+          <div class="project-section">
+            <div class="sec-label">vs Portfolio</div>
+            <ul class="tip-list" style="margin:0">${(g.vsPortfolio || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
+          </div>
+          <div class="project-section">
+            <div class="sec-label">${escapeHtml(g.howToPitchShi.title)}</div>
+            <ul class="tip-list" style="margin:0">${(g.howToPitchShi.bullets || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
+          </div>
+          <div class="project-section">
+            <div class="sec-label">Timeline</div>
+            <ul class="tip-list" style="margin:0">${(g.timeline || []).map(x => `<li><strong>${escapeHtml(x.when)}</strong> — ${escapeHtml(x.what)}</li>`).join("")}</ul>
+          </div>
+          <div class="project-section">
+            <div class="sec-label">Process checklist</div>
+            ${researchStepsHtml("process", g.processSteps)}
+          </div>
+        </div>
+        <div class="card-title" style="margin:0.4rem 0 0.65rem">Topic shortlist (pick 1 with Shi)</div>
+        ${topicsHtml}`;
+
+      root.querySelectorAll("input[data-rscope]").forEach(inp => {
+        inp.onchange = () => {
+          const key = researchStepKey(inp.dataset.rscope, inp.dataset.rstep);
+          if (!state.researchChecked) state.researchChecked = {};
+          if (inp.checked) state.researchChecked[key] = true;
+          else delete state.researchChecked[key];
+          saveState();
+          renderResearch();
+        };
+      });
+    }
+
     function bindCareerForm() {
       if (bindCareerForm.done) return;
       bindCareerForm.done = true;
