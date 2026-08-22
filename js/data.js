@@ -536,5 +536,5 @@ const CAREER_COLUMNS = [
   { id:"networking", label:"네트워킹" }
 ];
 const CAREER_CLOSED_STATUSES = ["rejected", "withdrawn"];
-const CAREER_TYPE_LABELS = { job:"온캠/PT", intern:"인턴", networking:"네트워킹" };
+const CAREER_TYPE_LABELS = { job:"온캠/PT", intern:"인턴", networking:"네트워킹·컨퍼" };
 const CAREER_ADVANCE = { target:"applied", applied:"interview", interview:"offer", networking:"applied" };
