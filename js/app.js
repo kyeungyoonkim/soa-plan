@@ -474,6 +474,7 @@ let state;
     function isExamReq(id) { return EXAM_IDS.includes(id); }
     function getExamStatus(id) { return state.examStatus[id] || "pending"; }
     function isReqDone(id) {
+      if (!id) return false;
       if (isExamReq(id)) return getExamStatus(id) === "passed";
       return isReqChecked(id);
     }

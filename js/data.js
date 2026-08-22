@@ -129,14 +129,21 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"pa-transcript", cat:"admin", name:"PA 합격 transcript", method:"SOA에 성적 제출", when:"합격 후", order:37 }
     ];
 
+    // Temple Registrar 공식 캘린더 기준 (Fall 2026 · Spring 2027)
+    // Fall 2027은 미발표 → Fall 2026 패턴으로 잠정
     const DDAYS = [
       { date:"2026-08-23", label:"SAS Base 시험", taskId:"sas-cert" },
+      { date:"2026-08-24", label:"Fall 2026 개강" },
       { date:"2026-09-21", label:"Exam P", taskId:"exam-p" },
+      { date:"2026-12-15", label:"Fall 2026 종강 (기말 종료)" },
       { date:"2026-12-23", label:"CLEP Microeconomics", taskId:"vee-econ" },
-      { date:"2027-06-01", label:"CPT FT", taskId:"cpt-ft" },
+      { date:"2027-01-11", label:"Spring 2027 개강" },
       { date:"2027-03-16", label:"Exam PA 등록 마감", taskId:"exam-pa" },
       { date:"2027-04-13", label:"Exam PA (4/13–16)", taskId:"exam-pa" },
-      { date:"2027-12-15", label:"Temple 졸업", taskId:"graduate" },
+      { date:"2027-05-04", label:"Spring 2027 종강 (기말 종료)" },
+      { date:"2027-06-01", label:"CPT FT", taskId:"cpt-ft" },
+      { date:"2027-08-24", label:"Fall 2027 개강 (잠정)" },
+      { date:"2027-12-15", label:"Fall 2027 종강 · 졸업 (잠정)", taskId:"graduate" },
       { date:"2028-03-01", label:"ASA (목표)", taskId:"asa" }
     ];
 
