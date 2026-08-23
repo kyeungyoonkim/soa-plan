@@ -32,6 +32,26 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const CIRC = 2 * Math.PI * 30;
     const JOURNEY_START = "2026-01-01";
     const JOURNEY_END = "2028-03-01";
+    const DEFAULT_WEEKLY_STUDY_GOAL = 900; // 15h/week · more ambitious than 10h
+    const STUDY_GOAL_VERSION = 1;
+
+    // Fixed weekly todos · shown on 시간표/캘린더 · checkbox resets each Monday
+    const WEEKLY_FIXED_TODOS = {
+      title: "Weekly fixed todos",
+      goalNote: "Study goal default = 900 min/week (15h). Until Exam P (9/21): push 900–1050. After P with full classes: 720–900 is OK.",
+      items: [
+        { id: "minutes", text: "Hit weekly study minutes (log in 공부모드 · default 900+)", always: true },
+        { id: "p-practice", text: "Exam P: ≥5 practice blocks (TIA / Adapt) or ~10h problems", until: "2026-09-21" },
+        { id: "p-wrongs", text: "Exam P: wrong-answer review ≥30 min", until: "2026-09-21" },
+        { id: "p-formula", text: "Exam P: weak-topic / formula pass (Wed or Sun)", until: "2026-09-21" },
+        { id: "class-catchup", text: "Temple: HW/readings catch-up (5101 · 5104 · RMI · HCM)", from: "2026-08-24" },
+        { id: "fm-align", text: "AS 5101: one FM-aligned interest-theory block", from: "2026-08-24", until: "2026-12-15" },
+        { id: "health-proj", text: "Health rate memo / SAS hackathon: ≥1 deep work block", from: "2026-09-22", until: "2026-10-30" },
+        { id: "life-or-research", text: "Life assumption memo OR Research 1-pager: ≥1 small step", from: "2026-10-31" },
+        { id: "admin", text: "Admin: Canvas/email/ISSS or career pipeline 1 update", always: true },
+        { id: "body", text: "One real rest block · no exam all-nighter debt", always: true }
+      ]
+    };
 
     const PHASES = [
       { id:"pre", name:"입학 전 · 2026 여름", period:"~2026년 8월", start:"2025-01-01", end:"2026-08-23", tasks:[

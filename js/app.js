@@ -29,7 +29,9 @@ let state;
         reqChecked:{}, timelineChecked:{}, templeChecked:{}, examStatus:{}, projectChecked:{}, researchChecked:{},
         weeklyMemo:"", adminMemo:"",
         studyLogs:[], checklistFilter:"all", schedule:[],
-        weeklyStudyGoal:600, budgetSpent:0, pomoLogRange:"week",
+        weeklyStudyGoal: DEFAULT_WEEKLY_STUDY_GOAL, studyGoalVersion: STUDY_GOAL_VERSION,
+        weeklyTodoWeek: "", weeklyTodoChecked: {},
+        budgetSpent:0, pomoLogRange:"week",
         pomodoro:{ workMin:25, breakMin:5, dailyGoal:4, todayCount:0, lastDate:"", topic:"" },
         careerPipeline:[]
       };
@@ -452,10 +454,19 @@ let state;
 
     function withDefaultSchedule(st) {
       const ver = st.fallScheduleVersion || 0;
+      let next = st;
       if ((st.schedule || []).length === 0 || ver < FALL_2026_SCHEDULE_VERSION) {
-        return { ...st, schedule: applyFall2026Schedule(), fallScheduleVersion: FALL_2026_SCHEDULE_VERSION };
+        next = { ...next, schedule: applyFall2026Schedule(), fallScheduleVersion: FALL_2026_SCHEDULE_VERSION };
       }
-      return st;
+      const goalVer = next.studyGoalVersion || 0;
+      if (goalVer < STUDY_GOAL_VERSION) {
+        const g = next.weeklyStudyGoal;
+        // Bump old default 600 → 900 once; keep custom values the user set above 600
+        const bumped = (!g || g === 600) ? DEFAULT_WEEKLY_STUDY_GOAL : g;
+        next = { ...next, weeklyStudyGoal: bumped, studyGoalVersion: STUDY_GOAL_VERSION };
+      }
+      if (!next.weeklyTodoChecked) next.weeklyTodoChecked = {};
+      return next;
     }
 
     function loadState() {
@@ -1594,7 +1605,7 @@ let state;
     function renderExamStudyGuide() {
       const el = document.getElementById("examStudyGuide");
       const logged = getWeekStudyMinutes();
-      const goal = state.weeklyStudyGoal || 600;
+      const goal = state.weeklyStudyGoal || DEFAULT_WEEKLY_STUDY_GOAL;
 
       if (getExamStatus("exam-p") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 11월 또는 다음 window</span></div>
@@ -1619,8 +1630,68 @@ let state;
       }).join("");
     }
 
+    function weekKeyFromDate(d) {
+      const x = new Date(d);
+      x.setHours(0, 0, 0, 0);
+      x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
+      return x.toISOString().slice(0, 10);
+    }
+
+    function ensureWeeklyTodoWeek() {
+      const key = weekKeyFromDate(new Date());
+      if (state.weeklyTodoWeek !== key) {
+        state.weeklyTodoWeek = key;
+        state.weeklyTodoChecked = {};
+        saveState(true);
+      }
+      if (!state.weeklyTodoChecked) state.weeklyTodoChecked = {};
+      return key;
+    }
+
+    function activeWeeklyTodos() {
+      if (typeof WEEKLY_FIXED_TODOS === "undefined") return [];
+      const today = new Date().toISOString().slice(0, 10);
+      return (WEEKLY_FIXED_TODOS.items || []).filter(it => {
+        if (it.always) return true;
+        if (it.from && today < it.from) return false;
+        if (it.until && today > it.until) return false;
+        return true;
+      });
+    }
+
+    function renderWeeklyFixedTodos() {
+      const el = document.getElementById("weeklyFixedTodos");
+      if (!el || typeof WEEKLY_FIXED_TODOS === "undefined") return;
+      const weekKey = ensureWeeklyTodoWeek();
+      const items = activeWeeklyTodos();
+      const done = items.filter(it => state.weeklyTodoChecked[it.id]).length;
+      const goal = state.weeklyStudyGoal || DEFAULT_WEEKLY_STUDY_GOAL;
+      el.innerHTML = `
+        <div class="card-title">${escapeHtml(WEEKLY_FIXED_TODOS.title)}</div>
+        <p class="stat-sub" style="margin:0 0 0.45rem;line-height:1.5">${escapeHtml(WEEKLY_FIXED_TODOS.goalNote)}</p>
+        <p class="stat-sub" style="margin:0 0 0.55rem">This week (Mon ${weekKey}) · <strong style="color:var(--accent2)">${done}/${items.length}</strong> · study goal <strong>${goal}</strong> min</p>
+        <ul class="project-steps">${items.map((it, i) => {
+          const checked = !!state.weeklyTodoChecked[it.id];
+          return `<li class="${checked ? "checked-step" : ""}">
+            <input type="checkbox" data-weekly-todo="${it.id}" ${checked ? "checked" : ""}/>
+            <span><strong style="color:var(--muted)">${i + 1}.</strong> ${escapeHtml(it.text)}</span>
+          </li>`;
+        }).join("")}</ul>`;
+      el.querySelectorAll("input[data-weekly-todo]").forEach(inp => {
+        inp.onchange = () => {
+          ensureWeeklyTodoWeek();
+          if (inp.checked) state.weeklyTodoChecked[inp.dataset.weeklyTodo] = true;
+          else delete state.weeklyTodoChecked[inp.dataset.weeklyTodo];
+          saveState();
+          renderWeeklyFixedTodos();
+        };
+      });
+    }
+
     function renderSchedule() {
+      renderWeeklyFixedTodos();
       const grid = document.getElementById("scheduleGrid");
+      if (!grid) return;
       const today = new Date().getDay();
       grid.innerHTML = DAY_ORDER.map((d) => {
         const classes = (state.schedule || []).filter(c => c.day === d)
@@ -1667,7 +1738,7 @@ let state;
     }
 
     function renderStudyGoal() {
-      const goal = state.weeklyStudyGoal || 600;
+      const goal = state.weeklyStudyGoal || DEFAULT_WEEKLY_STUDY_GOAL;
       const done = getWeekStudyMinutes();
       const pct = Math.min(100, Math.round(done / goal * 100));
       document.getElementById("studyGoalMin").textContent = goal;
@@ -1872,7 +1943,7 @@ let state;
       bindCareerForm();
 
       document.getElementById("studyGoalInput").addEventListener("change", e => {
-        state.weeklyStudyGoal = Math.max(60, +e.target.value || 600);
+        state.weeklyStudyGoal = Math.max(60, +e.target.value || DEFAULT_WEEKLY_STUDY_GOAL);
         saveState(true);
       });
 
