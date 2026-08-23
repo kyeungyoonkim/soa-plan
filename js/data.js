@@ -613,7 +613,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     // 커리어: SOA · Life/Health · 서부 · 스폰 위주
     const CAREER_EVENT_GUIDE = {
       title: "커리어 타깃 · 컨퍼런스 · 스폰 (내 기준)",
-      intro: "경로: SOA · Life/Health 선호 · CAS 안 함 · 유학생 스폰(CPT→OPT→H-1B) · 서부 정착. 이벤트는 ‘참석 → LinkedIn → 커피챗 1명’이 목표.",
+      intro: "경로: SOA · Life/Health · CAS 안 함 · F-1 → CPT → OPT → H-1B → green card(EB) · 서부 정착. ‘유학생은 취업 불가’는 과장 — 어렵지만 Plan A/B/C로 관리. 이벤트 목표: 참석 → LinkedIn → 커피챗 1명.",
       channels: [
         {
           name: "SOA Professional Development (PD Edge)",
@@ -676,6 +676,61 @@ const STORAGE_KEY = "soa-asa-plan-v6";
           { name: "Elevance (Anthem) / regional Blues", fit: "Health", why: "헬스케어 pricing·risk · 서부 plan 오픈 시 지원", url: "https://careers.elevancehealth.com/" },
           { name: "Blue Shield of California", fit: "Health · CA", why: "CA 정착 시 우선 워치리스트", url: "https://www.blueshieldca.com/careers" },
           { name: "WTW · Aon · Mercer (Life/Health teams)", fit: "Consulting · 서부 오피스", why: "스폰 비교적 익숙 · Life/Health practice로 지원 명시", url: "https://www.wtwco.com/en-us/careers" }
+        ]
+      },
+      immigrationPlans: {
+        title: "US permanent residency · Plan A / B / C (내 기준)",
+        reality: "‘유학생은 취업 불가능’은 틀림. Actuarial + exams + sponsorship-aware targeting은 실제로 뽑힘. 다만 H-1B lottery·경기·회사 정책 때문에 한 줄 계획만으론 불안한 게 정상. 목표 = green card(영주권)까지 여러 레일.",
+        notLegalAdvice: "Not legal advice — ISSS + immigration attorney when filing. Rules change.",
+        plans: [
+          {
+            id: "A",
+            name: "Plan A — Stay on SOA Life/Health track (default)",
+            goal: "US job → H-1B → employer green card (EB-2/EB-3 PERM)",
+            steps: [
+              "Now–grad: Exam P + UEC + SAS + 1 Health portfolio + CPT/OPT-ready résumé",
+              "Internships: CPT PT → summer CPT FT at sponsorship-friendly Life/Health (Milliman, Pacific Life, health plans, WTW/Aon/Mercer Life/Health)",
+              "Post-grad: STEM OPT (MS) if eligible · work full-time · employer files H-1B (multiple years if needed)",
+              "After H-1B (or sometimes earlier): employer starts PERM → I-140 → green card (EB-2 common for master’s)",
+              "Mindset: apply where LCA/H-1B history exists · say visa need early but after showing exam/skill value"
+            ],
+            greenCard: "Most actuaries: employer-sponsored EB-2/EB-3. Slow but standard."
+          },
+          {
+            id: "B",
+            name: "Plan B — Same US goal, wider rails (if Plan A stalls)",
+            goal: "Still US PR · reduce ‘pure actuarial analyst at one carrier’ bottleneck",
+            steps: [
+              "Widen roles: actuarial analyst + health analytics, pricing ops, risk, valuation support, consulting analyst (still Life/Health)",
+              "Cap-exempt H-1B try: university, some nonprofits / research / hospital systems (lottery-exempt) — keep SOA exams going",
+              "Temple/Fox: RA with Dr. Shi if paid/CPT-able · builds network + possible longer runway",
+              "Multi-year H-1B strategy: file each lottery year on OPT/STEM OPT/cap-gap · don’t freeze life for one lottery",
+              "Geography flexibility: still prefer West, but take sponsorship-strong offer elsewhere first → transfer west later",
+              "EB-2 NIW (self-petition) later only if research/impact case is real — disability/equity research can help long-term, not year-1"
+            ],
+            greenCard: "Still mostly employer PERM; NIW is Plan B+ after strong record — not a freshman backup fantasy."
+          },
+          {
+            id: "C",
+            name: "Plan C — Keep US PR dream, change country timing (bridge)",
+            goal: "Don’t lose the end goal if US timing breaks · bridge then return or parallel PR",
+            steps: [
+              "Canada: actuarial jobs + clearer PR pathways (Express Entry / provincial) — SOA exams still travel; many return or dual-track US later",
+              "Extra US runway: another STEM master’s / PhD only if funding + clear visa math (don’t do degree just to stall)",
+              "Korea bridge: work 1–2 yrs at global insurer/consulting that transfers to US later (intra-company) — rare but real",
+              "Maintain US-ready file always: exams, SAS, LinkedIn, US references, OPT unused carefully timed",
+              "Emotional rule: Plan C is a bridge, not ‘give up US.’ Re-enter when lottery/employer/market opens"
+            ],
+            greenCard: "Canada PR can be faster; US GC later via employer/transfer/marriage/NIW depending on life — pick with a lawyer when real."
+          }
+        ],
+        nearTermActions: [
+          "This week feeling: anxiety ≠ signal that Plan A is dead — signal to build B/C rails on paper",
+          "Until 9/21: Exam P only (best immigration move right now = pass exams)",
+          "Fall: ISSS CPT/OPT info session · calendar STEM OPT eligibility",
+          "Applications: only sponsorship-aware list (Career tab companies) · track in pipeline",
+          "After P: Dr. Shi research talk (equity/disability) = Plan B skill + possible NIW story years later",
+          "Every Dec: update ‘visa runway’ note — OPT end date, H-1B attempts, backup country decision date"
         ]
       }
     };

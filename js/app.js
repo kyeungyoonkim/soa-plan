@@ -142,9 +142,25 @@ let state;
               <div class="stat-sub" style="margin-top:0.15rem;line-height:1.45">${c.why}</div>
             </div>`).join("")}
         </div>` : "";
+      const imm = g.immigrationPlans ? `
+        <div class="project-section">
+          <div class="sec-label">${escapeHtml(g.immigrationPlans.title)}</div>
+          <p class="stat-sub" style="margin:0 0 0.45rem;line-height:1.5">${escapeHtml(g.immigrationPlans.reality)}</p>
+          <p class="stat-sub" style="margin:0 0 0.65rem;line-height:1.45;color:var(--accent2)">${escapeHtml(g.immigrationPlans.notLegalAdvice)}</p>
+          ${(g.immigrationPlans.plans || []).map(p => `
+            <div style="margin-bottom:0.75rem;padding-bottom:0.55rem;border-bottom:1px solid var(--border)">
+              <div style="font-weight:600;font-size:0.9rem;color:var(--accent)">${escapeHtml(p.name)}</div>
+              <div class="stat-sub" style="margin-top:0.2rem;line-height:1.45"><strong>Goal:</strong> ${escapeHtml(p.goal)}</div>
+              <ul class="tip-list" style="margin:0.35rem 0 0">${(p.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("")}</ul>
+              <div class="stat-sub" style="margin-top:0.35rem;line-height:1.45;color:var(--accent2)"><strong>Green card:</strong> ${escapeHtml(p.greenCard)}</div>
+            </div>`).join("")}
+          <div class="sec-label" style="margin-top:0.35rem">Near-term actions</div>
+          <ul class="tip-list" style="margin:0">${(g.immigrationPlans.nearTermActions || []).map(t => `<li>${escapeHtml(t)}</li>`).join("")}</ul>
+        </div>` : "";
       el.innerHTML = `
         <div class="card-title">${g.title}</div>
         <p class="stat-sub" style="margin:0 0 0.65rem;line-height:1.5">${g.intro}</p>
+        ${imm}
         ${west}
         ${sponsors}
         <div class="project-section">
