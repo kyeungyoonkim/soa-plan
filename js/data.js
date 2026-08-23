@@ -716,21 +716,36 @@ const STORAGE_KEY = "soa-asa-plan-v6";
             goal: "Don’t lose the end goal if US timing breaks · bridge then return or parallel PR",
             steps: [
               "Canada: actuarial jobs + clearer PR pathways (Express Entry / provincial) — SOA exams still travel; many return or dual-track US later",
-              "Extra US runway: another STEM master’s / PhD only if funding + clear visa math (don’t do degree just to stall)",
+              "Extra US runway: another STEM master’s / PhD only if funding + clear visa math (don’t do degree just to stall) — full PhD path = Plan D",
               "Korea bridge: work 1–2 yrs at global insurer/consulting that transfers to US later (intra-company) — rare but real",
               "Maintain US-ready file always: exams, SAS, LinkedIn, US references, OPT unused carefully timed",
               "Emotional rule: Plan C is a bridge, not ‘give up US.’ Re-enter when lottery/employer/market opens"
             ],
             greenCard: "Canada PR can be faster; US GC later via employer/transfer/marriage/NIW depending on life — pick with a lawyer when real."
+          },
+          {
+            id: "D",
+            name: "Plan D — PhD admission (US runway + research → stronger GC story)",
+            goal: "PhD (STEM) for longer F-1 runway, RA/TA funding, cap-exempt possible, then industry or academic hire → H-1B/EB or NIW",
+            steps: [
+              "When to flip: if OPT/H-1B math looks bad, or you love research (disability/equity + actuarial/stats) more than rushing industry",
+              "Target fields that keep SOA door open: actuarial science, statistics, biostatistics, risk/insurance economics, health services research — not random PhD",
+              "Funding first: RA/TA / fellowship · avoid self-pay PhD as immigration stall",
+              "Use Research tab + Dr. Shi: lit review, letter, methods — application packet needs research fit not just GPA",
+              "Timeline sketch: applications ~Fall Y2 / after MS momentum · start PhD ~2028+ if needed (don’t quit MS early without offer)",
+              "During PhD: keep 1–2 SOA exams/modules warm · summer industry or research internships when CPT allows",
+              "Exit: industry actuarial/analytics with PhD premium, university/nonprofit cap-exempt, or EB-2 NIW if publication/impact case is real"
+            ],
+            greenCard: "PhD is not automatic PR. It buys time + credentials. GC still usually employer PERM, cap-exempt job, or later NIW — lawyer when concrete."
           }
         ],
         nearTermActions: [
-          "This week feeling: anxiety ≠ signal that Plan A is dead — signal to build B/C rails on paper",
+          "This week feeling: anxiety ≠ signal that Plan A is dead — signal to build B/C/D rails on paper",
           "Until 9/21: Exam P only (best immigration move right now = pass exams)",
           "Fall: ISSS CPT/OPT info session · calendar STEM OPT eligibility",
           "Applications: only sponsorship-aware list (Career tab companies) · track in pipeline",
-          "After P: Dr. Shi research talk (equity/disability) = Plan B skill + possible NIW story years later",
-          "Every Dec: update ‘visa runway’ note — OPT end date, H-1B attempts, backup country decision date"
+          "After P: Dr. Shi research talk (equity/disability) = Plan B skill + Plan D PhD letters later",
+          "Every Dec: update ‘visa runway’ note — OPT end date, H-1B attempts, Plan C country, Plan D apply-or-not decision date"
         ]
       }
     };
