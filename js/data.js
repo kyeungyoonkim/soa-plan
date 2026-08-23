@@ -98,6 +98,13 @@ const STORAGE_KEY = "soa-asa-plan-v6";
           note: "해커톤·Health memo는 9/22 시작. 지금 욕심내면 P·수업 둘 다 무너짐."
         },
         {
+          name: "점심",
+          dur: "약 45분",
+          when: "월·수 13:30 · 화·목 12:10 · 금 11:45 · 토 12:05",
+          rule: "리뷰/수업 끝나고 · 캘린더 busy",
+          from: "2026-08-24"
+        },
+        {
           name: "운동",
           dur: "약 1시간",
           when: "월·수·금 저녁 · 저녁(18:30–19:00) 직전 1h (월·금 17:00 / 수 16:00 — HCM 전)",
@@ -186,7 +193,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         admin: { label: "행정", color: "var(--muted)" },
         project: { label: "프로젝트", color: "#c9a227" },
         rest: { label: "휴식 · 수면", color: "#7a8a9a" },
-        exercise: { label: "운동", color: "#e07a5f" }
+        exercise: { label: "운동", color: "#e07a5f" },
+        meal: { label: "식사", color: "#b8956b" }
       },
       // Review minutes · auto-placed after each Fall class in app.js
       classReviewRules: {
@@ -210,25 +218,29 @@ const STORAGE_KEY = "soa-asa-plan-v6";
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             1: [
-              { start: "13:45", end: "14:00", label: "행정", type: "admin" },
+              { start: "13:30", end: "14:15", label: "점심", type: "meal" },
+              { start: "14:20", end: "14:35", label: "행정", type: "admin" },
               { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전" },
               { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
               { start: "21:35", end: "22:00", label: "오답 노트", type: "study" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             2: [
-              { start: "11:45", end: "12:05", label: "행정", type: "admin" },
+              { start: "12:10", end: "12:55", label: "점심", type: "meal" },
+              { start: "13:00", end: "13:15", label: "행정", type: "admin" },
               { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
               { start: "21:35", end: "22:00", label: "오답 노트", type: "study" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             3: [
-              { start: "13:45", end: "14:00", label: "행정", type: "admin" },
+              { start: "13:30", end: "14:15", label: "점심", type: "meal" },
+              { start: "14:20", end: "14:35", label: "행정", type: "admin" },
               { start: "16:00", end: "17:00", label: "운동", type: "exercise", note: "HCM(18:00) 전 · 저녁 20:30 이후" },
               { start: "23:00", end: "—", label: "수면 · HCM 밤 P 금지", type: "rest" }
             ],
             4: [
-              { start: "11:45", end: "12:05", label: "행정", type: "admin" },
+              { start: "12:10", end: "12:55", label: "점심", type: "meal" },
+              { start: "13:00", end: "13:15", label: "행정", type: "admin" },
               { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
               { start: "21:35", end: "22:00", label: "오답 노트", type: "study" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
@@ -237,6 +249,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
               { start: "09:30", end: "10:30", label: "AS 5101 주간 복습", type: "review", note: "★ FM" },
               { start: "10:35", end: "11:20", label: "AS 5104 주간 복습", type: "review", note: "★ 모델링" },
               { start: "11:25", end: "11:40", label: "행정 · Canvas", type: "admin" },
+              { start: "11:45", end: "12:30", label: "점심", type: "meal" },
               { start: "13:00", end: "15:30", label: "Temple 숙제 몰아서", type: "study", note: "제출물 · 읽기" },
               { start: "15:35", end: "16:05", label: "RMI/HCM 밀린 리뷰", type: "review", note: "있으면만" },
               { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전" },
@@ -244,7 +257,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             6: [
-              { start: "09:00", end: "13:00", label: "Exam P 롱셋", type: "study", note: "혼합 · 시간 제한" },
+              { start: "09:00", end: "12:00", label: "Exam P 롱셋", type: "study", note: "혼합 · 시간 제한" },
+              { start: "12:05", end: "12:50", label: "점심", type: "meal" },
               { start: "19:00", end: "19:30", label: "커리어 / LinkedIn", type: "admin" },
               { start: "19:35", end: "—", label: "저녁 off", type: "rest" }
             ]
@@ -263,23 +277,27 @@ const STORAGE_KEY = "soa-asa-plan-v6";
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             1: [
-              { start: "13:45", end: "14:00", label: "행정", type: "admin" },
+              { start: "13:30", end: "14:15", label: "점심", type: "meal" },
+              { start: "14:20", end: "14:35", label: "행정", type: "admin" },
               { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전" },
               { start: "20:00", end: "21:30", label: "숙제 / UEC", type: "study", note: "5101·5104 우선" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             2: [
-              { start: "11:45", end: "12:05", label: "행정", type: "admin" },
+              { start: "12:10", end: "12:55", label: "점심", type: "meal" },
+              { start: "13:00", end: "13:15", label: "행정", type: "admin" },
               { start: "20:00", end: "21:30", label: "숙제 / UEC", type: "study", note: "5104" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             3: [
-              { start: "13:45", end: "14:00", label: "행정", type: "admin" },
+              { start: "13:30", end: "14:15", label: "점심", type: "meal" },
+              { start: "14:20", end: "14:35", label: "행정", type: "admin" },
               { start: "16:00", end: "17:00", label: "운동", type: "exercise", note: "HCM(18:00) 전" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             4: [
-              { start: "11:45", end: "12:05", label: "행정", type: "admin" },
+              { start: "12:10", end: "12:55", label: "점심", type: "meal" },
+              { start: "13:00", end: "13:15", label: "행정", type: "admin" },
               { start: "20:00", end: "21:30", label: "숙제 / UEC", type: "study" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
@@ -287,6 +305,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
               { start: "09:30", end: "10:30", label: "AS 5101 주간 복습", type: "review", note: "★" },
               { start: "10:35", end: "11:20", label: "AS 5104 주간 복습", type: "review", note: "★" },
               { start: "11:25", end: "11:40", label: "행정", type: "admin" },
+              { start: "11:45", end: "12:30", label: "점심", type: "meal" },
               { start: "13:00", end: "15:00", label: "Temple 숙제", type: "study" },
               { start: "15:05", end: "16:05", label: "Health memo / SAS", type: "project", note: "금요일 딥블록" },
               { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전" },
@@ -303,7 +322,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ],
       ruleOfThumb: [
         "Fall 수업표(5101 월수 9:30 · 5104 화목 9:30 · RMI 월수 11:00 · HCM 수 18:00) 기준. 리뷰는 수업 직후 자동 배치.",
-        "5101·5104 ★ 우선(40–45분). RMI 20분. HCM 수 30분(수업 직후). 금요일 = 5101·5104 복습 + 숙제 몰아서.",
+        "5101·5104 ★ 우선(40–45분). RMI 20분. HCM 수 30분. 점심 45분 · 금요일 = 복습 + 숙제.",
         "집중 45분+ → 시작 시각을 캘린더에. 행정은 딥/리뷰를 훔치지 않기.",
         "월·수·금 운동 1h는 저녁(18:30–19:00) 직전 고정. 수요일은 HCM(18:00) 때문에 16:00–17:00 · 저녁은 20:30 이후."
       ]
