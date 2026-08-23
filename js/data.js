@@ -387,7 +387,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const PHASES = [
       { id:"pre", name:"입학 전 · 2026 여름", period:"~2026년 8월", start:"2025-01-01", end:"2026-08-23", tasks:[
         { id:"prep-p", text:"Exam P 대비 (TIA only)", meta:"~110h 스프린트 · TIA 문제+practice exam · 목표 9/21", highlight:true },
-        { id:"sas-cert", text:"SAS Base 시험 8/23", meta:"Base Programming · 응시 예정", highlight:true },
+        { id:"sas-cert", text:"SAS Base Certification ✓", meta:"Base Programming Specialist · 2026-08-23 합격", highlight:true },
         { id:"vee-macro", text:"VEE Macroeconomics ✓", meta:"Economics VEE · 이미 완료" },
         { id:"vee-acct", text:"VEE Accounting & Finance ✓", meta:"이미 완료" },
         { id:"exam-p-reg", text:"Exam P 등록", meta:"마감 8/12 12AM CT · 응시 목표 9/21", highlight:true },
@@ -449,7 +449,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"as-5101", cat:"uec", name:"Exam FM", method:"AS 5101 UEC · SOA FM 시험 안 봄", when:"Fall Y1", order:0 },
       { id:"exam-p", cat:"exam", name:"Exam P", method:"목표 9/21 (window 9/10–21) · 등록 8/12 12AM CT", when:"Fall Y1", order:4 },
       { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2027.4/13–16 · 등록 마감 3/16 11:59 PM · 5108 Spring 2027 병행", when:"2학기 (Spring Y1)", order:11 },
-      { id:"sas-cert", cat:"career", name:"SAS Base Certification", method:"8/23 응시 예정", when:"2026 여름", order:19 },
+      { id:"sas-cert", cat:"career", name:"SAS Base Certification", method:"2026-08-23 합격 · Base Programming Specialist", when:"완료", order:19 },
       { id:"sas-hackathon", cat:"career", name:"SAS Student Hackathon", method:"10/1 시작 · 10/30 마감 · 신청 완료 · Health rate memo와 동일 스택", when:"Fall Y1 · 10/1–10/30", order:20 },
       { id:"sas-advanced", cat:"career", name:"SAS Advanced Programming (선택)", method:"Base 이후 · 인턴/실무에서 SAS 쓸 때 검토", when:"겨울방학 (선택)", order:28 },
       { id:"sas-clinical", cat:"career", name:"SAS Clinical Trials (선택)", method:"제약·임상 진로 시에만", when:"선택", order:29 },
@@ -487,7 +487,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     // Temple Registrar 공식 캘린더 기준 (Fall 2026 · Spring 2027)
     // Fall 2027은 미발표 → Fall 2026 패턴으로 잠정
     const DDAYS = [
-      { date:"2026-08-23", label:"SAS Base 시험", taskId:"sas-cert" },
+      { date:"2026-08-23", label:"SAS Base 합격 ✓", taskId:"sas-cert" },
       { date:"2026-08-24", label:"Fall 2026 개강" },
       { date:"2026-09-21", label:"Exam P", taskId:"exam-p" },
       { date:"2026-09-22", label:"Health rate memo start (post-P)", taskId:"proj-health" },
@@ -596,11 +596,11 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       },
       {
         when: "2026년 8/23 · SAS",
-        tier: "best", tierLabel: "8/23",
+        tier: "best", tierLabel: "합격 ✓",
         pick: "SAS Base Programming Specialist",
-        cost: "SAS 공식 요금",
-        costDetail: "8/23 응시 예정 · 입학(8/24) 직전 · P와 겹침 주의",
-        plan: "SAS 공식 prep → 8/23 Prometric/Pearson 응시 · 인턴·분석 직무에 유리",
+        cost: "완료",
+        costDetail: "2026-08-23 합격 · Base Programming Specialist",
+        plan: "완료 · 이력서/LinkedIn에 바로 추가 · 다음: Exam P(9/21) · Health memo는 P 이후",
         links: [
           { text: "SAS Certification", url: "https://www.sas.com/en_us/certification.html" }
         ],
@@ -682,7 +682,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const STUDY_HOURS = [
       { exam:"Exam P", min:150, max:350, typical:200, plan:"9/21 · TIA only", tips:"통계전공 · TIA 문제+practice exam 70%+ · 4주 ~110h · 8/12 등록" },
-      { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"8/23 응시 예정", tips:"Base SAS prep · 입학 전날 · P와 주간 시간 나누기" },
+      { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"2026-08-23 합격 ✓", tips:"완료 · 이력서·LinkedIn 반영 · Advanced는 겨울방학 선택" },
       { exam:"Exam PA", min:400, max:600, typical:500, plan:"4/13–16 · 등록 3/16", tips:"500h · Spring 2027 5108과 함께" },
       { exam:"UEC (FM/FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"별도 SOA 시험 없음 · FM=5101 · FAM=5102+5104 · SRM=5108 · ASTAM=5114 · B- 이상 · 수업+숙제로 대체" },
       { exam:"PAF / ASF / FAP", min:20, max:40, typical:30, plan:"Spring 초 PAF → FAP · 2027 여름 ASF", tips:"모듈당 대략 20–40시간. ASF는 FAM+SRM credit 후 · ASA 목표는 2028년 1–3월." }

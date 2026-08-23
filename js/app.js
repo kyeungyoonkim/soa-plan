@@ -465,6 +465,15 @@ let state;
         next = { ...next, weeklyStudyGoal: bumped, studyGoalVersion: STUDY_GOAL_VERSION };
       }
       if (!next.weeklyTodoChecked) next.weeklyTodoChecked = {};
+      // SAS Base passed 2026-08-23
+      if (!next.reqChecked) next.reqChecked = {};
+      if (!next.reqChecked["sas-cert"]) {
+        next = { ...next, reqChecked: { ...next.reqChecked, "sas-cert": true } };
+      }
+      if (!next.timelineChecked) next.timelineChecked = {};
+      if (!next.timelineChecked["sas-cert"]) {
+        next = { ...next, timelineChecked: { ...next.timelineChecked, "sas-cert": true } };
+      }
       return next;
     }
 
@@ -1023,7 +1032,7 @@ let state;
       // Left todo — Top 3 priority (optional element)
       const leftTodoEl = document.getElementById("leftTodo");
       if (leftTodoEl) {
-        const topTodoIds = ["sas-cert", "vee-econ", "exam-p"];
+        const topTodoIds = ["exam-p", "vee-stats-check", "vee-econ"];
         const leftItems = topTodoIds
           .map(id => REQUIREMENTS.find(r => r.id === id))
           .filter(r => r && !isReqDone(r.id));
