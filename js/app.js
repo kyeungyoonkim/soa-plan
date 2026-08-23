@@ -1728,27 +1728,6 @@ let state;
       const morning = sorted.filter(c => parseTimeMin(c.end) <= noon);
       const evening = sorted.filter(c => parseTimeMin(c.start) >= noon);
 
-      for (let i = 0; i < morning.length - 1; i++) {
-        const c = morning[i];
-        const next = morning[i + 1];
-        const rule = getReviewRule(c.name);
-        const endMin = parseTimeMin(c.end);
-        const nextStart = parseTimeMin(next.start);
-        const gap = nextStart - endMin;
-        if (rule.priority && gap >= buf + 4) {
-          const miniEnd = Math.min(endMin + 2 + 5, nextStart - 2);
-          if (miniEnd > endMin + 2) {
-            reviews.push({
-              start: formatTimeMin(endMin + 2),
-              end: formatTimeMin(miniEnd),
-              label: `${rule.label} 미니`,
-              type: "review",
-              note: "★ 직후"
-            });
-          }
-        }
-      }
-
       if (morning.length) {
         const ordered = [...morning].sort((a, b) => {
           const ra = getReviewRule(a.name), rb = getReviewRule(b.name);
