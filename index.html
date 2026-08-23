@@ -758,9 +758,10 @@
       <div class="card" style="margin-bottom:0.9rem" id="weeklyFixedTodos"></div>
       <div class="card" style="margin-bottom:0.9rem" id="timeBlockGuide"></div>
 
-      <div class="card">
-          <div class="card-title">학교 시간표 추가</div>
-          <input type="text" id="clsName" placeholder="수업명" />
+      <div class="card" style="margin-bottom:0.65rem">
+        <details class="pomo-settings" style="margin-top:0">
+          <summary>학교 시간표 추가 (숨김 · 필요할 때만)</summary>
+          <input type="text" id="clsName" placeholder="수업명" style="margin-top:0.45rem" />
           <div class="form-row">
             <div><label style="font-size:0.75rem;color:var(--muted)">요일</label>
               <select id="clsDay">
@@ -776,6 +777,7 @@
           </div>
           <input type="text" id="clsSemester" placeholder="학기" value="2026 Fall" />
           <button class="btn-action primary" id="btnAddClass">수업 추가</button>
+        </details>
       </div>
 
       <div class="card" style="margin-top:0.9rem">
@@ -869,7 +871,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="js/data.js?v=20260822z"></script>
-  <script defer src="js/app.js?v=20260822z"></script>
+  <script src="js/data.js?v=20260823a"></script>
+  <script defer src="js/app.js?v=20260823a"></script>
 </body>
 </html>
