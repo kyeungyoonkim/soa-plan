@@ -37,149 +37,149 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     // Fixed weekly todos · shown on 시간표/캘린더 · checkbox resets each Monday
     const WEEKLY_FIXED_TODOS = {
-      title: "Weekly fixed todos",
-      goalNote: "Study goal default = 900 min/week (15h). Until Exam P (9/21): push 900–1050. After P with full classes: 720–900 is OK.",
+      title: "매주 고정 할 일",
+      goalNote: "주간 공부 목표 기본 900분(15시간). Exam P(9/21)까지는 900–1050분 권장. P 이후·수업 풀이면 720–900분도 OK.",
       items: [
-        { id: "minutes", text: "Hit weekly study minutes (log in 공부모드 · default 900+)", always: true },
-        { id: "p-practice", text: "Exam P: ≥5 practice blocks (TIA / Adapt) or ~10h problems", until: "2026-09-21" },
-        { id: "p-wrongs", text: "Exam P: wrong-answer review ≥30 min", until: "2026-09-21" },
-        { id: "p-formula", text: "Exam P: weak-topic / formula pass (Wed or Sun)", until: "2026-09-21" },
-        { id: "class-catchup", text: "Temple: HW/readings catch-up (5101 · 5104 · RMI · HCM)", from: "2026-08-24" },
-        { id: "fm-align", text: "AS 5101: one FM-aligned interest-theory block", from: "2026-08-24", until: "2026-12-15" },
-        { id: "health-proj", text: "Health rate memo / SAS hackathon: ≥1 deep work block", from: "2026-09-22", until: "2026-10-30" },
-        { id: "life-or-research", text: "Life assumption memo OR Research 1-pager: ≥1 small step", from: "2026-10-31" },
-        { id: "admin", text: "Admin: Canvas/email/ISSS or career pipeline 1 update", always: true },
-        { id: "body", text: "One real rest block · no exam all-nighter debt", always: true }
+        { id: "minutes", text: "주간 공부 분 채우기 (공부모드에 기록 · 기본 900분+)", always: true },
+        { id: "p-practice", text: "Exam P: 연습 블록 5회 이상 (TIA/Adapt) 또는 문제풀이 ~10시간", until: "2026-09-21" },
+        { id: "p-wrongs", text: "Exam P: 오답 노트 복습 30분 이상", until: "2026-09-21" },
+        { id: "p-formula", text: "Exam P: 약점 파트 / 공식 복습 (수 또는 일)", until: "2026-09-21" },
+        { id: "class-catchup", text: "Temple: 숙제·읽기 밀린 것 처리 (5101 · 5104 · RMI · HCM)", from: "2026-08-24" },
+        { id: "fm-align", text: "AS 5101: FM 연결 interest theory 복습 1블록", from: "2026-08-24", until: "2026-12-15" },
+        { id: "health-proj", text: "Health rate memo / SAS 해커톤: 딥워크 1블록 이상", from: "2026-09-22", until: "2026-10-30" },
+        { id: "life-or-research", text: "Life assumption memo 또는 Research 1-pager: 작은 진행 1개", from: "2026-10-31" },
+        { id: "admin", text: "행정: Canvas/메일/ISSS 또는 커리어 보드 1건 업데이트", always: true },
+        { id: "body", text: "진짜 휴식 1블록 · 시험 올나잇 빚 안 쌓기", always: true }
       ]
     };
 
     // Things that need a real calendar time block (not “when I feel like it”)
     const TIME_BLOCK_GUIDE = {
-      title: "Time blocks to protect (daily / weekly)",
-      intro: "School class times are already on the grid. These are the extra blocks you must put on a calendar or they get eaten. Phone notifications off during deep blocks.",
+      title: "캘린더에 막아둘 시간 블록 (매일 / 매주)",
+      intro: "수업 시간은 아래 주간 시간표에 이미 있음. 여기는 ‘기분 날 때’가 아니라 캘린더에 시작 시각을 박아둬야 하는 추가 블록. 딥워크 중엔 알림 끄기.",
       daily: [
         {
-          name: "Deep study (Exam P / later: UEC homework)",
-          dur: "90–120 min × 1–2 / day",
-          when: "Best: morning after class OR fixed evening slot (e.g. 20:00–21:30)",
-          rule: "Calendar block · no Slack/email · only TIA/Adapt or assigned HW",
+          name: "딥 스터디 (지금은 Exam P)",
+          dur: "하루 90–120분 × 1–2회",
+          when: "추천: 수업 끝난 아침 직후 또는 저녁 고정 (예: 20:00–21:30)",
+          rule: "캘린더 busy · 메일/슬랙 금지 · TIA/Adapt 또는 지정 숙제만",
           until: "2026-09-21",
-          note: "Until 9/21 this = Exam P. After P: same slot becomes class HW / FM / project."
+          note: "9/21까지 = Exam P. 이후엔 같은 슬롯을 수업 숙제 / FM / 프로젝트로 교체."
         },
         {
-          name: "Deep study (post-P default)",
-          dur: "60–90 min × 1 / day on class days",
-          when: "Same evening slot you used for P",
-          rule: "Keep the habit slot even if content changes",
+          name: "딥 스터디 (P 이후 기본)",
+          dur: "수업 있는 날 60–90분 × 1회",
+          when: "P 때 쓰던 저녁 슬롯 그대로 유지",
+          rule: "내용만 바꾸고 습관 슬롯은 유지",
           from: "2026-09-22"
         },
         {
-          name: "Wrong-answer / error log (P season)",
-          dur: "20–30 min",
-          when: "Right after a practice block (same day)",
-          rule: "Don’t skip — this is where EL rises",
+          name: "오답 / 에러 로그 (P 시즌)",
+          dur: "20–30분",
+          when: "연습 블록 직후 같은 날",
+          rule: "스킵 금지 — EL 올리는 구간",
           until: "2026-09-21"
         },
         {
-          name: "Admin / inbox triage",
-          dur: "15–20 min",
-          when: "Fixed: lunch or 21:30 after deep block",
-          rule: "Batch Canvas · email · ISSS · LinkedIn. Not during deep study.",
+          name: "행정 / 인박스 정리",
+          dur: "15–20분",
+          when: "고정: 점심 또는 딥워크 끝난 뒤 (예: 21:30)",
+          rule: "Canvas·메일·ISSS·LinkedIn 몰아서. 딥 스터디 중에 하지 말기.",
           always: true
         },
         {
-          name: "Sleep / wind-down",
-          dur: "protect 7h sleep window",
-          when: "Pick a hard stop (e.g. no new problems after 23:00)",
-          rule: "Exam performance > hero all-nighter",
+          name: "수면 / 정리",
+          dur: "수면 7시간 창 보호",
+          when: "하드 스톱 정하기 (예: 23시 이후 새 문제 금지)",
+          rule: "시험 점수 > 올나잇 영웅 플레이",
           always: true
         }
       ],
       weekly: [
         {
-          name: "Exam P long set",
-          dur: "3–4 h (or 2× 90–120 min)",
-          when: "Sat morning OR Sun afternoon — same every week",
-          rule: "Full mixed practice · simulate timing",
+          name: "Exam P 롱셋",
+          dur: "3–4시간 (또는 90–120분 × 2)",
+          when: "매주 토 오전 또는 일 오후 — 요일 고정",
+          rule: "혼합 문제 · 시간 제한 연습",
           until: "2026-09-21"
         },
         {
-          name: "Weak-topic / formula clinic",
-          dur: "45–60 min",
-          when: "Wed evening OR Sun night",
-          rule: "Only weak chapters · flashcards / notes",
+          name: "약점 / 공식 클리닉",
+          dur: "45–60분",
+          when: "수 저녁 또는 일 밤",
+          rule: "약한 챕터만 · 플래시카드/노트",
           until: "2026-09-21"
         },
         {
-          name: "Temple catch-up batch",
-          dur: "2–3 h",
-          when: "Fri afternoon or Sat after long set",
-          rule: "5101 · 5104 · RMI · HCM HW/readings in one batch",
+          name: "Temple 밀린 숙제 배치",
+          dur: "2–3시간",
+          when: "금 오후 또는 토 롱셋 이후",
+          rule: "5101 · 5104 · RMI · HCM 한 번에",
           from: "2026-08-24"
         },
         {
-          name: "FM (5101) interest-theory block",
-          dur: "60–90 min",
-          when: "After Mon/Wed 5101 class same day if possible",
-          rule: "Same-day review beats weekend cram",
+          name: "FM(5101) interest theory 블록",
+          dur: "60–90분",
+          when: "월·수 5101 수업 당일 가능하면 바로",
+          rule: "당일 복습이 주말 벼락치기보다 나음",
           from: "2026-08-24",
           until: "2026-12-15"
         },
         {
-          name: "Health / SAS project (hackathon season)",
-          dur: "2–3 h",
-          when: "Sat or Sun deep block (not the night before class)",
-          rule: "One weekly ship step · same as hackathon work",
+          name: "Health / SAS 프로젝트 (해커톤 시즌)",
+          dur: "2–3시간",
+          when: "토 또는 일 딥블록 (수업 전날 밤 금지)",
+          rule: "매주 산출물 1스텝 · 해커톤 작업과 동일",
           from: "2026-09-22",
           until: "2026-10-30"
         },
         {
-          name: "Life memo OR Research 1-pager",
-          dur: "60–90 min",
-          when: "One weekday evening",
-          rule: "After hackathon · don’t let it vanish",
+          name: "Life memo 또는 Research 1-pager",
+          dur: "60–90분",
+          when: "평일 저녁 1회",
+          rule: "해커톤 이후 · 사라지지 않게",
           from: "2026-10-31"
         },
         {
-          name: "Career / networking",
-          dur: "30–45 min",
-          when: "Sun night or Mon lunch",
-          rule: "1 application update OR 1 LinkedIn/event · pipeline board",
+          name: "커리어 / 네트워킹",
+          dur: "30–45분",
+          when: "일 밤 또는 월 점심",
+          rule: "지원 1건 업데이트 또는 LinkedIn/이벤트 1건 · 커리어 보드",
           always: true
         },
         {
-          name: "Full rest block",
-          dur: "half-day or evening off",
-          when: "Pick 1 weekly (e.g. Sat night or Sun morning)",
-          rule: "On calendar as busy · non-negotiable",
+          name: "완전 휴식 블록",
+          dur: "반나절 또는 저녁 off",
+          when: "매주 1회 (예: 토 밤 / 일 오전)",
+          rule: "캘린더에 busy로 표시 · 협상 불가",
           always: true
         },
         {
-          name: "BA 5687 Saturday sessions",
-          dur: "as scheduled",
-          when: "10/3 · 10/24 · 11/7 only",
-          rule: "Block whole morning those days",
+          name: "BA 5687 토요일 세션",
+          dur: "해당일 일정대로",
+          when: "10/3 · 10/24 · 11/7만",
+          rule: "그날 오전 통째로 비우기",
           from: "2026-10-01",
           until: "2026-11-07"
         }
       ],
       sampleWeek: {
-        title: "Sample week skeleton (until Exam P · with Fall classes)",
-        note: "Class times stay as on your grid. Fill the empty slots like this — adjust clock times to your energy.",
+        title: "한 주 뼈대 예시 (Exam P까지 · Fall 수업 포함)",
+        note: "수업 시각은 주간 시간표 그대로. 빈칸만 이렇게 채우면 됨 — 시계는 체력에 맞게 조정.",
         rows: [
-          { day: "Mon / Wed", blocks: "Class morning → short lunch admin 15m → evening Deep P 90–120m → error log 25m → sleep" },
-          { day: "Tue / Thu", blocks: "Class morning → Deep P 90m (or HW if behind) → light formula 20m" },
-          { day: "Wed night", blocks: "HCM 18:00 class → don’t also do a 2h P set after; P only if early slot exists" },
-          { day: "Fri", blocks: "Lighter P 60–90m · Temple catch-up batch 2h starts Friday if possible" },
-          { day: "Sat", blocks: "Long P set 3–4h (morning) · rest evening OR career 30m" },
-          { day: "Sun", blocks: "Weak-topic clinic 45–60m · plan next week 15m · rest block" }
+          { day: "월 / 수", blocks: "오전 수업 → 점심 행정 15분 → 저녁 딥 P 90–120분 → 오답 25분 → 수면" },
+          { day: "화 / 목", blocks: "오전 수업 → 딥 P 90분 (밀리면 숙제) → 공식 가벼운 20분" },
+          { day: "수 밤", blocks: "HCM 18:00 수업 → 그날 밤에 2시간 P 추가 금지 · P는 낮/이른 저녁만" },
+          { day: "금", blocks: "P 가볍게 60–90분 · Temple 밀린 것 배치 2시간 시작 가능하면 금부터" },
+          { day: "토", blocks: "P 롱셋 3–4시간(오전) · 저녁 휴식 또는 커리어 30분" },
+          { day: "일", blocks: "약점 클리닉 45–60분 · 다음 주 계획 15분 · 휴식 블록" }
         ]
       },
       ruleOfThumb: [
-        "If it needs focus >45 min → it gets a calendar block with a start time.",
-        "Admin never steals deep blocks — batch it.",
-        "Until 9/21: P deep blocks beat projects/research (except tiny admin).",
-        "After 9/21: keep the same clock slots; swap content (HW → hackathon → Life/Research)."
+        "집중 45분 이상 필요하면 → 시작 시각을 캘린더에 넣는다.",
+        "행정은 딥 블록을 훔치지 않는다 — 몰아서.",
+        "9/21까지: P 딥 블록이 프로젝트/리서치보다 우선 (아주 짧은 행정 제외).",
+        "9/21 이후: 같은 시계 슬롯 유지하고 내용만 교체 (숙제 → 해커톤 → Life/Research)."
       ]
     };
 

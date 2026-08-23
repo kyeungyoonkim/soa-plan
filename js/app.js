@@ -1676,7 +1676,7 @@ let state;
         <div style="margin-bottom:0.65rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)">
           <div style="font-weight:600;font-size:0.88rem">${escapeHtml(b.name)}
             <span class="stat-sub"> · ${escapeHtml(b.dur)}</span></div>
-          <div class="stat-sub" style="margin-top:0.15rem;line-height:1.45"><strong>When:</strong> ${escapeHtml(b.when)}</div>
+          <div class="stat-sub" style="margin-top:0.15rem;line-height:1.45"><strong>언제:</strong> ${escapeHtml(b.when)}</div>
           <div class="stat-sub" style="margin-top:0.1rem;line-height:1.45;color:var(--accent2)">${escapeHtml(b.rule)}</div>
           ${b.note ? `<div class="stat-sub" style="margin-top:0.1rem;line-height:1.45">${escapeHtml(b.note)}</div>` : ""}
         </div>`).join("");
@@ -1691,16 +1691,16 @@ let state;
         <div class="card-title">${escapeHtml(g.title)}</div>
         <p class="stat-sub" style="margin:0 0 0.55rem;line-height:1.5">${escapeHtml(g.intro)}</p>
         <div class="project-section">
-          <div class="sec-label">Daily blocks (put on calendar every day)</div>
+          <div class="sec-label">매일 블록 (매일 캘린더에 넣기)</div>
           ${blockHtml(g.daily) || "<p class='stat-sub'>—</p>"}
         </div>
         <div class="project-section">
-          <div class="sec-label">Weekly blocks (same weekday each week)</div>
+          <div class="sec-label">매주 블록 (매주 같은 요일)</div>
           ${blockHtml(g.weekly) || "<p class='stat-sub'>—</p>"}
         </div>
         ${sample}
         <div class="project-section">
-          <div class="sec-label">Rules</div>
+          <div class="sec-label">규칙</div>
           <ul class="tip-list" style="margin:0">${(g.ruleOfThumb || []).map(t => `<li>${escapeHtml(t)}</li>`).join("")}</ul>
         </div>`;
     }
@@ -1715,7 +1715,7 @@ let state;
       el.innerHTML = `
         <div class="card-title">${escapeHtml(WEEKLY_FIXED_TODOS.title)}</div>
         <p class="stat-sub" style="margin:0 0 0.45rem;line-height:1.5">${escapeHtml(WEEKLY_FIXED_TODOS.goalNote)}</p>
-        <p class="stat-sub" style="margin:0 0 0.55rem">This week (Mon ${weekKey}) · <strong style="color:var(--accent2)">${done}/${items.length}</strong> · study goal <strong>${goal}</strong> min</p>
+        <p class="stat-sub" style="margin:0 0 0.55rem">이번 주 (월 ${weekKey} 시작) · <strong style="color:var(--accent2)">${done}/${items.length}</strong> · 공부 목표 <strong>${goal}</strong>분</p>
         <ul class="project-steps">${items.map((it, i) => {
           const checked = !!state.weeklyTodoChecked[it.id];
           return `<li class="${checked ? "checked-step" : ""}">
