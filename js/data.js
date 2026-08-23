@@ -130,14 +130,14 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         {
           name: "Exam P 롱셋",
           dur: "3–4시간 (또는 90–120분 × 2)",
-          when: "토 오전 또는 일 오후 — 요일 고정",
+          when: "토 오전 · 일 15:00~ (12시 성당 후)",
           rule: "혼합 문제 · 시간 제한. 이 날도 수업 밀린 리뷰가 있으면 먼저 30–45분 비우기.",
           until: "2026-09-21"
         },
         {
           name: "약점 / 공식 클리닉",
           dur: "45–60분",
-          when: "수 저녁 또는 일 밤",
+          when: "일 15:00~ (12시 성당 후)",
           rule: "약한 챕터만",
           until: "2026-09-21"
         },
@@ -213,9 +213,15 @@ const STORAGE_KEY = "soa-asa-plan-v6";
           useFallSchedule: true,
           dayTemplates: {
             0: [
-              { start: "19:00", end: "20:00", label: "약점 / 공식 클리닉", type: "study" },
-              { start: "20:15", end: "20:30", label: "다음 주 예습 · 계획", type: "admin" },
-              { start: "20:45", end: "22:15", label: "Exam P 추가", type: "study" },
+              { start: "12:00", end: "13:30", label: "성당", type: "rest", note: "일요일 · 일정 전" },
+              { start: "13:45", end: "14:30", label: "점심", type: "meal" },
+              { start: "15:00", end: "16:00", label: "약점 / 공식 클리닉", type: "study", note: "★ 15시 시작" },
+              { start: "16:15", end: "16:30", label: "다음 주 예습 · 계획", type: "admin" },
+              { start: "16:45", end: "17:15", label: "5101·5104 밀린 복습", type: "review", note: "있으면만" },
+              { start: "18:15", end: "19:00", label: "저녁", type: "meal" },
+              { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
+              { start: "21:45", end: "22:15", label: "오답 노트", type: "study" },
+              { start: "22:30", end: "23:45", label: "Exam P 추가", type: "study" },
               { start: "00:00", end: "—", label: "취침 · 새 문제 금지", type: "rest" }
             ],
             1: [
@@ -271,7 +277,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
               { start: "09:00", end: "11:30", label: "Exam P 롱셋", type: "study", note: "1부 · 시간 제한" },
               { start: "12:15", end: "13:00", label: "점심", type: "meal" },
               { start: "13:15", end: "15:00", label: "Exam P 롱셋", type: "study", note: "2부" },
-              { start: "19:00", end: "19:30", label: "커리어 / LinkedIn", type: "admin" },
+              { start: "15:15", end: "16:00", label: "Temple 숙제 · 밀린 리뷰", type: "study", note: "주말 정리" },
+              { start: "16:15", end: "16:45", label: "커리어 / LinkedIn", type: "admin" },
+              { start: "18:15", end: "19:00", label: "저녁", type: "meal" },
+              { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study", note: "오답 위주 OK" },
+              { start: "21:45", end: "22:15", label: "오답 노트", type: "study" },
+              { start: "22:30", end: "23:45", label: "Exam P 추가", type: "study" },
               { start: "00:00", end: "—", label: "취침", type: "rest" }
             ]
           }
@@ -284,8 +295,13 @@ const STORAGE_KEY = "soa-asa-plan-v6";
           useFallSchedule: true,
           dayTemplates: {
             0: [
-              { start: "19:00", end: "20:00", label: "Life memo / Research", type: "project", note: "주 1블록" },
-              { start: "20:15", end: "20:30", label: "다음 주 계획", type: "admin" },
+              { start: "12:00", end: "13:30", label: "성당", type: "rest", note: "일요일 · 일정 전" },
+              { start: "13:45", end: "14:30", label: "점심", type: "meal" },
+              { start: "15:00", end: "16:00", label: "Life memo / Research", type: "project", note: "15시 시작" },
+              { start: "16:15", end: "16:30", label: "다음 주 계획", type: "admin" },
+              { start: "18:15", end: "19:00", label: "저녁", type: "meal" },
+              { start: "20:00", end: "21:30", label: "숙제 / UEC", type: "study" },
+              { start: "22:30", end: "23:45", label: "5101·5104 복습", type: "review" },
               { start: "00:00", end: "—", label: "취침", type: "rest" }
             ],
             1: [
@@ -332,9 +348,14 @@ const STORAGE_KEY = "soa-asa-plan-v6";
               { start: "00:00", end: "—", label: "취침", type: "rest" }
             ],
             6: [
-              { start: "09:00", end: "12:00", label: "Health rate memo / SAS", type: "project", note: "해커톤" },
+              { start: "09:00", end: "12:00", label: "Health rate memo / SAS", type: "project", note: "해커톤 · 1부" },
               { start: "12:15", end: "13:00", label: "점심", type: "meal" },
-              { start: "19:00", end: "19:30", label: "커리어", type: "admin" },
+              { start: "13:15", end: "15:00", label: "Health rate memo / SAS", type: "project", note: "2부" },
+              { start: "15:15", end: "16:00", label: "Temple 숙제 정리", type: "study" },
+              { start: "16:15", end: "16:45", label: "커리어", type: "admin" },
+              { start: "18:15", end: "19:00", label: "저녁", type: "meal" },
+              { start: "20:00", end: "21:30", label: "숙제 / UEC", type: "study" },
+              { start: "22:30", end: "23:45", label: "프로젝트 마무리", type: "project" },
               { start: "00:00", end: "—", label: "취침", type: "rest" }
             ]
           }
@@ -343,7 +364,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ruleOfThumb: [
         "Fall 수업표(5101 월수 9:30 · 5104 화목 9:30 · RMI 월수 11:00 · HCM 수 18:00) 기준. 리뷰는 수업 직후 자동 배치.",
         "주간 1200분 · P 저녁 2블록(22:30–23:45) · 0시 취침. 블록 사이 10분+ 텀.",
-        "5101·5104 ★ 리뷰 유지. 금요일 복습+숙제. 수요일 HCM 후 가벼운 P 30분만.",
+        "토: 롱셋 오전+저녁 P 2블록. 일: 12시 성당 → 15시 시작 · 저녁 P 2블록.",
       ]
     };
 
