@@ -1696,6 +1696,12 @@ let state;
       return h * 60 + m;
     }
 
+    function timetableSortKey(start) {
+      const m = parseTimeMin(start);
+      if (m == null) return 99999;
+      return m < 360 ? m + 1440 : m;
+    }
+
     function formatTimeMin(m) {
       const h = Math.floor(m / 60) % 24;
       const min = m % 60;
@@ -1707,65 +1713,14 @@ let state;
       return parseTimeMin(slot.end);
     }
 
-    function getReviewRule(name) {
-      const rules = (typeof TIME_BLOCK_GUIDE !== "undefined" && TIME_BLOCK_GUIDE.classReviewRules) || {};
-      for (const [key, rule] of Object.entries(rules)) {
-        if ((name || "").includes(key)) return rule;
-      }
-      return { minutes: 25, priority: false, label: shortClassLabel(name) };
-    }
-
-    function buildReviewSlotsFromClasses(dayClasses) {
-      const buf = TIMETABLE_BUFFER_MIN;
-      const sorted = dayClasses
-        .filter(c => c.start && c.start !== "—" && c.end && c.end !== "—")
-        .sort((a, b) => a.start.localeCompare(b.start));
-      if (!sorted.length) return [];
-
-      const reviews = [];
-      const noon = 14 * 60;
-      const morning = sorted.filter(c => parseTimeMin(c.end) <= noon);
-      const evening = sorted.filter(c => parseTimeMin(c.start) >= noon);
-
-      if (morning.length) {
-        const ordered = [...morning].sort((a, b) => {
-          const ra = getReviewRule(a.name), rb = getReviewRule(b.name);
-          if (ra.priority !== rb.priority) return (rb.priority ? 1 : 0) - (ra.priority ? 1 : 0);
-          return a.start.localeCompare(b.start);
-        });
-        let cursor = parseTimeMin(morning[morning.length - 1].end) + buf;
-        for (const c of ordered) {
-          const rule = getReviewRule(c.name);
-          reviews.push({
-            start: formatTimeMin(cursor),
-            end: formatTimeMin(cursor + rule.minutes),
-            label: `${rule.label} 리뷰`,
-            type: "review",
-            note: rule.priority ? "★" : undefined
-          });
-          cursor += rule.minutes + buf;
-        }
-      }
-
-      for (const c of evening) {
-        const rule = getReviewRule(c.name);
-        const endMin = parseTimeMin(c.end);
-        reviews.push({
-          start: formatTimeMin(endMin + buf),
-          end: formatTimeMin(endMin + buf + rule.minutes),
-          label: `${rule.label} 리뷰`,
-          type: "review",
-          note: /HCM/i.test(c.name) ? "저녁 긴 P 금지" : undefined
-        });
-      }
-
-      return reviews;
-    }
-
     function resolveTimetableSlots(slots) {
-      const sorted = [...slots].sort((a, b) => a.start.localeCompare(b.start));
+      const sorted = [...slots].sort((a, b) => timetableSortKey(a.start) - timetableSortKey(b.start));
       const out = [];
       for (const raw of sorted) {
+        if (raw.fixed) {
+          out.push({ ...raw });
+          continue;
+        }
         let start = parseTimeMin(raw.start);
         if (start == null) continue;
         const openEnded = !raw.end || raw.end === "—";
@@ -1786,7 +1741,7 @@ let state;
           end: openEnded ? "—" : formatTimeMin(endMin)
         });
       }
-      return out;
+      return out.sort((a, b) => timetableSortKey(a.start) - timetableSortKey(b.start));
     }
 
     function mergeDayTimetable(day, templates, phase) {
@@ -1800,23 +1755,18 @@ let state;
           label: shortClassLabel(c.name),
           type: "class",
           note: c.location && c.location !== "—" ? c.location : "",
-          name: c.name
+          name: c.name,
+          fixed: true
         }));
-      const reviews = useFall ? buildReviewSlotsFromClasses(rawClasses).map(r => ({
-        start: r.start,
-        end: r.end,
-        label: r.label,
-        type: r.type,
-        note: r.note
-      })) : [];
       const blocks = (templates || []).filter(isTimeWindowActive).map(b => ({
         start: b.start,
         end: b.end,
         label: b.label,
         type: b.type,
-        note: b.note
+        note: b.note,
+        fixed: true
       }));
-      return resolveTimetableSlots([...classes, ...reviews, ...blocks]);
+      return resolveTimetableSlots([...classes, ...blocks]);
     }
 
     function renderTimeSlot(slot) {
