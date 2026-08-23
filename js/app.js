@@ -461,8 +461,7 @@ let state;
       const goalVer = next.studyGoalVersion || 0;
       if (goalVer < STUDY_GOAL_VERSION) {
         const g = next.weeklyStudyGoal;
-        // Bump old default 600 → 900 once; keep custom values the user set above 600
-        const bumped = (!g || g === 600) ? DEFAULT_WEEKLY_STUDY_GOAL : g;
+        const bumped = (!g || g === 600 || g === 900) ? DEFAULT_WEEKLY_STUDY_GOAL : g;
         next = { ...next, weeklyStudyGoal: bumped, studyGoalVersion: STUDY_GOAL_VERSION };
       }
       if (!next.weeklyTodoChecked) next.weeklyTodoChecked = {};
@@ -1689,7 +1688,7 @@ let state;
       return end && end !== "—" ? `${start}–${end}` : `${start}~`;
     }
 
-    const TIMETABLE_BUFFER_MIN = 5;
+    const TIMETABLE_BUFFER_MIN = 12;
 
     function parseTimeMin(t) {
       if (!t || t === "—") return null;
