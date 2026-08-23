@@ -1659,6 +1659,52 @@ let state;
       });
     }
 
+    function isTimeWindowActive(it) {
+      const today = new Date().toISOString().slice(0, 10);
+      if (it.always) return true;
+      if (it.from && today < it.from) return false;
+      if (it.until && today > it.until) return false;
+      if (!it.always && !it.from && !it.until) return true;
+      return !(it.from && today < it.from) && !(it.until && today > it.until);
+    }
+
+    function renderTimeBlockGuide() {
+      const el = document.getElementById("timeBlockGuide");
+      if (!el || typeof TIME_BLOCK_GUIDE === "undefined") return;
+      const g = TIME_BLOCK_GUIDE;
+      const blockHtml = (list) => (list || []).filter(isTimeWindowActive).map(b => `
+        <div style="margin-bottom:0.65rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)">
+          <div style="font-weight:600;font-size:0.88rem">${escapeHtml(b.name)}
+            <span class="stat-sub"> · ${escapeHtml(b.dur)}</span></div>
+          <div class="stat-sub" style="margin-top:0.15rem;line-height:1.45"><strong>When:</strong> ${escapeHtml(b.when)}</div>
+          <div class="stat-sub" style="margin-top:0.1rem;line-height:1.45;color:var(--accent2)">${escapeHtml(b.rule)}</div>
+          ${b.note ? `<div class="stat-sub" style="margin-top:0.1rem;line-height:1.45">${escapeHtml(b.note)}</div>` : ""}
+        </div>`).join("");
+      const sample = g.sampleWeek ? `
+        <div class="project-section">
+          <div class="sec-label">${escapeHtml(g.sampleWeek.title)}</div>
+          <p class="stat-sub" style="margin:0 0 0.45rem;line-height:1.45">${escapeHtml(g.sampleWeek.note)}</p>
+          <ul class="tip-list" style="margin:0">${(g.sampleWeek.rows || []).map(r =>
+            `<li><strong>${escapeHtml(r.day)}</strong> — ${escapeHtml(r.blocks)}</li>`).join("")}</ul>
+        </div>` : "";
+      el.innerHTML = `
+        <div class="card-title">${escapeHtml(g.title)}</div>
+        <p class="stat-sub" style="margin:0 0 0.55rem;line-height:1.5">${escapeHtml(g.intro)}</p>
+        <div class="project-section">
+          <div class="sec-label">Daily blocks (put on calendar every day)</div>
+          ${blockHtml(g.daily) || "<p class='stat-sub'>—</p>"}
+        </div>
+        <div class="project-section">
+          <div class="sec-label">Weekly blocks (same weekday each week)</div>
+          ${blockHtml(g.weekly) || "<p class='stat-sub'>—</p>"}
+        </div>
+        ${sample}
+        <div class="project-section">
+          <div class="sec-label">Rules</div>
+          <ul class="tip-list" style="margin:0">${(g.ruleOfThumb || []).map(t => `<li>${escapeHtml(t)}</li>`).join("")}</ul>
+        </div>`;
+    }
+
     function renderWeeklyFixedTodos() {
       const el = document.getElementById("weeklyFixedTodos");
       if (!el || typeof WEEKLY_FIXED_TODOS === "undefined") return;
@@ -1690,6 +1736,7 @@ let state;
 
     function renderSchedule() {
       renderWeeklyFixedTodos();
+      renderTimeBlockGuide();
       const grid = document.getElementById("scheduleGrid");
       if (!grid) return;
       const today = new Date().getDay();

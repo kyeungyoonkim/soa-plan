@@ -53,6 +53,136 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ]
     };
 
+    // Things that need a real calendar time block (not “when I feel like it”)
+    const TIME_BLOCK_GUIDE = {
+      title: "Time blocks to protect (daily / weekly)",
+      intro: "School class times are already on the grid. These are the extra blocks you must put on a calendar or they get eaten. Phone notifications off during deep blocks.",
+      daily: [
+        {
+          name: "Deep study (Exam P / later: UEC homework)",
+          dur: "90–120 min × 1–2 / day",
+          when: "Best: morning after class OR fixed evening slot (e.g. 20:00–21:30)",
+          rule: "Calendar block · no Slack/email · only TIA/Adapt or assigned HW",
+          until: "2026-09-21",
+          note: "Until 9/21 this = Exam P. After P: same slot becomes class HW / FM / project."
+        },
+        {
+          name: "Deep study (post-P default)",
+          dur: "60–90 min × 1 / day on class days",
+          when: "Same evening slot you used for P",
+          rule: "Keep the habit slot even if content changes",
+          from: "2026-09-22"
+        },
+        {
+          name: "Wrong-answer / error log (P season)",
+          dur: "20–30 min",
+          when: "Right after a practice block (same day)",
+          rule: "Don’t skip — this is where EL rises",
+          until: "2026-09-21"
+        },
+        {
+          name: "Admin / inbox triage",
+          dur: "15–20 min",
+          when: "Fixed: lunch or 21:30 after deep block",
+          rule: "Batch Canvas · email · ISSS · LinkedIn. Not during deep study.",
+          always: true
+        },
+        {
+          name: "Sleep / wind-down",
+          dur: "protect 7h sleep window",
+          when: "Pick a hard stop (e.g. no new problems after 23:00)",
+          rule: "Exam performance > hero all-nighter",
+          always: true
+        }
+      ],
+      weekly: [
+        {
+          name: "Exam P long set",
+          dur: "3–4 h (or 2× 90–120 min)",
+          when: "Sat morning OR Sun afternoon — same every week",
+          rule: "Full mixed practice · simulate timing",
+          until: "2026-09-21"
+        },
+        {
+          name: "Weak-topic / formula clinic",
+          dur: "45–60 min",
+          when: "Wed evening OR Sun night",
+          rule: "Only weak chapters · flashcards / notes",
+          until: "2026-09-21"
+        },
+        {
+          name: "Temple catch-up batch",
+          dur: "2–3 h",
+          when: "Fri afternoon or Sat after long set",
+          rule: "5101 · 5104 · RMI · HCM HW/readings in one batch",
+          from: "2026-08-24"
+        },
+        {
+          name: "FM (5101) interest-theory block",
+          dur: "60–90 min",
+          when: "After Mon/Wed 5101 class same day if possible",
+          rule: "Same-day review beats weekend cram",
+          from: "2026-08-24",
+          until: "2026-12-15"
+        },
+        {
+          name: "Health / SAS project (hackathon season)",
+          dur: "2–3 h",
+          when: "Sat or Sun deep block (not the night before class)",
+          rule: "One weekly ship step · same as hackathon work",
+          from: "2026-09-22",
+          until: "2026-10-30"
+        },
+        {
+          name: "Life memo OR Research 1-pager",
+          dur: "60–90 min",
+          when: "One weekday evening",
+          rule: "After hackathon · don’t let it vanish",
+          from: "2026-10-31"
+        },
+        {
+          name: "Career / networking",
+          dur: "30–45 min",
+          when: "Sun night or Mon lunch",
+          rule: "1 application update OR 1 LinkedIn/event · pipeline board",
+          always: true
+        },
+        {
+          name: "Full rest block",
+          dur: "half-day or evening off",
+          when: "Pick 1 weekly (e.g. Sat night or Sun morning)",
+          rule: "On calendar as busy · non-negotiable",
+          always: true
+        },
+        {
+          name: "BA 5687 Saturday sessions",
+          dur: "as scheduled",
+          when: "10/3 · 10/24 · 11/7 only",
+          rule: "Block whole morning those days",
+          from: "2026-10-01",
+          until: "2026-11-07"
+        }
+      ],
+      sampleWeek: {
+        title: "Sample week skeleton (until Exam P · with Fall classes)",
+        note: "Class times stay as on your grid. Fill the empty slots like this — adjust clock times to your energy.",
+        rows: [
+          { day: "Mon / Wed", blocks: "Class morning → short lunch admin 15m → evening Deep P 90–120m → error log 25m → sleep" },
+          { day: "Tue / Thu", blocks: "Class morning → Deep P 90m (or HW if behind) → light formula 20m" },
+          { day: "Wed night", blocks: "HCM 18:00 class → don’t also do a 2h P set after; P only if early slot exists" },
+          { day: "Fri", blocks: "Lighter P 60–90m · Temple catch-up batch 2h starts Friday if possible" },
+          { day: "Sat", blocks: "Long P set 3–4h (morning) · rest evening OR career 30m" },
+          { day: "Sun", blocks: "Weak-topic clinic 45–60m · plan next week 15m · rest block" }
+        ]
+      },
+      ruleOfThumb: [
+        "If it needs focus >45 min → it gets a calendar block with a start time.",
+        "Admin never steals deep blocks — batch it.",
+        "Until 9/21: P deep blocks beat projects/research (except tiny admin).",
+        "After 9/21: keep the same clock slots; swap content (HW → hackathon → Life/Research)."
+      ]
+    };
+
     const PHASES = [
       { id:"pre", name:"입학 전 · 2026 여름", period:"~2026년 8월", start:"2025-01-01", end:"2026-08-23", tasks:[
         { id:"prep-p", text:"Exam P 대비 본격 공부", meta:"지금부터 · 350h · 목표 9/21 (window 9/10–21)", highlight:true },
