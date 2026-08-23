@@ -1689,18 +1689,156 @@ let state;
       return end && end !== "—" ? `${start}–${end}` : `${start}~`;
     }
 
-    function mergeDayTimetable(day, templates) {
-      const classes = (state.schedule || [])
-        .filter(c => c.day === day && c.start && c.start !== "—")
+    const TIMETABLE_BUFFER_MIN = 5;
+
+    function parseTimeMin(t) {
+      if (!t || t === "—") return null;
+      const [h, m] = t.split(":").map(Number);
+      return h * 60 + m;
+    }
+
+    function formatTimeMin(m) {
+      const h = Math.floor(m / 60) % 24;
+      const min = m % 60;
+      return `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}`;
+    }
+
+    function slotEndMin(slot) {
+      if (!slot?.end || slot.end === "—") return null;
+      return parseTimeMin(slot.end);
+    }
+
+    function getReviewRule(name) {
+      const rules = (typeof TIME_BLOCK_GUIDE !== "undefined" && TIME_BLOCK_GUIDE.classReviewRules) || {};
+      for (const [key, rule] of Object.entries(rules)) {
+        if ((name || "").includes(key)) return rule;
+      }
+      return { minutes: 25, priority: false, label: shortClassLabel(name) };
+    }
+
+    function buildReviewSlotsFromClasses(dayClasses) {
+      const buf = TIMETABLE_BUFFER_MIN;
+      const sorted = dayClasses
+        .filter(c => c.start && c.start !== "—" && c.end && c.end !== "—")
+        .sort((a, b) => a.start.localeCompare(b.start));
+      if (!sorted.length) return [];
+
+      const reviews = [];
+      const noon = 14 * 60;
+      const morning = sorted.filter(c => parseTimeMin(c.end) <= noon);
+      const evening = sorted.filter(c => parseTimeMin(c.start) >= noon);
+
+      for (let i = 0; i < morning.length - 1; i++) {
+        const c = morning[i];
+        const next = morning[i + 1];
+        const rule = getReviewRule(c.name);
+        const endMin = parseTimeMin(c.end);
+        const nextStart = parseTimeMin(next.start);
+        const gap = nextStart - endMin;
+        if (rule.priority && gap >= buf + 4) {
+          const miniEnd = Math.min(endMin + 2 + 5, nextStart - 2);
+          if (miniEnd > endMin + 2) {
+            reviews.push({
+              start: formatTimeMin(endMin + 2),
+              end: formatTimeMin(miniEnd),
+              label: `${rule.label} 미니`,
+              type: "review",
+              note: "★ 직후"
+            });
+          }
+        }
+      }
+
+      if (morning.length) {
+        const ordered = [...morning].sort((a, b) => {
+          const ra = getReviewRule(a.name), rb = getReviewRule(b.name);
+          if (ra.priority !== rb.priority) return (rb.priority ? 1 : 0) - (ra.priority ? 1 : 0);
+          return a.start.localeCompare(b.start);
+        });
+        let cursor = parseTimeMin(morning[morning.length - 1].end) + buf;
+        for (const c of ordered) {
+          const rule = getReviewRule(c.name);
+          reviews.push({
+            start: formatTimeMin(cursor),
+            end: formatTimeMin(cursor + rule.minutes),
+            label: `${rule.label} 리뷰`,
+            type: "review",
+            note: rule.priority ? "★" : undefined
+          });
+          cursor += rule.minutes + buf;
+        }
+      }
+
+      for (const c of evening) {
+        const rule = getReviewRule(c.name);
+        const endMin = parseTimeMin(c.end);
+        reviews.push({
+          start: formatTimeMin(endMin + buf),
+          end: formatTimeMin(endMin + buf + rule.minutes),
+          label: `${rule.label} 리뷰`,
+          type: "review",
+          note: /HCM/i.test(c.name) ? "저녁 긴 P 금지" : undefined
+        });
+      }
+
+      return reviews;
+    }
+
+    function resolveTimetableSlots(slots) {
+      const sorted = [...slots].sort((a, b) => a.start.localeCompare(b.start));
+      const out = [];
+      for (const raw of sorted) {
+        let start = parseTimeMin(raw.start);
+        if (start == null) continue;
+        const openEnded = !raw.end || raw.end === "—";
+        let endMin = openEnded ? null : parseTimeMin(raw.end);
+        const dur = endMin != null ? endMin - parseTimeMin(raw.start) : null;
+
+        if (out.length) {
+          const prevEnd = slotEndMin(out[out.length - 1]);
+          if (prevEnd != null && start < prevEnd + TIMETABLE_BUFFER_MIN) {
+            start = prevEnd + TIMETABLE_BUFFER_MIN;
+            if (dur != null) endMin = start + dur;
+          }
+        }
+        if (!openEnded && endMin != null && endMin <= start) continue;
+        out.push({
+          ...raw,
+          start: formatTimeMin(start),
+          end: openEnded ? "—" : formatTimeMin(endMin)
+        });
+      }
+      return out;
+    }
+
+    function mergeDayTimetable(day, templates, phase) {
+      const useFall = phase?.useFallSchedule !== false;
+      const rawClasses = useFall ? (state.schedule || []).filter(c => c.day === day) : [];
+      const classes = rawClasses
+        .filter(c => c.start && c.start !== "—")
         .map(c => ({
           start: c.start,
           end: c.end,
           label: shortClassLabel(c.name),
           type: "class",
-          note: c.location && c.location !== "—" ? c.location : ""
+          note: c.location && c.location !== "—" ? c.location : "",
+          name: c.name
         }));
-      const blocks = (templates || []).filter(isTimeWindowActive);
-      return [...classes, ...blocks].sort((a, b) => a.start.localeCompare(b.start));
+      const reviews = useFall ? buildReviewSlotsFromClasses(rawClasses).map(r => ({
+        start: r.start,
+        end: r.end,
+        label: r.label,
+        type: r.type,
+        note: r.note
+      })) : [];
+      const blocks = (templates || []).filter(isTimeWindowActive).map(b => ({
+        start: b.start,
+        end: b.end,
+        label: b.label,
+        type: b.type,
+        note: b.note
+      }));
+      return resolveTimetableSlots([...classes, ...reviews, ...blocks]);
     }
 
     function renderTimeSlot(slot) {
@@ -1729,7 +1867,7 @@ let state;
         <div class="time-phase-badge">${escapeHtml(phase.label)}</div>
         <div class="time-legend">${legend}</div>
         <div class="time-week">${weekDays.map(d => {
-          const slots = mergeDayTimetable(d, (phase.dayTemplates || {})[d]);
+          const slots = mergeDayTimetable(d, (phase.dayTemplates || {})[d], phase);
           return `<div class="time-day${d === todayDow ? " today" : ""}">
             <div class="time-day-head">${DAY_NAMES[d]}</div>
             ${slots.length ? slots.map(renderTimeSlot).join("") : `<p class="stat-sub" style="margin:0;font-size:0.72rem">—</p>`}

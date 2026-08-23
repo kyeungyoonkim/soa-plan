@@ -41,11 +41,11 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       goalNote: "주간 공부 목표 기본 900분(15시간). Exam P(9/21)까지는 P + 수업 리뷰가 본체. 프로젝트는 9/22 이후(해커톤과 묶기). P 시즌엔 프로젝트 0~최소.",
       items: [
         { id: "minutes", text: "주간 공부 분 채우기 (공부모드 기록 · 기본 900분+ · P+수업 합산)", always: true },
-        { id: "class-daily", text: "수업 있는 날: 당일 리뷰 전부 했는가 (5101·5104·RMI·HCM)", from: "2026-08-24" },
+        { id: "class-daily", text: "수업 있는 날: 과목별 당일 리뷰 (5101·5104 ★ 40분+ / RMI 20분 / HCM 30분)", from: "2026-08-24" },
         { id: "p-practice", text: "Exam P: 연습 블록 5회 이상 (TIA/Adapt) 또는 문제풀이 ~10시간", until: "2026-09-21" },
         { id: "p-wrongs", text: "Exam P: 오답 노트 복습 30분 이상", until: "2026-09-21" },
         { id: "p-formula", text: "Exam P: 약점 파트 / 공식 복습 (수 또는 일)", until: "2026-09-21" },
-        { id: "class-catchup", text: "Temple: 주말 전에 밀린 숙제·읽기 제로에 가깝게", from: "2026-08-24" },
+        { id: "class-catchup", text: "Temple: 금 13:00 숙제 몰아서 · 토 전에 제출물·읽기 정리", from: "2026-08-24" },
         { id: "proj-pause", text: "프로젝트: 이번 주는 스킵 또는 10분 메모만 (P 우선)", until: "2026-09-21" },
         { id: "health-proj", text: "Health rate memo / SAS 해커톤: 딥워크 1블록 이상", from: "2026-09-22", until: "2026-10-30" },
         { id: "life-or-research", text: "Life assumption memo 또는 Research 1-pager: 작은 진행 1개", from: "2026-10-31" },
@@ -57,7 +57,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     // Things that need a real calendar time block (not “when I feel like it”)
     const TIME_BLOCK_GUIDE = {
       title: "캘린더에 막아둘 시간 블록 (매일 / 매주)",
-      intro: "우선순위: ① 수업 당일 리뷰 ② Exam P(9/21까지) ③ 행정/휴식. 프로젝트는 9/22~해커톤 시즌에 본격 — P 끝나기 전엔 캘린더에 큰 블록 넣지 말기.",
+      intro: "Fall 2026 (8/24 개강) · Temple 수업 시간표 기준. 우선순위: ① 과목별 당일 리뷰(5101·5104 ★) ② Exam P(~9/21) ③ 금요일 숙제 ④ 행정/운동.",
       daily: [
         {
           name: "수업 당일 리뷰 (학교)",
@@ -65,7 +65,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
           when: "수업 끝난 직후 또는 그날 저녁 딥 P 전",
           rule: "노트 정리 · 예제 1–2문제 · 모르는 것 표시. 주말로 미루지 않기.",
           from: "2026-08-24",
-          note: "월수: 5101+RMI → 리뷰 2번. 화목: 5104. 수: HCM까지. ‘주말에 몰아서’가 기본이 되면 안 됨."
+          note: "5101·5104 ★ 우선(40–45분). RMI 20분. HCM 수 20:30–21:00. 월·수는 5101 미니(10분) 직후 + 점심 딥 리뷰."
         },
         {
           name: "딥 스터디 Exam P",
@@ -136,9 +136,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         },
         {
           name: "Temple 숙제 배치 (밀린 것만)",
-          dur: "1.5–2.5시간",
-          when: "금 오후 또는 토 롱셋 전",
-          rule: "당일 리뷰를 매일 했다면 이 블록은 ‘숙제 제출물’ 위주. 리뷰 대행이 되면 매일 루틴 실패.",
+          dur: "2–2.5시간",
+          when: "금 13:00–15:30 (주 몰아서) · 토 롱셋 전 마무리",
+          rule: "당일 리뷰 매일 했으면 제출물·읽기 위주. 금요일 = 숙제 메인 데이. 5101·5104 복습은 금 오전.",
           from: "2026-08-24"
         },
         {
@@ -188,155 +188,122 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         rest: { label: "휴식 · 수면", color: "#7a8a9a" },
         exercise: { label: "운동", color: "#e07a5f" }
       },
-      // Non-class blocks per weekday · merged with state.schedule at render
+      // Review minutes · auto-placed after each Fall class in app.js
+      classReviewRules: {
+        "AS 5101": { minutes: 40, priority: true, label: "AS 5101" },
+        "AS 5104": { minutes: 45, priority: true, label: "AS 5104" },
+        "RMI 5104": { minutes: 20, priority: false, label: "RMI" },
+        "HCM 5101": { minutes: 30, priority: false, label: "HCM" }
+      },
+      // Fixed blocks only · classes + reviews merged from state.schedule at render
       timetablePhases: [
         {
-          id: "pre-fall",
-          label: "입학 전 · 여름",
-          until: "2026-08-23",
-          dayTemplates: {
-            0: [
-              { start: "19:00", end: "20:00", label: "약점 클리닉", type: "study" },
-              { start: "20:00", end: "20:15", label: "다음 주 계획", type: "admin" }
-            ],
-            1: [
-              { start: "10:00", end: "12:00", label: "Exam P", type: "study" },
-              { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전" },
-              { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
-              { start: "21:30", end: "21:55", label: "오답 노트", type: "study" }
-            ],
-            2: [
-              { start: "10:00", end: "12:00", label: "Exam P", type: "study" },
-              { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
-              { start: "21:30", end: "21:55", label: "오답 노트", type: "study" }
-            ],
-            3: [
-              { start: "10:00", end: "12:00", label: "Exam P", type: "study" },
-              { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전" },
-              { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
-              { start: "21:30", end: "21:55", label: "오답 노트", type: "study" }
-            ],
-            4: [
-              { start: "10:00", end: "12:00", label: "Exam P", type: "study" },
-              { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
-              { start: "21:30", end: "21:55", label: "오답 노트", type: "study" }
-            ],
-            5: [
-              { start: "10:00", end: "12:00", label: "Exam P", type: "study" },
-              { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전" },
-              { start: "20:00", end: "21:00", label: "가벼운 P", type: "study" }
-            ],
-            6: [
-              { start: "09:00", end: "13:00", label: "Exam P 롱셋", type: "study", note: "혼합 · 시간 제한" },
-              { start: "19:00", end: "19:30", label: "커리어 30분", type: "admin" }
-            ]
-          }
-        },
-        {
           id: "exam-p-season",
-          label: "Fall · Exam P 시즌 (~9/21)",
-          from: "2026-08-24",
+          label: "Fall 2026 · Exam P (~9/21)",
+          from: "2026-08-23",
           until: "2026-09-21",
+          useFallSchedule: true,
           dayTemplates: {
             0: [
               { start: "19:00", end: "20:00", label: "약점 / 공식 클리닉", type: "study" },
               { start: "20:00", end: "20:15", label: "다음 주 예습 · 계획", type: "admin" },
-              { start: "20:15", end: "—", label: "휴식", type: "rest" }
+              { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             1: [
-              { start: "12:15", end: "12:55", label: "당일 리뷰 ×2 (5101·RMI)", type: "review" },
-              { start: "12:55", end: "13:15", label: "행정 / 인박스", type: "admin" },
-              { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전 · P 전" },
+              { start: "13:45", end: "14:00", label: "행정", type: "admin" },
+              { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전" },
               { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
-              { start: "21:30", end: "21:55", label: "오답 노트", type: "study" },
-              { start: "23:00", end: "—", label: "수면 · 새 문제 금지", type: "rest" }
+              { start: "21:35", end: "22:00", label: "오답 노트", type: "study" },
+              { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             2: [
-              { start: "11:00", end: "11:35", label: "당일 리뷰 (5104)", type: "review" },
-              { start: "11:35", end: "11:55", label: "행정", type: "admin" },
+              { start: "11:45", end: "12:05", label: "행정", type: "admin" },
               { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
-              { start: "21:30", end: "21:55", label: "오답 노트", type: "study" },
+              { start: "21:35", end: "22:00", label: "오답 노트", type: "study" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             3: [
-              { start: "12:15", end: "12:55", label: "당일 리뷰 ×2 (5101·RMI)", type: "review" },
-              { start: "12:55", end: "13:15", label: "행정", type: "admin" },
-              { start: "16:00", end: "17:00", label: "운동", type: "exercise", note: "HCM(18:00) 전 · 17:30 가볍게 또는 20:30 이후 본 저녁" },
-              { start: "20:30", end: "21:00", label: "HCM 당일 리뷰", type: "review", note: "저녁 긴 P 금지" },
-              { start: "23:00", end: "—", label: "수면", type: "rest" }
+              { start: "13:45", end: "14:00", label: "행정", type: "admin" },
+              { start: "16:00", end: "17:00", label: "운동", type: "exercise", note: "HCM(18:00) 전 · 저녁 20:30 이후" },
+              { start: "23:00", end: "—", label: "수면 · HCM 밤 P 금지", type: "rest" }
             ],
             4: [
-              { start: "11:00", end: "11:35", label: "당일 리뷰 (5104)", type: "review" },
-              { start: "11:35", end: "11:55", label: "행정", type: "admin" },
+              { start: "11:45", end: "12:05", label: "행정", type: "admin" },
               { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
-              { start: "21:30", end: "21:55", label: "오답 노트", type: "study" },
+              { start: "21:35", end: "22:00", label: "오답 노트", type: "study" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             5: [
-              { start: "14:00", end: "16:00", label: "Temple 숙제 배치", type: "study", note: "밀린 것만" },
-              { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전 · P 전" },
-              { start: "20:00", end: "21:00", label: "가벼운 P", type: "study" },
+              { start: "09:30", end: "10:30", label: "AS 5101 주간 복습", type: "review", note: "★ FM" },
+              { start: "10:35", end: "11:20", label: "AS 5104 주간 복습", type: "review", note: "★ 모델링" },
+              { start: "11:25", end: "11:40", label: "행정 · Canvas", type: "admin" },
+              { start: "13:00", end: "15:30", label: "Temple 숙제 몰아서", type: "study", note: "제출물 · 읽기" },
+              { start: "15:35", end: "16:05", label: "RMI/HCM 밀린 리뷰", type: "review", note: "있으면만" },
+              { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전" },
+              { start: "20:00", end: "21:00", label: "가벼운 P · 숙제 마무리", type: "study" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             6: [
-              { start: "09:00", end: "13:00", label: "Exam P 롱셋", type: "study", note: "리뷰 밀렸으면 먼저 30–45분" },
+              { start: "09:00", end: "13:00", label: "Exam P 롱셋", type: "study", note: "혼합 · 시간 제한" },
               { start: "19:00", end: "19:30", label: "커리어 / LinkedIn", type: "admin" },
-              { start: "19:30", end: "—", label: "저녁 off", type: "rest" }
+              { start: "19:35", end: "—", label: "저녁 off", type: "rest" }
             ]
           }
         },
         {
           id: "hackathon",
-          label: "Fall · 해커톤 시즌 (9/22~10/30)",
+          label: "Fall 2026 · 해커톤 (9/22~10/30)",
           from: "2026-09-22",
           until: "2026-10-30",
+          useFallSchedule: true,
           dayTemplates: {
             0: [
-              { start: "19:00", end: "20:00", label: "Life memo / Research", type: "project", note: "주 1블록이면 충분" },
-              { start: "20:00", end: "20:15", label: "다음 주 계획", type: "admin" }
+              { start: "19:00", end: "20:00", label: "Life memo / Research", type: "project", note: "주 1블록" },
+              { start: "20:00", end: "20:15", label: "다음 주 계획", type: "admin" },
+              { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             1: [
-              { start: "12:15", end: "12:55", label: "당일 리뷰 ×2", type: "review" },
-              { start: "12:55", end: "13:15", label: "행정", type: "admin" },
+              { start: "13:45", end: "14:00", label: "행정", type: "admin" },
               { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전" },
-              { start: "20:00", end: "21:30", label: "숙제 / UEC 딥", type: "study" },
+              { start: "20:00", end: "21:30", label: "숙제 / UEC", type: "study", note: "5101·5104 우선" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             2: [
-              { start: "11:00", end: "11:35", label: "당일 리뷰", type: "review" },
-              { start: "11:35", end: "11:55", label: "행정", type: "admin" },
-              { start: "20:00", end: "21:30", label: "숙제 / UEC", type: "study" },
+              { start: "11:45", end: "12:05", label: "행정", type: "admin" },
+              { start: "20:00", end: "21:30", label: "숙제 / UEC", type: "study", note: "5104" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             3: [
-              { start: "12:15", end: "12:55", label: "당일 리뷰 ×2", type: "review" },
-              { start: "12:55", end: "13:15", label: "행정", type: "admin" },
-              { start: "16:00", end: "17:00", label: "운동", type: "exercise", note: "HCM(18:00) 전 · 17:30 가볍게 또는 20:30 이후 본 저녁" },
-              { start: "20:30", end: "21:00", label: "HCM 리뷰", type: "review" },
+              { start: "13:45", end: "14:00", label: "행정", type: "admin" },
+              { start: "16:00", end: "17:00", label: "운동", type: "exercise", note: "HCM(18:00) 전" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             4: [
-              { start: "11:00", end: "11:35", label: "당일 리뷰", type: "review" },
-              { start: "11:35", end: "11:55", label: "행정", type: "admin" },
+              { start: "11:45", end: "12:05", label: "행정", type: "admin" },
               { start: "20:00", end: "21:30", label: "숙제 / UEC", type: "study" },
               { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             5: [
-              { start: "14:00", end: "16:00", label: "Temple 숙제", type: "study" },
+              { start: "09:30", end: "10:30", label: "AS 5101 주간 복습", type: "review", note: "★" },
+              { start: "10:35", end: "11:20", label: "AS 5104 주간 복습", type: "review", note: "★" },
+              { start: "11:25", end: "11:40", label: "행정", type: "admin" },
+              { start: "13:00", end: "15:00", label: "Temple 숙제", type: "study" },
+              { start: "15:05", end: "16:05", label: "Health memo / SAS", type: "project", note: "금요일 딥블록" },
               { start: "17:00", end: "18:00", label: "운동", type: "exercise", note: "저녁 18:30–19:00 직전" },
-              { start: "20:00", end: "21:00", label: "가벼운 복습", type: "study" }
+              { start: "20:00", end: "21:00", label: "숙제 · UEC 마무리", type: "study" },
+              { start: "23:00", end: "—", label: "수면", type: "rest" }
             ],
             6: [
-              { start: "09:00", end: "12:00", label: "Health rate memo / SAS", type: "project", note: "해커톤 · 주 1딥블록" },
-              { start: "19:00", end: "19:30", label: "커리어", type: "admin" }
+              { start: "09:00", end: "12:00", label: "Health rate memo / SAS", type: "project", note: "해커톤" },
+              { start: "19:00", end: "19:30", label: "커리어", type: "admin" },
+              { start: "19:35", end: "—", label: "저녁 off", type: "rest" }
             ]
           }
         }
       ],
       ruleOfThumb: [
-        "수업 들은 날 = 그날 리뷰 블록 필수. ‘주말에 몰아서 수업 복습’은 플랜 실패.",
-        "하루 순서 기본: 수업 → 당일 리뷰 → (남은 에너지로) P 딥 → 오답 → 행정 → 수면.",
-        "프로젝트: ~9/21 캘린더에 큰 블록 금지. 9/22~10/30 주 1회 딥블록(해커톤=Health memo).",
+        "Fall 수업표(5101 월수 9:30 · 5104 화목 9:30 · RMI 월수 11:00 · HCM 수 18:00) 기준. 리뷰는 수업 직후 자동 배치.",
+        "5101·5104 ★ 우선(40–45분). RMI 20분. HCM 수 30분(수업 직후). 금요일 = 5101·5104 복습 + 숙제 몰아서.",
         "집중 45분+ → 시작 시각을 캘린더에. 행정은 딥/리뷰를 훔치지 않기.",
         "월·수·금 운동 1h는 저녁(18:30–19:00) 직전 고정. 수요일은 HCM(18:00) 때문에 16:00–17:00 · 저녁은 20:30 이후."
       ]
