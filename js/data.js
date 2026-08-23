@@ -38,13 +38,14 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     // Fixed weekly todos · shown on 시간표/캘린더 · checkbox resets each Monday
     const WEEKLY_FIXED_TODOS = {
       title: "매주 고정 할 일",
-      goalNote: "주간 공부 목표 기본 1200분(20시간). Exam P(9/21)까지 P+리뷰 본체 · 저녁 P 2블록(1시 취침).",
+      goalNote: "주간 공부 목표 1200분(20h). Exam P(9/21) · TIA only · ~110h 스프린트 · 저녁 P 2블록(1시 취침).",
       items: [
         { id: "minutes", text: "주간 공부 분 채우기 (공부모드 · 기본 1200분+ · P+수업 합산)", always: true },
         { id: "class-daily", text: "수업 있는 날: 과목별 당일 리뷰 (5101·5104 ★ 40분+ / RMI 20분 / HCM 30분)", from: "2026-08-24" },
-        { id: "p-practice", text: "Exam P: 연습 블록 6회+ 또는 문제풀이 ~12–15시간/주", until: "2026-09-21" },
-        { id: "p-wrongs", text: "Exam P: 오답 노트 복습 30분 이상", until: "2026-09-21" },
-        { id: "p-formula", text: "Exam P: 약점 파트 / 공식 복습 (수 또는 일)", until: "2026-09-21" },
+        { id: "p-practice", text: "TIA P: 문제·퀴즈 블록 6회+ (~12–15h/주 · 영상보다 문제 우선)", until: "2026-09-21" },
+        { id: "p-wrongs", text: "TIA P: 오답 노트 복습 30분 이상", until: "2026-09-21" },
+        { id: "p-formula", text: "TIA P: 약점 파트 / formula sheet (수 또는 일)", until: "2026-09-21" },
+        { id: "p-mock", text: "TIA practice exam 또는 SOA sample 1회 (70%+ 목표 · 9/7~14)", from: "2026-09-01", until: "2026-09-21" },
         { id: "class-catchup", text: "Temple: 금 13:00 숙제 몰아서 · 토 전에 제출물·읽기 정리", from: "2026-08-24" },
         { id: "proj-pause", text: "프로젝트: 이번 주는 스킵 또는 10분 메모만 (P 우선)", until: "2026-09-21" },
         { id: "health-proj", text: "Health rate memo / SAS 해커톤: 딥워크 1블록 이상", from: "2026-09-22", until: "2026-10-30" },
@@ -71,9 +72,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
           name: "딥 스터디 Exam P",
           dur: "저녁 90분 × 2블록 + 오답 30분 (월·화·목·일 · 토) · 수 HCM 후 1블록 · 금 1블록",
           when: "1블록 20:00–21:30 · 오답 21:45 · 2블록 22:30–23:45 · 화·목 11:00–12:00 · 수·금 21:15–22:45",
-          rule: "캘린더 busy · TIA/Adapt. 리뷰 먼저. 화·목 점심 전 P 1h. 금 20:00–21:00 OFF 후 1블록.",
+          rule: "캘린더 busy · TIA P 문제 위주. 리뷰 먼저. 화·목 점심 전 P 1h. 금 20:00–21:00 OFF 후 1블록.",
           until: "2026-09-21",
-          note: "1시 이후 새 문제 금지 · 7–8시 기상"
+          note: "1시 이후 새 문제 금지 · practice exam 70%+면 9/21 GO"
         },
         {
           name: "딥 스터디 (P 이후 · 숙제/UEC)",
@@ -379,13 +380,13 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ruleOfThumb: [
         "Fall 수업표(5101 월수 9:30 · 5104 화목 9:30 · RMI 월수 11:00–12:15 · HCM 수 18:00) 고정. 점심 12:15–13:30 → 리뷰.",
         "주간 1200분 · P 저녁 2블록(22:30–23:45) · 수 HCM 후 1블록 · 일 클리닉 2h · 1시 취침.",
-        "토: 롱셋 오전+저녁 P 2블록. 화·목 11:00 P 1h. 금: 20:00–21:00 OFF → 21:15 P 1블록. 9/21까지 P ~110h.",
+        "토: 롱셋 오전+저녁 P 2블록. 화·목 11:00 P 1h. 금: 20:00–21:00 OFF → 21:15 P 1블록. TIA only · 9/21까지 P ~110h.",
       ]
     };
 
     const PHASES = [
       { id:"pre", name:"입학 전 · 2026 여름", period:"~2026년 8월", start:"2025-01-01", end:"2026-08-23", tasks:[
-        { id:"prep-p", text:"Exam P 대비 본격 공부", meta:"지금부터 · 350h · 목표 9/21 (window 9/10–21)", highlight:true },
+        { id:"prep-p", text:"Exam P 대비 (TIA only)", meta:"~110h 스프린트 · TIA 문제+practice exam · 목표 9/21", highlight:true },
         { id:"sas-cert", text:"SAS Base 시험 8/23", meta:"Base Programming · 응시 예정", highlight:true },
         { id:"vee-macro", text:"VEE Macroeconomics ✓", meta:"Economics VEE · 이미 완료" },
         { id:"vee-acct", text:"VEE Accounting & Finance ✓", meta:"이미 완료" },
@@ -584,15 +585,14 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       {
         when: "지금 · Exam P (9/21)",
         tier: "best", tierLabel: "1순위",
-        pick: "TIA P (무료) + CA Adapt",
-        cost: "~$195",
-        costDetail: "Adapt only · 8/12 등록 마감",
-        plan: "① 지금부터 TIA P ② Adapt EL 6+ ③ 9/21 응시 · 8/23 SAS와 병행 시 주간 시간표 필수",
+        pick: "TIA P only (무료)",
+        cost: "$0",
+        costDetail: "영상·문제·formula sheet · practice exam으로 준비도 확인",
+        plan: "① TIA P 문제 위주(영상은 약한 파트만) ② practice exam 70%+ ③ 9/21 응시 · 통계전공 ~110h OK",
         links: [
-          { text: "TIA P", url: "https://www.theinfiniteactuary.com/exam-p/" },
-          { text: "CA Adapt P", url: "https://www.coachingactuaries.com/exam-p/pricing" }
+          { text: "TIA P", url: "https://www.theinfiniteactuary.com/exam-p/" }
         ],
-        alt: "CA Learn+Practice P — 학생 ~$216"
+        alt: "CA Adapt ($195) — EL 점수 원하면 선택 추가"
       },
       {
         when: "2026년 8/23 · SAS",
@@ -681,7 +681,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     ];
 
     const STUDY_HOURS = [
-      { exam:"Exam P", min:300, max:400, typical:350, plan:"9/21 · 지금부터", tips:"8/23 SAS · 12/23 CLEP · 8/12 등록 · TIA+Adapt EL 6+" },
+      { exam:"Exam P", min:150, max:350, typical:200, plan:"9/21 · TIA only", tips:"통계전공 · TIA 문제+practice exam 70%+ · 4주 ~110h · 8/12 등록" },
       { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"8/23 응시 예정", tips:"Base SAS prep · 입학 전날 · P와 주간 시간 나누기" },
       { exam:"Exam PA", min:400, max:600, typical:500, plan:"4/13–16 · 등록 3/16", tips:"500h · Spring 2027 5108과 함께" },
       { exam:"UEC (FM/FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"별도 SOA 시험 없음 · FM=5101 · FAM=5102+5104 · SRM=5108 · ASTAM=5114 · B- 이상 · 수업+숙제로 대체" },

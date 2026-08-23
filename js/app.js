@@ -1610,7 +1610,8 @@ let state;
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 11월 또는 다음 window</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. FM은 Fall 5101 UEC로 진행.</p>`;
       } else if (getExamStatus("exam-p") !== "passed") {
-        el.innerHTML = `<div><span class="hours-big">350h</span> <span class="stat-sub">Exam P · 목표 <strong>9/21</strong> (window 9/10–21)</span></div>`;
+        el.innerHTML = `<div><span class="hours-big">110h</span> <span class="stat-sub">Exam P · <strong>TIA only</strong> · 목표 <strong>9/21</strong></span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">통계전공 · TIA practice exam <strong>70%+</strong>면 GO · 부족하면 11월 backup.</p>`;
       } else if (getExamStatus("exam-pa") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108) 기반 복습</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;
