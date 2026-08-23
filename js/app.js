@@ -1668,41 +1668,97 @@ let state;
       return !(it.from && today < it.from) && !(it.until && today > it.until);
     }
 
+    function getActiveTimetablePhase(phases) {
+      const today = new Date().toISOString().slice(0, 10);
+      let active = phases[0];
+      for (const p of phases) {
+        if (p.from && today < p.from) continue;
+        if (p.until && today > p.until) continue;
+        active = p;
+      }
+      return active;
+    }
+
+    function shortClassLabel(name) {
+      const m = (name || "").match(/^(AS|RMI|HCM|BA)\s+\d+/);
+      return m ? m[0] : (name || "").split(" ").slice(0, 3).join(" ");
+    }
+
+    function formatTimeRange(start, end) {
+      if (!start) return "—";
+      return end && end !== "—" ? `${start}–${end}` : `${start}~`;
+    }
+
+    function mergeDayTimetable(day, templates) {
+      const classes = (state.schedule || [])
+        .filter(c => c.day === day && c.start && c.start !== "—")
+        .map(c => ({
+          start: c.start,
+          end: c.end,
+          label: shortClassLabel(c.name),
+          type: "class",
+          note: c.location && c.location !== "—" ? c.location : ""
+        }));
+      const blocks = (templates || []).filter(isTimeWindowActive);
+      return [...classes, ...blocks].sort((a, b) => a.start.localeCompare(b.start));
+    }
+
+    function renderTimeSlot(slot) {
+      const when = formatTimeRange(slot.start, slot.end);
+      return `<div class="time-slot slot-${slot.type || "study"}">
+        <span class="time-slot-when">${escapeHtml(when)}</span>
+        <span class="time-slot-label">${escapeHtml(slot.label)}</span>
+        ${slot.note ? `<span class="time-slot-note">${escapeHtml(slot.note)}</span>` : ""}
+      </div>`;
+    }
+
     function renderTimeBlockGuide() {
       const el = document.getElementById("timeBlockGuide");
       if (!el || typeof TIME_BLOCK_GUIDE === "undefined") return;
       const g = TIME_BLOCK_GUIDE;
+      const phases = g.timetablePhases || [];
+      const phase = phases.length ? getActiveTimetablePhase(phases) : null;
+      const todayDow = new Date().getDay();
+      const weekDays = [1, 2, 3, 4, 5, 6, 0];
+
+      const legend = g.slotTypes ? Object.entries(g.slotTypes).map(([key, meta]) =>
+        `<span><i style="background:${meta.color}"></i>${escapeHtml(meta.label)}</span>`
+      ).join("") : "";
+
+      const weekHtml = phase ? `
+        <div class="time-phase-badge">${escapeHtml(phase.label)}</div>
+        <div class="time-legend">${legend}</div>
+        <div class="time-week">${weekDays.map(d => {
+          const slots = mergeDayTimetable(d, (phase.dayTemplates || {})[d]);
+          return `<div class="time-day${d === todayDow ? " today" : ""}">
+            <div class="time-day-head">${DAY_NAMES[d]}</div>
+            ${slots.length ? slots.map(renderTimeSlot).join("") : `<p class="stat-sub" style="margin:0;font-size:0.72rem">—</p>`}
+          </div>`;
+        }).join("")}</div>` : "";
+
       const blockHtml = (list) => (list || []).filter(isTimeWindowActive).map(b => `
-        <div style="margin-bottom:0.65rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)">
-          <div style="font-weight:600;font-size:0.88rem">${escapeHtml(b.name)}
+        <div class="time-block-detail">
+          <div style="font-weight:600;font-size:0.84rem">${escapeHtml(b.name)}
             <span class="stat-sub"> · ${escapeHtml(b.dur)}</span></div>
-          <div class="stat-sub" style="margin-top:0.15rem;line-height:1.45"><strong>언제:</strong> ${escapeHtml(b.when)}</div>
-          <div class="stat-sub" style="margin-top:0.1rem;line-height:1.45;color:var(--accent2)">${escapeHtml(b.rule)}</div>
-          ${b.note ? `<div class="stat-sub" style="margin-top:0.1rem;line-height:1.45">${escapeHtml(b.note)}</div>` : ""}
+          <div class="stat-sub" style="margin-top:0.12rem;line-height:1.45">${escapeHtml(b.when)} · ${escapeHtml(b.rule)}</div>
         </div>`).join("");
-      const sample = g.sampleWeek ? `
-        <div class="project-section">
-          <div class="sec-label">${escapeHtml(g.sampleWeek.title)}</div>
-          <p class="stat-sub" style="margin:0 0 0.45rem;line-height:1.45">${escapeHtml(g.sampleWeek.note)}</p>
-          <ul class="tip-list" style="margin:0">${(g.sampleWeek.rows || []).map(r =>
-            `<li><strong>${escapeHtml(r.day)}</strong> — ${escapeHtml(r.blocks)}</li>`).join("")}</ul>
-        </div>` : "";
+
       el.innerHTML = `
         <div class="card-title">${escapeHtml(g.title)}</div>
-        <p class="stat-sub" style="margin:0 0 0.55rem;line-height:1.5">${escapeHtml(g.intro)}</p>
-        <div class="project-section">
-          <div class="sec-label">매일 블록 (매일 캘린더에 넣기)</div>
-          ${blockHtml(g.daily) || "<p class='stat-sub'>—</p>"}
-        </div>
-        <div class="project-section">
-          <div class="sec-label">매주 블록 (매주 같은 요일)</div>
-          ${blockHtml(g.weekly) || "<p class='stat-sub'>—</p>"}
-        </div>
-        ${sample}
-        <div class="project-section">
-          <div class="sec-label">규칙</div>
+        <p class="stat-sub" style="margin:0 0 0.45rem;line-height:1.5">${escapeHtml(g.intro)}</p>
+        ${weekHtml}
+        <details class="time-block-more" style="margin-top:0.65rem">
+          <summary>블록 설명 · 규칙 (펼치기)</summary>
+          <div class="project-section" style="margin-top:0.5rem">
+            <div class="sec-label">매일</div>
+            ${blockHtml(g.daily) || "<p class='stat-sub'>—</p>"}
+          </div>
+          <div class="project-section">
+            <div class="sec-label">매주</div>
+            ${blockHtml(g.weekly) || "<p class='stat-sub'>—</p>"}
+          </div>
           <ul class="tip-list" style="margin:0">${(g.ruleOfThumb || []).map(t => `<li>${escapeHtml(t)}</li>`).join("")}</ul>
-        </div>`;
+        </details>`;
     }
 
     function renderWeeklyFixedTodos() {

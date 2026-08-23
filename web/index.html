@@ -365,6 +365,37 @@
     }
     .info-box strong { color: var(--text); }
     .schedule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.45rem; }
+    .time-phase-badge {
+      display: inline-block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.04em;
+      padding: 0.2rem 0.55rem; border-radius: 999px; background: var(--accent-dim);
+      color: var(--accent); border: 1px solid var(--accent); margin-bottom: 0.4rem;
+    }
+    .time-legend { display: flex; flex-wrap: wrap; gap: 0.35rem 0.75rem; font-size: 0.65rem; color: var(--muted); margin-bottom: 0.45rem; }
+    .time-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .time-legend i { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+    .time-week { display: grid; grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 0.45rem; }
+    .time-day { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 0.45rem 0.5rem; }
+    .time-day.today { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-dim); }
+    .time-day-head { font-size: 0.68rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.3rem; }
+    .time-slot {
+      display: grid; grid-template-columns: 3.6rem 1fr; gap: 0.1rem 0.35rem;
+      font-size: 0.72rem; padding: 0.28rem 0 0.28rem 0.35rem; margin-left: -0.35rem;
+      border-bottom: 1px solid var(--border); border-left: 2px solid transparent;
+    }
+    .time-slot:last-child { border-bottom: none; }
+    .time-slot-when { font-weight: 600; color: var(--accent2); font-size: 0.65rem; line-height: 1.35; }
+    .time-slot-label { font-weight: 500; line-height: 1.35; }
+    .time-slot-note { grid-column: 2; font-size: 0.62rem; color: var(--muted); line-height: 1.35; }
+    .time-slot.slot-class { border-left-color: var(--accent2); }
+    .time-slot.slot-review { border-left-color: #6b9e78; }
+    .time-slot.slot-study { border-left-color: var(--accent); }
+    .time-slot.slot-admin { border-left-color: var(--muted); }
+    .time-slot.slot-project { border-left-color: #c9a227; }
+    .time-slot.slot-rest { border-left-color: #7a8a9a; opacity: 0.85; }
+    .time-slot.slot-exercise { border-left-color: #e07a5f; }
+    .time-block-more summary { font-size: 0.78rem; font-weight: 600; color: var(--muted); cursor: pointer; }
+    .time-block-detail { margin-bottom: 0.45rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); }
+    .time-block-detail:last-child { border-bottom: none; }
     .schedule-day { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 0.55rem; min-height: 90px; }
     .schedule-day .day-name { font-size: 0.68rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; }
     .schedule-day.today { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent-dim); }
@@ -871,7 +902,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="../js/data.js?v=20260823a"></script>
-  <script defer src="../js/app.js?v=20260823a"></script>
+  <script src="../js/data.js?v=20260823c"></script>
+  <script defer src="../js/app.js?v=20260823c"></script>
 </body>
 </html>
