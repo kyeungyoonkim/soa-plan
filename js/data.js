@@ -481,6 +481,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"graduate", cat:"career", name:"졸업", method:"Temple MS 완료", when:"2027.12", order:26 },
       { id:"asa", cat:"career", name:"ASA 완성", method:"모든 요건 + APC", when:"2028년 1–3월", order:27 },
       { id:"soa-join", cat:"admin", name:"SOA Candidate 등록", method:"soa.org 가입", when:"P 전후", order:30 },
+      { id:"resume-update", cat:"admin", name:"Resume 첨삭 · SAS Base 반영", method:"Fox Career/GCS · SAS Base Programming Specialist(2026-08-23 합격) · Skills·Certifications · LinkedIn 동기화", when:"입학 직후", order:29 },
       { id:"p-transcript", cat:"admin", name:"P 합격 transcript", method:"SOA에 성적 제출", when:"합격 후", order:33 },
       { id:"vee-submit", cat:"admin", name:"VEE 학점 SOA 제출", method:"Econ(Micro)+Acct 완료 후 Candidate Central · Macro transcript 포함", when:"완료 시", order:34 },
       { id:"uec-grade", cat:"admin", name:"UEC 성적 요건 확인", method:"Temple AS과목 B 이상 등", when:"수강 전", order:35 },
@@ -514,7 +515,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const MOD_IDS = ["paf","asf","fap-12","fap-34","fap-5","fap-final","atpa","apc"];
     const UEC_IDS = ["as-5101","as-5102-5104","as-5108","as-5114"];
     const CAREER_IDS = ["sas-cert","sas-hackathon","sas-advanced","sas-clinical","shi-research","oncampus-job","intern-fall","intern-confirm","cpt-pt","cpt-ft","graduate","asa"];
-    const ADMIN_IDS = ["soa-join","p-transcript","vee-submit","uec-grade","cpt-paperwork","pa-transcript"];
+    const ADMIN_IDS = ["resume-update","soa-join","p-transcript","vee-submit","uec-grade","cpt-paperwork","pa-transcript"];
     const ASA_IDS = [...EXAM_IDS, ...VEE_IDS, ...UEC_IDS, ...MOD_IDS];
 
     const DAY_NAMES = ["일","월","화","수","목","금","토"];
@@ -684,7 +685,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const STUDY_HOURS = [
       { exam:"Exam P", min:150, max:350, typical:200, plan:"9/21 · TIA only", tips:"통계전공 · TIA 문제+practice exam 70%+ · 4주 ~110h · 8/12 등록" },
-      { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"2026-08-23 합격 ✓", tips:"완료 · 이력서·LinkedIn 반영 · Advanced는 겨울방학 선택" },
+      { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"2026-08-23 합격 ✓", tips:"완료 · 이력서·LinkedIn 반영 · Advanced는 겨울방학 선택", done:true },
       { exam:"Exam PA", min:400, max:600, typical:500, plan:"4/13–16 · 등록 3/16", tips:"500h · Spring 2027 5108과 함께" },
       { exam:"UEC (FM/FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"별도 SOA 시험 없음 · FM=5101 · FAM=5102+5104 · SRM=5108 · ASTAM=5114 · B- 이상 · 수업+숙제로 대체" },
       { exam:"PAF / ASF / FAP", min:20, max:40, typical:30, plan:"Spring 초 PAF → FAP · 2027 여름 ASF", tips:"모듈당 대략 20–40시간. ASF는 FAM+SRM credit 후 · ASA 목표는 2028년 1–3월." }

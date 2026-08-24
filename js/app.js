@@ -1045,8 +1045,7 @@ let state;
         { label:"VEE", ids: VEE_IDS, cls:"cat-vee" },
         { label:"UEC (FM·FAM·SRM·ASTAM)", ids: UEC_IDS, cls:"cat-uec" },
         { label:"모듈 & FAP", ids: MOD_IDS, cls:"cat-module" },
-        { label:"커리어", ids: CAREER_IDS, cls:"cat-career" },
-        { label:"행정", ids: ADMIN_IDS, cls:"cat-admin" }
+        { label:"커리어", ids: CAREER_IDS, cls:"cat-career" }
       ];
       document.getElementById("catBars").innerHTML = cats.map(c => {
         const p = getProgress(c.ids);
@@ -1671,7 +1670,8 @@ let state;
       document.getElementById("studyHoursTable").innerHTML = STUDY_HOURS.map(s => {
         const range = s.typical ? `${s.min}–${s.max}h` : "수업으로 대체";
         const weeks = s.typical ? `약 ${Math.ceil(s.typical/10)}주` : "—";
-        return `<tr><td><strong>${s.exam}</strong></td><td>${range}</td><td>${weeks}</td><td>${s.plan}</td><td style="color:var(--muted);font-size:0.8rem">${s.tips}</td></tr>`;
+        const rowCls = s.done ? ' class="done"' : "";
+        return `<tr${rowCls}><td><strong>${s.exam}</strong></td><td>${range}</td><td>${weeks}</td><td>${s.plan}</td><td style="font-size:0.8rem">${s.tips}</td></tr>`;
       }).join("");
     }
 
