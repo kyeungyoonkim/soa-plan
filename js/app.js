@@ -30,6 +30,7 @@ let state;
         weeklyMemo:"", adminMemo:"",
         studyLogs:[], checklistFilter:"all", schedule:[],
         weeklyStudyGoal: DEFAULT_WEEKLY_STUDY_GOAL, studyGoalVersion: STUDY_GOAL_VERSION,
+        weeklyExamPGoal: DEFAULT_WEEKLY_EXAM_P_GOAL, examPTotalGoal: EXAM_P_TOTAL_GOAL,
         weeklyTodoWeek: "", weeklyTodoChecked: {},
         budgetSpent:0, pomoLogRange:"week",
         pomodoro:{ workMin:25, breakMin:5, dailyGoal:4, todayCount:0, lastDate:"", topic:"" },
@@ -462,7 +463,13 @@ let state;
       if (goalVer < STUDY_GOAL_VERSION) {
         const g = next.weeklyStudyGoal;
         const bumped = (!g || g === 600 || g === 900) ? DEFAULT_WEEKLY_STUDY_GOAL : g;
-        next = { ...next, weeklyStudyGoal: bumped, studyGoalVersion: STUDY_GOAL_VERSION };
+        next = {
+          ...next,
+          weeklyStudyGoal: bumped,
+          weeklyExamPGoal: next.weeklyExamPGoal || DEFAULT_WEEKLY_EXAM_P_GOAL,
+          examPTotalGoal: next.examPTotalGoal || EXAM_P_TOTAL_GOAL,
+          studyGoalVersion: STUDY_GOAL_VERSION
+        };
       }
       if (!next.weeklyTodoChecked) next.weeklyTodoChecked = {};
       // SAS Base passed 2026-08-23
@@ -889,6 +896,33 @@ let state;
       return (state.studyLogs || []).filter(l => new Date(l.date + "T00:00:00") >= weekStart).reduce((s, l) => s + (+l.minutes || 0), 0);
     }
 
+    function isExamPStudyLog(log) {
+      if (!log) return false;
+      if (log.examP === true || log.category === "exam-p") return true;
+      if (log.examP === false) return false;
+      const topic = String(log.topic || "").toLowerCase();
+      if (/5101|5104|rmi|hcm|temple|canvas|숙제|uec|리뷰|review|fm uec|as 510/.test(topic)) return false;
+      return /exam\s*p|tia|probability|\bp\b|오답|practice exam|롱셋|클리닉|multivariate|survival/.test(topic);
+    }
+
+    function getWeekExamPMinutes() {
+      const weekStart = getWeekStart();
+      return (state.studyLogs || [])
+        .filter(l => new Date(l.date + "T00:00:00") >= weekStart && isExamPStudyLog(l))
+        .reduce((s, l) => s + (+l.minutes || 0), 0);
+    }
+
+    function getTotalExamPMinutes() {
+      const from = new Date(EXAM_P_TRACK_FROM + "T00:00:00");
+      const until = new Date(EXAM_P_TRACK_UNTIL + "T23:59:59");
+      return (state.studyLogs || [])
+        .filter(l => {
+          const d = new Date(l.date + "T00:00:00");
+          return d >= from && d <= until && isExamPStudyLog(l);
+        })
+        .reduce((s, l) => s + (+l.minutes || 0), 0);
+    }
+
     function applyBackupPayload(p) {
       const reqChecked = p.reqChecked || {};
       state = {
@@ -988,8 +1022,9 @@ let state;
         </div>`;
       }).join("");
 
-      // D-day grid (날짜순)
+      // D-day grid (오늘 이후 · 완료된 항목 제외)
       document.getElementById("ddayGrid").innerHTML = [...DDAYS]
+        .filter(d => daysUntil(d.date) >= 0 && !(d.taskId && isReqDone(d.taskId)))
         .sort((a, b) => a.date.localeCompare(b.date))
         .map(d => {
         const dd = daysUntil(d.date);
@@ -1454,7 +1489,8 @@ let state;
       state.studyLogs.push({
         date: today,
         minutes: workMin,
-        topic: topic ? `Pomodoro: ${topic}` : "Pomodoro 집중"
+        topic: topic ? `Pomodoro: ${topic}` : "Pomodoro 집중",
+        examP: isExamPStudyLog({ topic: topic ? `Pomodoro: ${topic}` : "Pomodoro 집중" })
       });
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       scheduleCloudSync();
@@ -1927,6 +1963,28 @@ let state;
       if (document.getElementById("studyGoalInput")) {
         document.getElementById("studyGoalInput").value = goal;
       }
+
+      const pGoal = state.weeklyExamPGoal || DEFAULT_WEEKLY_EXAM_P_GOAL;
+      const pDone = getWeekExamPMinutes();
+      const pPct = Math.min(100, Math.round(pDone / pGoal * 100));
+      const pTotalGoal = state.examPTotalGoal || EXAM_P_TOTAL_GOAL;
+      const pTotalDone = getTotalExamPMinutes();
+      const pTotalPct = Math.min(100, Math.round(pTotalDone / pTotalGoal * 100));
+      const examPPctEl = document.getElementById("examPGoalPct");
+      if (examPPctEl) {
+        examPPctEl.textContent = pPct + "%";
+        document.getElementById("examPGoalMin").textContent = pGoal;
+        document.getElementById("examPWeekMin").textContent = pDone;
+        document.getElementById("examPGoalBar").style.width = pPct + "%";
+        document.getElementById("examPTotalMin").textContent = pTotalDone;
+        document.getElementById("examPTotalGoalMin").textContent = pTotalGoal;
+        if (document.getElementById("examPGoalInput") && document.activeElement !== document.getElementById("examPGoalInput")) {
+          document.getElementById("examPGoalInput").value = pGoal;
+        }
+        examPPctEl.title = `9/21까지 ${pTotalPct}% (${Math.round(pTotalDone / 60)}h / ${Math.round(pTotalGoal / 60)}h)`;
+      }
+      const weekExamPEl = document.getElementById("weekExamPTotal");
+      if (weekExamPEl) weekExamPEl.textContent = pDone;
     }
 
     function renderStudyRecommendations() {
@@ -2023,7 +2081,10 @@ let state;
       const weekStart = getWeekStart();
       const logs = (state.studyLogs || []).slice().reverse().slice(0,8);
       document.getElementById("studyLogs").innerHTML = logs.length
-        ? logs.map((l,i) => `<li><span>${l.date} · ${l.minutes}분 · ${l.topic||"-"}</span></li>`).join("")
+        ? logs.map((l) => {
+            const pTag = isExamPStudyLog(l) ? " · <span style='color:var(--accent2)'>P</span>" : "";
+            return `<li><span>${l.date} · ${l.minutes}분 · ${escapeHtml(l.topic || "-")}${pTag}</span></li>`;
+          }).join("")
         : "<li><span style='color:var(--muted)'>기록 없음</span></li>";
       const weekTotal = getWeekStudyMinutes();
       document.getElementById("weekStudyTotal").textContent = weekTotal;
@@ -2076,8 +2137,9 @@ let state;
         const minutes = +document.getElementById("studyMin").value || 0;
         const topic = document.getElementById("studyTopic").value.trim();
         if (!minutes && !topic) { toast("시간 또는 내용 입력"); return; }
+        const examP = document.getElementById("studyExamP")?.checked ?? true;
         if (!state.studyLogs) state.studyLogs = [];
-        state.studyLogs.push({ date: new Date().toISOString().slice(0,10), minutes, topic });
+        state.studyLogs.push({ date: new Date().toISOString().slice(0,10), minutes, topic, examP });
         document.getElementById("studyMin").value = "";
         document.getElementById("studyTopic").value = "";
         saveState();
@@ -2125,6 +2187,14 @@ let state;
         state.weeklyStudyGoal = Math.max(60, +e.target.value || DEFAULT_WEEKLY_STUDY_GOAL);
         saveState(true);
       });
+
+      const examPGoalInput = document.getElementById("examPGoalInput");
+      if (examPGoalInput) {
+        examPGoalInput.addEventListener("change", e => {
+          state.weeklyExamPGoal = Math.max(60, +e.target.value || DEFAULT_WEEKLY_EXAM_P_GOAL);
+          saveState(true);
+        });
+      }
 
       const budgetSpentInput = document.getElementById("budgetSpent");
       if (budgetSpentInput) budgetSpentInput.addEventListener("input", e => {

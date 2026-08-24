@@ -33,7 +33,11 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const JOURNEY_START = "2026-01-01";
     const JOURNEY_END = "2028-03-01";
     const DEFAULT_WEEKLY_STUDY_GOAL = 1200; // 20h/week · P 시즌
-    const STUDY_GOAL_VERSION = 2;
+    const DEFAULT_WEEKLY_EXAM_P_GOAL = 1320; // ~22h/week · Exam P 블록 기준
+    const EXAM_P_TOTAL_GOAL = 6600; // 110h · 9/21까지
+    const EXAM_P_TRACK_FROM = "2026-08-24";
+    const EXAM_P_TRACK_UNTIL = "2026-09-21";
+    const STUDY_GOAL_VERSION = 3;
 
     // Fixed weekly todos · shown on 시간표/캘린더 · checkbox resets each Monday
     const WEEKLY_FIXED_TODOS = {
@@ -487,8 +491,6 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     // Temple Registrar 공식 캘린더 기준 (Fall 2026 · Spring 2027)
     // Fall 2027은 미발표 → Fall 2026 패턴으로 잠정
     const DDAYS = [
-      { date:"2026-08-23", label:"SAS Base 합격 ✓", taskId:"sas-cert" },
-      { date:"2026-08-24", label:"Fall 2026 개강" },
       { date:"2026-09-21", label:"Exam P", taskId:"exam-p" },
       { date:"2026-09-22", label:"Health rate memo start (post-P)", taskId:"proj-health" },
       { date:"2026-10-01", label:"SAS Hackathon 시작", taskId:"sas-hackathon" },
