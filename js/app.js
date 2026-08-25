@@ -1660,7 +1660,7 @@ let state;
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108+5118) 기반 복습</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;
       } else if (getExamStatus("exam-pa") !== "passed") {
-        el.innerHTML = `<div><span class="hours-big">500h</span> <span class="stat-sub">Exam PA · <strong>4/13–16</strong> (등록 마감 3/16 11:59 PM · 5118 Spring 병행)</span></div>`;
+        el.innerHTML = `<div><span class="hours-big">500h</span> <span class="stat-sub">Exam PA · <strong>10/12–15</strong> (등록 마감 9/14 · SRM 완료 후)</span></div>`;
       } else {
         el.innerHTML = `<p class="stat-sub">SOA 시험(P·FM·PA) 완료. UEC·모듈·FAP에 집중. <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('guide')">Temple 학위 요건 →</span></p>`;
       }

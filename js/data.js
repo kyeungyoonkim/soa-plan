@@ -427,27 +427,28 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"as-5102-5104", text:"AS 5102 → FAM UEC 완성", meta:"Fall 5104 이미 수강 · Advisor 확인", highlight:true },
         { id:"as-5118", text:"AS 5118 → SRM UEC 완성 (2/2)", meta:"5108(Fall) + 5118 · Selective · PA 기반", highlight:true },
         { id:"rmi-5051", text:"RMI 5051 Managing Risk", meta:"Core · Spring 2027", highlight:true },
-        { id:"prep-pa", text:"Exam PA 준비 (5118·SRM 병행)", meta:"봄학기 · ~500h · Fall 5108 기반", highlight:true },
-        { id:"exam-pa", text:"Exam PA 응시 (4/13–16)", meta:"등록 마감 3/16 11:59 PM · 5118 병행", highlight:true },
+        { id:"prep-pa-start", text:"Exam PA 기초 (5118·SRM과 함께)", meta:"R/Python·GLM 감각 · 본격 준비는 여름~Fall", highlight:true },
         { id:"cpt-pt", text:"CPT 파트타임 인턴", meta:"커리어" },
         { id:"fap-34", text:"FAP Module 3 & 4", meta:"수업·인턴 병행" }
       ]},
       { id:"summer", name:"여름방학", period:"2027년 6월 ~ 8월", start:"2027-06-01", end:"2027-08-31", tasks:[
         { id:"cpt-ft", text:"CPT 풀타임 인턴", meta:"커리어", highlight:true },
         { id:"asf", text:"ASF Module", meta:"FAM+SRM credit 반영 직후 · PAF 완료 후", highlight:true },
+        { id:"prep-pa", text:"Exam PA 본격 준비 (~500h)", meta:"SRM(5108+5118) 완료 후 · CA PA / Mahler · 10월 목표", highlight:true },
         { id:"fap-5", text:"FAP Module 5", meta:"Final 전 완료", highlight:true },
         { id:"atpa", text:"ATPA Assessment", meta:"Assessment" }
       ]},
       { id:"sem3", name:"3학기 (Fall Y2)", period:"2027년 8/24 ~ 12/15", start:"2027-08-24", end:"2027-12-15", tasks:[
         { id:"as-5114", text:"AS 5114 → ASTAM UEC", meta:"Selective 3 · Fall 2027", highlight:true },
+        { id:"exam-pa", text:"Exam PA 응시 (10/12–15)", meta:"등록 마감 9/14 11:59 PM · 성적 ~11월 말", highlight:true },
         { id:"elective-2", text:"Elective 2 (추가 1과목)", meta:"Elective 2/2 · Fall 2027" },
         { id:"elec-waiver", text:"추가 3cr (5101 FM 면제 대체)", meta:"30cr · Advisor 확인", highlight:true },
         { id:"fap-final", text:"FAP 최종 평가", meta:"모듈 완료 후", highlight:true },
         { id:"graduate", text:"Temple MS 졸업", meta:"2027.12", highlight:true }
       ]},
       { id:"post", name:"졸업 후 · ASA 마무리", period:"2028년 1월 ~ 3월", start:"2028-01-01", end:"2028-03-31", tasks:[
-        { id:"apc", text:"APC 참석", meta:"ASTAM UEC·FAP Final 등 전부 후 · 초대제", highlight:true },
-        { id:"asa", text:"ASA 완성", meta:"목표 2028년 1–3월", highlight:true },
+        { id:"apc", text:"APC 참석", meta:"PA 성적(~11월 말)·ASTAM·FAP Final 등 전부 후 · 초대제", highlight:true },
+        { id:"asa", text:"ASA 완성", meta:"목표 2028년 1–3월 · 졸업(12월) 직후", highlight:true },
         { id:"sas-clinical", text:"SAS Clinical (선택)", meta:"제약·임상 진로 시" }
       ]}
     ];
@@ -455,7 +456,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const REQUIREMENTS = [
       { id:"exam-fm", cat:"exam", name:"Exam FM", method:"SOA 독학 · 2026.12/3–14 · 등록 마감 11/4 10AM CT · AS 5101 미수강·합격 시 면제", when:"Fall Y1 · 12월", order:0 },
       { id:"exam-p", cat:"exam", name:"Exam P", method:"목표 9/21 (window 9/10–21) · 등록 8/12 12AM CT", when:"Fall Y1", order:4 },
-      { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2027.4/13–16 · 등록 마감 3/16 11:59 PM · 5118(Spring)·5108(Fall) 기반", when:"2학기 (Spring Y1)", order:11 },
+      { id:"exam-pa", cat:"exam", name:"Exam PA", method:"2027.10/12–15 · 등록 마감 9/14 11:59 PM · SRM(5108+5118) 완료 후 · 성적 ~11월 말", when:"Fall Y2", order:11 },
       { id:"sas-cert", cat:"career", name:"SAS Base Certification", method:"2026-08-23 합격 · Base Programming Specialist", when:"완료", order:19 },
       { id:"sas-hackathon", cat:"career", name:"SAS Student Hackathon", method:"10/1 시작 · 10/30 마감 · 신청 완료 · Health rate memo와 동일 스택", when:"Fall Y1 · 10/1–10/30", order:20 },
       { id:"sas-advanced", cat:"career", name:"SAS Advanced Programming (선택)", method:"Base 이후 · 인턴/실무에서 SAS 쓸 때 검토", when:"겨울방학 (선택)", order:28 },
@@ -504,8 +505,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { date:"2026-12-15", label:"Fall 2026 종강 (기말 종료)" },
       { date:"2026-12-23", label:"CLEP Microeconomics", taskId:"vee-econ" },
       { date:"2027-01-11", label:"Spring 2027 개강" },
-      { date:"2027-03-16", label:"Exam PA 등록 마감", taskId:"exam-pa" },
-      { date:"2027-04-13", label:"Exam PA (4/13–16)", taskId:"exam-pa" },
+      { date:"2027-09-14", label:"Exam PA 등록 마감", taskId:"exam-pa" },
+      { date:"2027-10-12", label:"Exam PA (10/12–15)", taskId:"exam-pa" },
       { date:"2027-05-04", label:"Spring 2027 종강 (기말 종료)" },
       { date:"2027-06-01", label:"CPT FT", taskId:"cpt-ft" },
       { date:"2027-08-24", label:"Fall 2027 개강 (잠정)" },
@@ -644,18 +645,18 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         alt: "FoxMS@temple.edu에 FM 합격 → 5101 면제·30cr 대체 과목 확인"
       },
       {
-        when: "2027 · Exam PA (4/13–16)",
-        tier: "later", tierLabel: "Spring 2027",
-        pick: "AS 5108+5118(SRM) + CA PA + Mahler",
+        when: "2027 · Exam PA (10/12–15)",
+        tier: "later", tierLabel: "Fall 2027",
+        pick: "AS 5108+5118(SRM) 완료 후 · CA PA + Mahler",
         cost: "~$500+",
-        costDetail: "등록 마감 3/16 11:59 PM · window 4/13–16",
-        plan: "Fall 5108 + Spring 5118로 SRM UEC · R/Python·GLM 기반 → SOA PA sample projects → 4/13–16 응시",
+        costDetail: "등록 마감 9/14 11:59 PM · window 10/12–15 · 성적 ~11월 말",
+        plan: "Spring 5118까지 SRM UEC → 여름~Fall PA 집중 (~500h) → 10/12–15 응시 · APC는 PA 성적 후 2028 초",
         links: [
           { text: "CA PA", url: "https://www.coachingactuaries.com/exam-pa/pricing" },
           { text: "Mahler PA", url: "https://www.theinfiniteactuary.com/mahler/" },
           { text: "SOA PA", url: "https://www.soa.org/education/exam-req/edu-exam-pa-detail/" }
         ],
-        alt: "P→PA 직행 비추 — SRM(5108+5118)과 함께 Temple·SOA 플랜"
+        alt: "4월 PA는 5118 병행이라 비추 · 10월이 SRM 직후 여유"
       },
       {
         when: "학기별 · 모듈",
@@ -663,7 +664,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         pick: "PAF → FAP → ASF → Final (SOA e-Learning)",
         cost: "SOA 요금 포함",
         costDetail: "별도 교재 거의 없음",
-        plan: "Spring 초 PAF → FAP 1–5 · 2027 여름 ASF(FAM+SRM 후) → Fall FAP Final · 졸업 후 APC → 2028년 1–3월 ASA",
+        plan: "Spring 초 PAF → FAP 1–5 · 2027 여름 ASF(FAM+SRM 후) · Fall PA(10월)+FAP Final · 졸업 후 APC → 2028년 1–3월 ASA",
         links: [
           { text: "SOA FAP", url: "https://www.soa.org/education/exam-req/edu-module-fap-detail/" },
           { text: "My SOA (login)", url: "https://engage.soa.org/login" }
@@ -681,7 +682,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { exam:"Exam P (9월 · 목표 9/21)", examDate:"2026-09-10", examEnd:"2026-09-21", regDeadline:"2026-08-12", note:"SOA 공식 window 9/10–21 · 등록 8/12 12AM CT · 목표일 9/21" },
       { exam:"Exam P (11월 · fallback)", examDate:"2026-11-04", examEnd:"2026-11-15", regDeadline:"2026-09-30", note:"9월 불합격 시 · SOA 공식" },
       { exam:"Exam FM (2026.12)", examDate:"2026-12-03", examEnd:"2026-12-14", regDeadline:"2026-11-04", note:"독학 · window 12/3–14 · 등록 마감 11/4 10AM CT · 5101 미수강" },
-      { exam:"Exam PA (2027.4)", examDate:"2027-04-13", examEnd:"2027-04-16", regDeadline:"2027-03-16", note:"Sitting 4/13–16 · 등록 마감 3/16 11:59 PM · 5118(Spring)·5108(Fall) 기반" }
+      { exam:"Exam PA (2027.10)", examDate:"2027-10-12", examEnd:"2027-10-15", regDeadline:"2027-09-14", note:"Sitting 10/12–15 · 등록 마감 9/14 11:59 PM · SRM 완료 후 · 성적 ~11월 말 · APC는 그 다음" }
     ];
 
     const CONTACTS = [
@@ -696,7 +697,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { exam:"Exam P", min:150, max:350, typical:200, plan:"9/21 · TIA only", tips:"통계전공 · TIA 문제+practice exam 70%+ · 4주 ~110h · 8/12 등록" },
       { exam:"SAS Base Certification", min:40, max:80, typical:60, plan:"2026-08-23 합격 ✓", tips:"완료 · 이력서·LinkedIn 반영 · Advanced는 겨울방학 선택", done:true },
       { exam:"Exam FM", min:150, max:250, typical:200, plan:"12/3–14 · TIA 독학", tips:"P 직후 시작 · 등록 11/4 · 5101 미수강 · 합격 시 Core 면제" },
-      { exam:"Exam PA", min:400, max:600, typical:500, plan:"4/13–16 · 등록 3/16", tips:"500h · Fall 5108 + Spring 5118(SRM) 기반" },
+      { exam:"Exam PA", min:400, max:600, typical:500, plan:"10/12–15 · 등록 9/14", tips:"500h · 여름~Fall · SRM(5108+5118) 끝난 뒤" },
       { exam:"UEC (FAM/SRM/ASTAM)", min:0, max:0, typical:0, plan:"Temple 수업", tips:"FM=SOA 시험 · FAM=5102+5104 · SRM=5108+5118 · ASTAM=5114 · B- 이상" },
       { exam:"PAF / ASF / FAP", min:20, max:40, typical:30, plan:"Spring 초 PAF → FAP · 2027 여름 ASF", tips:"모듈당 대략 20–40시간. ASF는 FAM+SRM credit 후 · ASA 목표는 2028년 1–3월." }
     ];
