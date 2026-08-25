@@ -901,7 +901,7 @@ let state;
       if (log.examP === true || log.category === "exam-p") return true;
       if (log.examP === false) return false;
       const topic = String(log.topic || "").toLowerCase();
-      if (/5101|5104|rmi|hcm|temple|canvas|숙제|uec|리뷰|review|fm uec|as 510/.test(topic)) return false;
+      if (/5108|5104|rmi|hcm|temple|canvas|숙제|uec|리뷰|review|as 510|exam fm|fm 독학/.test(topic)) return false;
       return /exam\s*p|tia|probability|\bp\b|오답|practice exam|롱셋|클리닉|multivariate|survival/.test(topic);
     }
 
@@ -1041,9 +1041,9 @@ let state;
 
       // Category bars
       const cats = [
-        { label:"시험 (P·PA)", ids: EXAM_IDS, cls:"cat-exam" },
+        { label:"시험 (P·FM·PA)", ids: EXAM_IDS, cls:"cat-exam" },
         { label:"VEE", ids: VEE_IDS, cls:"cat-vee" },
-        { label:"UEC (FM·FAM·SRM·ASTAM)", ids: UEC_IDS, cls:"cat-uec" },
+        { label:"UEC (FAM·SRM·ASTAM)", ids: UEC_IDS, cls:"cat-uec" },
         { label:"모듈 & FAP", ids: MOD_IDS, cls:"cat-module" },
         { label:"커리어", ids: CAREER_IDS, cls:"cat-career" }
       ];
@@ -1652,17 +1652,17 @@ let state;
 
       if (getExamStatus("exam-p") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 11월 또는 다음 window</span></div>
-        <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. FM은 Fall 5101 UEC로 진행.</p>`;
+        <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. FM은 2026.12 독학.</p>`;
       } else if (getExamStatus("exam-p") !== "passed") {
         el.innerHTML = `<div><span class="hours-big">110h</span> <span class="stat-sub">Exam P · <strong>TIA only</strong> · 목표 <strong>9/21</strong></span></div>
         <p class="stat-sub" style="margin-top:0.5rem">통계전공 · TIA practice exam <strong>70%+</strong>면 GO · 부족하면 11월 backup.</p>`;
       } else if (getExamStatus("exam-pa") === "failed") {
-        el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108) 기반 복습</span></div>
+        el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108+5118) 기반 복습</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;
       } else if (getExamStatus("exam-pa") !== "passed") {
-        el.innerHTML = `<div><span class="hours-big">500h</span> <span class="stat-sub">Exam PA · <strong>4/13–16</strong> (등록 마감 3/16 11:59 PM · 5108 Spring 2027 병행)</span></div>`;
+        el.innerHTML = `<div><span class="hours-big">500h</span> <span class="stat-sub">Exam PA · <strong>4/13–16</strong> (등록 마감 3/16 11:59 PM · 5118 Spring 병행)</span></div>`;
       } else {
-        el.innerHTML = `<p class="stat-sub">SOA 시험(P·PA) 완료. FM UEC·모듈·FAP에 집중. <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('guide')">Temple 학위 요건 →</span></p>`;
+        el.innerHTML = `<p class="stat-sub">SOA 시험(P·FM·PA) 완료. UEC·모듈·FAP에 집중. <span style="cursor:pointer;color:var(--accent)" onclick="switchTab('guide')">Temple 학위 요건 →</span></p>`;
       }
     }
 
