@@ -150,6 +150,12 @@
     }
     .left-list li:last-child { border-bottom: none; }
     .left-list .when { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+    .left-list .study-log-text { flex: 1; min-width: 0; }
+    .study-log-del {
+      flex-shrink: 0; border: none; background: transparent; color: var(--muted);
+      font-size: 1.05rem; line-height: 1; padding: 0.15rem 0.4rem; cursor: pointer; border-radius: 6px;
+    }
+    .study-log-del:hover { color: #e07a5f; background: rgba(224, 122, 95, 0.12); }
 
     .check-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
     .check-table th { text-align: left; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding: 0.6rem 0.45rem; border-bottom: 1px solid var(--border); }
@@ -914,7 +920,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="js/data.js?v=20260825b"></script>
-  <script defer src="js/app.js?v=20260825b"></script>
+  <script src="js/data.js?v=20260825c"></script>
+  <script defer src="js/app.js?v=20260825c"></script>
 </body>
 </html>

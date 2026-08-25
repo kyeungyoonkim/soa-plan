@@ -481,7 +481,7 @@ let state;
       if (!next.timelineChecked["sas-cert"]) {
         next = { ...next, timelineChecked: { ...next.timelineChecked, "sas-cert": true } };
       }
-      return next;
+      return ensureStudyLogIds(next);
     }
 
     function loadState() {
@@ -1234,6 +1234,40 @@ let state;
         .replace(/"/g, "&quot;");
     }
 
+    function newStudyLogId() {
+      return `sl-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    }
+
+    function ensureStudyLogIds(st) {
+      if (!Array.isArray(st.studyLogs) || !st.studyLogs.length) return st;
+      let changed = false;
+      const studyLogs = st.studyLogs.map(l => {
+        if (l.id) return l;
+        changed = true;
+        return { ...l, id: newStudyLogId() };
+      });
+      return changed ? { ...st, studyLogs } : st;
+    }
+
+    function syncPomoTodayCountFromLogs() {
+      ensurePomodoro();
+      const today = new Date().toISOString().slice(0, 10);
+      state.pomodoro.todayCount = (state.studyLogs || []).filter(l =>
+        l.date === today && (l.topic || "").includes("Pomodoro")
+      ).length;
+      state.pomodoro.lastDate = today;
+    }
+
+    function deleteStudyLog(id) {
+      if (!id || !state.studyLogs) return;
+      const removed = state.studyLogs.find(l => l.id === id);
+      if (!removed) return;
+      state.studyLogs = state.studyLogs.filter(l => l.id !== id);
+      if ((removed.topic || "").includes("Pomodoro")) syncPomoTodayCountFromLogs();
+      saveState(true);
+      toast("기록 삭제됨");
+    }
+
     function getPomoDailyGoal() {
       ensurePomodoro();
       return Math.max(1, Math.min(20, +(state.pomodoro.dailyGoal || POMO_DAILY_GOAL)));
@@ -1486,6 +1520,7 @@ let state;
       state.pomodoro.topic = topic;
       if (!state.studyLogs) state.studyLogs = [];
       state.studyLogs.push({
+        id: newStudyLogId(),
         date: today,
         minutes: workMin,
         topic: topic ? `Pomodoro: ${topic}` : "Pomodoro 집중",
@@ -2078,14 +2113,17 @@ let state;
         bindTaskList(adminTasksEl, "req");
       }
 
-      const weekStart = getWeekStart();
-      const logs = (state.studyLogs || []).slice().reverse().slice(0,8);
+      const today = new Date().toISOString().slice(0, 10);
+      const logs = (state.studyLogs || []).filter(l => l.date === today).slice().reverse();
       document.getElementById("studyLogs").innerHTML = logs.length
         ? logs.map((l) => {
             const pTag = isExamPStudyLog(l) ? " · <span style='color:var(--accent2)'>P</span>" : "";
-            return `<li><span>${l.date} · ${l.minutes}분 · ${escapeHtml(l.topic || "-")}${pTag}</span></li>`;
+            return `<li data-study-log-id="${l.id}">
+              <span class="study-log-text">${l.minutes}분 · ${escapeHtml(l.topic || "-")}${pTag}</span>
+              <button type="button" class="study-log-del" data-study-log-del="${l.id}" title="삭제" aria-label="삭제">×</button>
+            </li>`;
           }).join("")
-        : "<li><span style='color:var(--muted)'>기록 없음</span></li>";
+        : "<li><span style='color:var(--muted)'>오늘 기록 없음</span></li>";
       const weekTotal = getWeekStudyMinutes();
       document.getElementById("weekStudyTotal").textContent = weekTotal;
       renderBudget();
@@ -2139,11 +2177,17 @@ let state;
         if (!minutes && !topic) { toast("시간 또는 내용 입력"); return; }
         const examP = document.getElementById("studyExamP")?.checked ?? true;
         if (!state.studyLogs) state.studyLogs = [];
-        state.studyLogs.push({ date: new Date().toISOString().slice(0,10), minutes, topic, examP });
+        state.studyLogs.push({ id: newStudyLogId(), date: new Date().toISOString().slice(0,10), minutes, topic, examP });
         document.getElementById("studyMin").value = "";
         document.getElementById("studyTopic").value = "";
         saveState();
       };
+
+      document.getElementById("studyLogs").addEventListener("click", e => {
+        const btn = e.target.closest("[data-study-log-del]");
+        if (!btn) return;
+        deleteStudyLog(btn.dataset.studyLogDel);
+      });
 
       document.getElementById("btnAddClass").onclick = () => {
         const name = document.getElementById("clsName").value.trim();
