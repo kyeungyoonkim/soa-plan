@@ -8,17 +8,17 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"tc-5104", name:"AS 5104 Short-Term Actuarial Modeling", credits:3, group:"Core · 2026 Fall", soa:"FAM UEC" },
       { id:"tc-ba5687", name:"BA 5687 MS Professional Development", credits:0, group:"Core (0 cr · 2026 Fall · 토 3회: 10/3·10/24·11/7)", soa:"0 cr" },
       { id:"tc-rmi5104", name:"RMI 5104 Property & Liability", credits:3, group:"Selective (1/3) · 2026 Fall", soa:"—" },
-      { id:"tc-hcm5101", name:"HCM 5101 Health Systems Organization", credits:3, group:"Elective (1/2) · 3 cr · 2026 Fall", soa:"Non-Fox elective" },
       { id:"tc-5102", name:"AS 5102 Long-Term Actuarial Modeling", credits:3, group:"Core · 2027 Spring", soa:"FAM UEC" },
       { id:"tc-rmi5051", name:"RMI 5051 Managing Risk", credits:3, group:"Core · 2027 Spring", soa:"—" },
       { id:"tc-sel-2", name:"AS 5118 Advanced Actuarial Analytics", credits:3, group:"Selective (2/3) · 2027 Spring", soa:"SRM UEC (2/2)" },
       { id:"tc-sel-1", name:"AS 5114 Advanced Short-Term Modeling", credits:3, group:"Selective (3/3) · 2027 Fall", soa:"ASTAM UEC" },
+      { id:"tc-hcm5101", name:"HCM 5101 Health Systems (Elective 1)", credits:3, group:"Elective (1/2) · Fall 드랍 · 이후 수강", soa:"Non-Fox elective" },
       { id:"tc-elec-2", name:"Elective (추가 1과목)", credits:3, group:"Elective (2/2) · 3 cr · 2027 Fall", soa:"—" },
       { id:"tc-elec-waiver", name:"추가 3cr (5101 면제 대체)", credits:3, group:"Elective/Selective · 2027 Fall · Advisor 확인", soa:"30cr 맞춤" }
     ];
 
-    // 2026 Fall 시간표 · AS 5101 미수강 · AS 5108 추가 (시간·강의실 = 등록표 확인)
-    // RMI 5104 월수 11:00–12:15 온라인 · BA 5687 토요 3회
+    // 2026 Fall · HCM 드랍 · AS 5108·5104·RMI 5104 · BA 5687 토요 3회
+    // 5108 시간·강의실 = 등록표 확인
     const DEFAULT_FALL_2026_SCHEDULE = [
       { name:"AS 5108 Actuarial Analytics", day:1, start:"09:30", end:"10:50", location:"등록표 확인", semester:"2026 Fall", note:"시간 임시 · 등록표로 수정" },
       { name:"AS 5108 Actuarial Analytics", day:3, start:"09:30", end:"10:50", location:"등록표 확인", semester:"2026 Fall", note:"시간 임시 · 등록표로 수정" },
@@ -26,10 +26,9 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { name:"RMI 5104 Property & Liability", day:3, start:"11:00", end:"12:15", location:"온라인", semester:"2026 Fall" },
       { name:"AS 5104 Short-Term Modeling", day:2, start:"09:30", end:"10:50", location:"Speakman Hall 00213", semester:"2026 Fall" },
       { name:"AS 5104 Short-Term Modeling", day:4, start:"09:30", end:"10:50", location:"Speakman Hall 00213", semester:"2026 Fall" },
-      { name:"HCM 5101 Health Systems", day:3, start:"18:00", end:"20:30", location:"온라인", semester:"2026 Fall" },
       { name:"BA 5687 Professional Dev", day:6, start:"—", end:"—", location:"10/3만 Alter Hall 0A231 · 10/24·11/7 온라인", note:"10/3 · 10/24 · 11/7", semester:"2026 Fall" }
     ];
-    const FALL_2026_SCHEDULE_VERSION = 5;
+    const FALL_2026_SCHEDULE_VERSION = 6;
     const CIRC = 2 * Math.PI * 30;
     const JOURNEY_START = "2026-01-01";
     const JOURNEY_END = "2028-03-01";
@@ -46,7 +45,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       goalNote: "주간 공부 목표 1200분(20h). Exam P(9/21) · TIA only · ~110h 스프린트 · 저녁 P 2블록(1시 취침).",
       items: [
         { id: "minutes", text: "주간 공부 분 채우기 (공부모드 · 기본 1200분+ · P+수업 합산)", always: true },
-        { id: "class-daily", text: "수업 있는 날: 과목별 당일 리뷰 (5108·5104 ★ 40분+ / RMI 20분 / HCM 30분)", from: "2026-08-24" },
+        { id: "class-daily", text: "수업 있는 날: 과목별 당일 리뷰 (5108·5104 ★ 40분+ / RMI 20분)", from: "2026-08-24" },
         { id: "p-practice", text: "TIA P: 문제·퀴즈 블록 6회+ (~12–15h/주 · 영상보다 문제 우선)", until: "2026-09-21" },
         { id: "p-wrongs", text: "TIA P: 오답 노트 복습 30분 이상", until: "2026-09-21" },
         { id: "p-formula", text: "TIA P: 약점 파트 / formula sheet (수 또는 일)", until: "2026-09-21" },
@@ -71,11 +70,11 @@ const STORAGE_KEY = "soa-asa-plan-v6";
           when: "점심(12:15–13:30) 직후 · 그날 저녁 P 전",
           rule: "노트 정리 · 예제 1–2문제 · 모르는 것 표시. 주말로 미루지 않기.",
           from: "2026-08-24",
-          note: "5108·5104 ★ 우선(40–45분). RMI 20분. HCM 수 30분(수업 직후). 월·수·화·목: 12:15 수업 끝 → 점심 → 리뷰."
+          note: "5108·5104 ★ 우선(40–45분). RMI 20분. 월·수·화·목: 12:15 수업 끝 → 점심 → 리뷰."
         },
         {
           name: "딥 스터디 Exam P",
-          dur: "저녁 90분 × 2블록 + 오답 30분 (월·화·목·일 · 토) · 수 HCM 후 1블록 · 금 1블록",
+          dur: "저녁 90분 × 2블록 + 오답 30분 (월–목 · 일 · 토) · 금 1블록",
           when: "1블록 20:00–21:30 · 오답 21:45 · 2블록 22:30–23:45 · 화·목 11:00–12:00 · 수·금 21:15–22:45",
           rule: "캘린더 busy · TIA P 문제 위주. 리뷰 먼저. 화·목 점심 전 P 1h. 금 20:00–21:00 OFF 후 1블록.",
           until: "2026-09-21",
@@ -113,8 +112,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         {
           name: "운동",
           dur: "약 1시간",
-          when: "월·수·금 저녁 · 저녁(18:30–19:00) 직전 1h (월·금 17:00 / 수 16:00 — HCM 전)",
-          rule: "캘린더 busy · P 딥(20:00) 전에 끝내기. 수요일 HCM(18:00) 후 P 1블록(21:15).",
+          when: "월·수·금 저녁 · 저녁(18:15–19:00) 직전 1h (17:00)",
+          rule: "캘린더 busy · P 딥(20:00) 전에 끝내기.",
           always: true
         },
         {
@@ -206,8 +205,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       classReviewRules: {
         "AS 5108": { minutes: 40, priority: true, label: "AS 5108" },
         "AS 5104": { minutes: 45, priority: true, label: "AS 5104" },
-        "RMI 5104": { minutes: 20, priority: false, label: "RMI" },
-        "HCM 5101": { minutes: 30, priority: false, label: "HCM" }
+        "RMI 5104": { minutes: 20, priority: false, label: "RMI" }
       },
       // Fixed blocks only · classes + reviews merged from state.schedule at render
       timetablePhases: [
@@ -258,10 +256,12 @@ const STORAGE_KEY = "soa-asa-plan-v6";
               { start: "13:30", end: "14:10", label: "AS 5108 리뷰", type: "review", note: "★" },
               { start: "14:20", end: "14:40", label: "RMI 리뷰", type: "review" },
               { start: "14:50", end: "15:05", label: "행정", type: "admin" },
-              { start: "16:00", end: "17:00", label: "운동", type: "exercise", note: "HCM(18:00) 전" },
-              { start: "20:35", end: "21:05", label: "HCM 리뷰", type: "review", note: "수업(20:30) 직후" },
-              { start: "21:15", end: "22:45", label: "Exam P 딥", type: "study", note: "HCM 후 1블록 · 90분" },
-              { start: "01:00", end: "—", label: "취침 · HCM 밤 긴 P 금지", type: "rest" }
+              { start: "17:00", end: "18:00", label: "운동", type: "exercise" },
+              { start: "18:15", end: "19:00", label: "저녁", type: "meal" },
+              { start: "20:00", end: "21:30", label: "Exam P 딥", type: "study" },
+              { start: "21:45", end: "22:15", label: "오답 노트", type: "study" },
+              { start: "22:30", end: "23:45", label: "Exam P 추가", type: "study" },
+              { start: "01:00", end: "—", label: "취침 · 새 문제 금지", type: "rest" }
             ],
             4: [
               { start: "11:00", end: "12:00", label: "Exam P", type: "study", note: "5104(10:50) 후 · 점심 전 1h" },
@@ -280,7 +280,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
               { start: "11:45", end: "12:00", label: "행정 · Canvas", type: "admin" },
               { start: "12:00", end: "12:50", label: "점심", type: "meal" },
               { start: "13:15", end: "15:30", label: "Temple 숙제 몰아서", type: "study", note: "제출물 · 읽기" },
-              { start: "15:45", end: "16:15", label: "RMI/HCM 밀린 리뷰", type: "review", note: "있으면만" },
+              { start: "15:45", end: "16:15", label: "RMI 밀린 리뷰", type: "review", note: "있으면만" },
               { start: "17:00", end: "18:00", label: "운동", type: "exercise" },
               { start: "18:15", end: "19:00", label: "저녁", type: "meal" },
               { start: "20:00", end: "21:00", label: "저녁 휴식 · OFF", type: "rest", note: "1h · P·숙제 금지" },
@@ -343,8 +343,10 @@ const STORAGE_KEY = "soa-asa-plan-v6";
               { start: "13:30", end: "14:10", label: "AS 5108 리뷰", type: "review", note: "★" },
               { start: "14:20", end: "14:40", label: "RMI 리뷰", type: "review" },
               { start: "14:50", end: "15:05", label: "행정", type: "admin" },
-              { start: "16:00", end: "17:00", label: "운동", type: "exercise" },
-              { start: "20:35", end: "21:05", label: "HCM 리뷰", type: "review" },
+              { start: "17:00", end: "18:00", label: "운동", type: "exercise" },
+              { start: "18:15", end: "19:00", label: "저녁", type: "meal" },
+              { start: "20:00", end: "21:30", label: "숙제 / UEC", type: "study" },
+              { start: "22:30", end: "23:45", label: "숙제 / UEC 추가", type: "study" },
               { start: "01:00", end: "—", label: "취침", type: "rest" }
             ],
             4: [
@@ -383,8 +385,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         }
       ],
       ruleOfThumb: [
-        "Fall 수업표(5108 월수 9:30 임시 · 5104 화목 9:30 · RMI 월수 11:00–12:15 · HCM 수 18:00) 고정. 5108 시간은 등록표 확인. 점심 12:15–13:30 → 리뷰. · FM은 12월 독학.",
-        "주간 1200분 · P 저녁 2블록(22:30–23:45) · 수 HCM 후 1블록 · 일 클리닉 2h · 1시 취침.",
+        "Fall 수업표(5108 월수 9:30 임시 · 5104 화목 9:30 · RMI 월수 11:00–12:15 · HCM 드랍) 고정. 5108 시간은 등록표 확인. 점심 12:15–13:30 → 리뷰. · FM은 12월 독학.",
+        "주간 1200분 · P 저녁 2블록(월–목·일·토) · 금 1블록 · 일 클리닉 2h · 1시 취침.",
         "토: 롱셋 오전+저녁 P 2블록. 화·목 11:00 P 1h. 금: 20:00–21:00 OFF → 21:15 P 1블록. TIA only · 9/21까지 P ~110h.",
       ]
     };
@@ -402,7 +404,6 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"as-5108", text:"AS 5108 Actuarial Analytics → SRM UEC (1/2)", meta:"Fall 2026 · 5118과 함께 SRM · B- 이상", highlight:true },
         { id:"as-5104", text:"AS 5104 Short-Term Modeling", meta:"화목 09:30 · FAM UEC 일부", highlight:true },
         { id:"rmi-5104", text:"RMI 5104 Property & Liability", meta:"Selective · 월수 11:00 온라인", highlight:true },
-        { id:"hcm-5101", text:"HCM 5101 Health Systems", meta:"Elective 1/2 · 수 18:00 온라인", highlight:true },
         { id:"ba-5687", text:"BA 5687 Professional Dev", meta:"0 cr · 토 3회 (10/3·10/24·11/7)" },
         { id:"exam-p", text:"Exam P 응시 (목표 9/21)", meta:"window 9/10–21 · 등록 8/12", highlight:true },
         { id:"exam-fm", text:"Exam FM 독학 · 12월 응시", meta:"window 12/3–14 · 등록 마감 11/4 10AM CT · 5101 미수강", highlight:true },
@@ -441,6 +442,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"sem3", name:"3학기 (Fall Y2)", period:"2027년 8/24 ~ 12/15", start:"2027-08-24", end:"2027-12-15", tasks:[
         { id:"as-5114", text:"AS 5114 → ASTAM UEC", meta:"Selective 3 · Fall 2027", highlight:true },
         { id:"exam-pa", text:"Exam PA 응시 (10/12–15)", meta:"등록 마감 9/14 11:59 PM · 성적 ~11월 말", highlight:true },
+        { id:"hcm-5101", text:"Elective 1 (HCM 5101 또는 대안)", meta:"Fall 드랍분 · 이후 수강 · Advisor 확인", highlight:true },
         { id:"elective-2", text:"Elective 2 (추가 1과목)", meta:"Elective 2/2 · Fall 2027" },
         { id:"elec-waiver", text:"추가 3cr (5101 FM 면제 대체)", meta:"30cr · Advisor 확인", highlight:true },
         { id:"fap-final", text:"FAP 최종 평가", meta:"모듈 완료 후", highlight:true },
@@ -876,7 +878,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         {
           id: "res-health-disability",
           title: "Health actuarial + disability / chronic conditions (access & benefit design)",
-          fit: "Health · Kaiser / Blues / Cigna · HCM 5101 overlap",
+          fit: "Health · Kaiser / Blues / Cigna",
           paperPotential: "Medium · stronger with claims or MEPS/Medicare disability cohorts",
           question: "How do plan design and risk adjustment treat members with disabilities or high chronic burden — and what are the equity tradeoffs in premiums, cost-sharing, or network access?",
           whyYou: "Health path + fairness; can connect to disability status / functional limitation measures in survey data.",
