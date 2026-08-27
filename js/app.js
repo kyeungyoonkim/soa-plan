@@ -1169,6 +1169,8 @@ let state;
     const POMO_DAILY_GOAL = 4;
     const POMO_WIN_MSGS = ["하나 끝! 🎯", "굿! 또 해냈어", "집중력 레벨업 ✓", "완료! momentum ↑", "잘했어 — 이 속도 유지"];
     const POMO_BASE_TITLE = document.title || "My ASA Plan";
+    const POMO_TITLE_BLINK_TIMES = 3;
+    const POMO_TITLE_BLINK_MS = 550;
     let pomoTitleBlinkInterval = null;
     let pomoTitleRunInterval = null;
 
@@ -1215,10 +1217,21 @@ let state;
       pomoTitleRunInterval = setInterval(tick, 1000);
     }
 
-    function startPomoTitleBlink(msg) {
+    function startPomoTitleBlink(msg, times = POMO_TITLE_BLINK_TIMES) {
       stopPomoTitleRun();
       stopPomoTitleBlink();
+      let step = 0;
+      const maxSteps = times * 2;
       document.title = msg;
+      pomoTitleBlinkInterval = setInterval(() => {
+        step += 1;
+        if (step >= maxSteps) {
+          stopPomoTitleBlink();
+          document.title = POMO_BASE_TITLE;
+          return;
+        }
+        document.title = step % 2 === 1 ? POMO_BASE_TITLE : msg;
+      }, POMO_TITLE_BLINK_MS);
     }
 
     function ensurePomodoro() {
