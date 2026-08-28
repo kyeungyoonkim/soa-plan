@@ -771,6 +771,7 @@ let state;
     function switchTab(name) {
       document.querySelectorAll(".nav button").forEach(b => b.classList.toggle("active", b.dataset.tab === name));
       document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === "panel-" + name));
+      if (name === "focus" && pomoAwaitingAck) acknowledgePomoEnd();
     }
     window.switchTab = switchTab;
 
@@ -1165,12 +1166,12 @@ let state;
     let pomoPhaseTotalSec = 0;
     let pomoMode = "work";
     let pomoRunning = false;
+    let pomoAwaitingAck = false;
+    let pomoEndedAsBreak = false;
     const POMO_RING_CIRC = 2 * Math.PI * 54;
     const POMO_DAILY_GOAL = 4;
     const POMO_WIN_MSGS = ["하나 끝! 🎯", "굿! 또 해냈어", "집중력 레벨업 ✓", "완료! momentum ↑", "잘했어 — 이 속도 유지"];
     const POMO_BASE_TITLE = document.title || "My ASA Plan";
-    const POMO_TITLE_BLINK_TIMES = 3;
-    const POMO_TITLE_BLINK_MS = 550;
     let pomoTitleBlinkInterval = null;
     let pomoTitleRunInterval = null;
 
@@ -1217,21 +1218,30 @@ let state;
       pomoTitleRunInterval = setInterval(tick, 1000);
     }
 
-    function startPomoTitleBlink(msg, times = POMO_TITLE_BLINK_TIMES) {
+    function acknowledgePomoEnd() {
+      if (!pomoAwaitingAck) return;
+      pomoAwaitingAck = false;
+      stopPomoTitleBlink();
+      document.title = POMO_BASE_TITLE;
+      const hero = document.getElementById("pomoHero");
+      if (hero) hero.classList.remove("awaiting-ack");
+      setPomoUi(pomoRemainingSec);
+    }
+
+    function startPomoTitleBlink(msg) {
       stopPomoTitleRun();
       stopPomoTitleBlink();
-      let step = 0;
-      const maxSteps = times * 2;
-      document.title = msg;
-      pomoTitleBlinkInterval = setInterval(() => {
-        step += 1;
-        if (step >= maxSteps) {
-          stopPomoTitleBlink();
-          document.title = POMO_BASE_TITLE;
-          return;
-        }
-        document.title = step % 2 === 1 ? POMO_BASE_TITLE : msg;
-      }, POMO_TITLE_BLINK_MS);
+      pomoAwaitingAck = true;
+      let on = true;
+      const tick = () => {
+        document.title = on ? msg : POMO_BASE_TITLE;
+        on = !on;
+      };
+      tick();
+      pomoTitleBlinkInterval = setInterval(tick, 800);
+      const hero = document.getElementById("pomoHero");
+      if (hero) hero.classList.add("awaiting-ack");
+      setPomoUi(pomoRemainingSec);
     }
 
     function ensurePomodoro() {
@@ -1458,7 +1468,14 @@ let state;
       const total = pomoPhaseTotalSec || getPomoPhaseTotalSec();
       const pct = total ? Math.round((1 - left / total) * 100) : 0;
       document.getElementById("pomoDisplay").textContent = formatPomo(left);
-      document.getElementById("pomoModeLabel").textContent = pomoMode === "work" ? "집중" : "휴식";
+      const modeLabel = document.getElementById("pomoModeLabel");
+      if (modeLabel) {
+        if (pomoAwaitingAck) {
+          modeLabel.textContent = pomoEndedAsBreak ? "휴식 끝 · 탭 터치" : "집중 완료 · 탭 터치";
+        } else {
+          modeLabel.textContent = pomoMode === "work" ? "집중" : "휴식";
+        }
+      }
       document.getElementById("btnPomoStart").hidden = pomoRunning;
       document.getElementById("btnPomoPause").hidden = !pomoRunning;
       const ring = document.getElementById("pomoRingFg");
@@ -1472,21 +1489,24 @@ let state;
       if (hero) {
         hero.classList.toggle("running", pomoRunning);
         hero.classList.toggle("break-mode", pomoMode === "break");
+        hero.classList.toggle("awaiting-ack", pomoAwaitingAck);
       }
       const startBtn = document.getElementById("btnPomoStart");
-      if (startBtn) startBtn.textContent = pomoRunning ? "진행 중…" : "▶ 시작";
-      syncPomoTitle(left);
+      if (startBtn) startBtn.textContent = pomoRunning ? "진행 중…" : (pomoAwaitingAck ? "▶ 탭해서 확인" : "▶ 시작");
+      if (!pomoAwaitingAck) syncPomoTitle(left);
     }
 
     function advancePomoPhase() {
       if (pomoMode === "work") {
         const count = completePomoWork();
+        pomoEndedAsBreak = false;
         pomoMode = "break";
         pomoPhaseTotalSec = (state.pomodoro.breakMin || 5) * 60;
         pomoRemainingSec = pomoPhaseTotalSec;
         toast(POMO_WIN_MSGS[(count - 1) % POMO_WIN_MSGS.length] + ` · 오늘 ${count}회`);
         startPomoTitleBlink("✓ 집중 완료! 휴식 시작");
       } else {
+        pomoEndedAsBreak = true;
         pomoMode = "work";
         pomoPhaseTotalSec = (state.pomodoro.workMin || 25) * 60;
         pomoRemainingSec = pomoPhaseTotalSec;
@@ -1511,6 +1531,8 @@ let state;
 
     function resetPomoDisplay() {
       ensurePomodoro();
+      pomoAwaitingAck = false;
+      pomoEndedAsBreak = false;
       stopAllPomoTitles();
       pomoPhaseTotalSec = (state.pomodoro.workMin || 25) * 60;
       pomoRemainingSec = pomoPhaseTotalSec;
@@ -1589,6 +1611,10 @@ let state;
       bindFocusTools.done = true;
 
       document.getElementById("btnPomoStart").onclick = () => {
+        if (pomoAwaitingAck) {
+          acknowledgePomoEnd();
+          return;
+        }
         ensurePomodoro();
         if (!pomoRunning) {
           stopAllPomoTitles();
@@ -1638,8 +1664,18 @@ let state;
         };
       });
 
+      document.getElementById("pomoHero")?.addEventListener("click", e => {
+        if (!pomoAwaitingAck) return;
+        if (e.target.closest("button, input, summary, details, a, label")) return;
+        acknowledgePomoEnd();
+      });
+
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
+          if (pomoAwaitingAck) {
+            acknowledgePomoEnd();
+            return;
+          }
           stopPomoTitleBlink();
           if (pomoRunning) {
             updatePomoFromClock();
@@ -1652,6 +1688,10 @@ let state;
         }
       });
       window.addEventListener("focus", () => {
+        if (pomoAwaitingAck) {
+          acknowledgePomoEnd();
+          return;
+        }
         if (!pomoRunning) {
           stopPomoTitleBlink();
           document.title = POMO_BASE_TITLE;

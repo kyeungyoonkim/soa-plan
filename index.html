@@ -234,6 +234,22 @@
     }
     .pomo-hero.running { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-dim), 0 4px 16px rgba(77,138,101,0.12); }
     .pomo-hero.running.break-mode { border-color: var(--accent2); box-shadow: 0 0 0 2px var(--accent2-dim), 0 4px 16px rgba(160,125,46,0.1); }
+    .pomo-hero.awaiting-ack { cursor: pointer; }
+    .pomo-hero.awaiting-ack .pomo-time { animation: pomo-text-blink 0.85s ease-in-out infinite; }
+    @keyframes pomo-text-blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.98); }
+    }
+    @keyframes pomo-hero-blink-work {
+      0%, 100% { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim), 0 4px 20px rgba(77,138,101,0.22); }
+      50% { border-color: var(--accent2); box-shadow: 0 0 0 8px rgba(160,125,46,0.18), 0 4px 24px rgba(160,125,46,0.14); }
+    }
+    @keyframes pomo-hero-blink-break {
+      0%, 100% { border-color: var(--accent2); box-shadow: 0 0 0 3px var(--accent2-dim), 0 4px 20px rgba(160,125,46,0.18); }
+      50% { border-color: var(--accent); box-shadow: 0 0 0 8px var(--accent-dim), 0 4px 24px rgba(77,138,101,0.16); }
+    }
+    .pomo-hero.awaiting-ack:not(.break-mode) { animation: pomo-hero-blink-work 0.85s ease-in-out infinite; }
+    .pomo-hero.awaiting-ack.break-mode { animation: pomo-hero-blink-break 0.85s ease-in-out infinite; }
     .pomo-hero-top { margin-bottom: 0.45rem; }
     .pomo-ring-wrap { position: relative; width: min(132px, 38vw); margin: 0 auto 0.5rem; aspect-ratio: 1; }
     .pomo-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -920,7 +936,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="js/data.js?v=20260827a"></script>
-  <script defer src="js/app.js?v=20260827a"></script>
+  <script src="js/data.js?v=20260828a"></script>
+  <script defer src="js/app.js?v=20260828a"></script>
 </body>
 </html>
