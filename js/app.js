@@ -1172,14 +1172,46 @@ let state;
     const POMO_DAILY_GOAL = 4;
     const POMO_WIN_MSGS = ["하나 끝! 🎯", "굿! 또 해냈어", "집중력 레벨업 ✓", "완료! momentum ↑", "잘했어 — 이 속도 유지"];
     const POMO_BASE_TITLE = document.title || "My ASA Plan";
+    const POMO_THEME_DEFAULT = "#faf7f2";
+    const POMO_THEME_GREEN = "#4d8a65";
+    const POMO_THEME_GOLD = "#a07d2e";
     let pomoTitleBlinkInterval = null;
     let pomoTitleRunInterval = null;
+    let pomoDefaultFaviconHref = null;
+
+    function getFaviconLink() {
+      let link = document.querySelector('link[rel~="icon"]');
+      if (!link) {
+        link = document.createElement("link");
+        link.rel = "icon";
+        document.head.appendChild(link);
+      }
+      return link;
+    }
+
+    function pomoFaviconDataUri(bg, mark) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="7" fill="${bg}"/><text x="16" y="22" text-anchor="middle" fill="#fff" font-size="15" font-family="system-ui,sans-serif" font-weight="700">${mark}</text></svg>`;
+      return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+    }
+
+    function setPomoThemeColor(color) {
+      const meta = document.getElementById("themeColorMeta") || document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.content = color;
+    }
+
+    function restorePomoTabStyle() {
+      const link = getFaviconLink();
+      if (pomoDefaultFaviconHref) link.href = pomoDefaultFaviconHref;
+      else link.removeAttribute("href");
+      setPomoThemeColor(POMO_THEME_DEFAULT);
+    }
 
     function stopPomoTitleBlink() {
       if (pomoTitleBlinkInterval) {
         clearInterval(pomoTitleBlinkInterval);
         pomoTitleBlinkInterval = null;
       }
+      restorePomoTabStyle();
     }
 
     function stopPomoTitleRun() {
@@ -1228,17 +1260,25 @@ let state;
       setPomoUi(pomoRemainingSec);
     }
 
-    function startPomoTitleBlink(msg) {
+    function startPomoTitleBlink(msg, fromBreak) {
       stopPomoTitleRun();
       stopPomoTitleBlink();
       pomoAwaitingAck = true;
+      const link = getFaviconLink();
+      if (pomoDefaultFaviconHref == null) pomoDefaultFaviconHref = link.getAttribute("href") || "";
+      const favA = pomoFaviconDataUri(fromBreak ? POMO_THEME_GOLD : POMO_THEME_GREEN, fromBreak ? "!" : "✓");
+      const favB = pomoFaviconDataUri(fromBreak ? POMO_THEME_GREEN : POMO_THEME_GOLD, fromBreak ? "✓" : "!");
+      const themeA = fromBreak ? POMO_THEME_GOLD : POMO_THEME_GREEN;
+      const themeB = POMO_THEME_DEFAULT;
       let on = true;
       const tick = () => {
         document.title = on ? msg : POMO_BASE_TITLE;
+        link.href = on ? favA : favB;
+        setPomoThemeColor(on ? themeA : themeB);
         on = !on;
       };
       tick();
-      pomoTitleBlinkInterval = setInterval(tick, 800);
+      pomoTitleBlinkInterval = setInterval(tick, 700);
       const hero = document.getElementById("pomoHero");
       if (hero) hero.classList.add("awaiting-ack");
       setPomoUi(pomoRemainingSec);
@@ -1504,14 +1544,14 @@ let state;
         pomoPhaseTotalSec = (state.pomodoro.breakMin || 5) * 60;
         pomoRemainingSec = pomoPhaseTotalSec;
         toast(POMO_WIN_MSGS[(count - 1) % POMO_WIN_MSGS.length] + ` · 오늘 ${count}회`);
-        startPomoTitleBlink("✓ 집중 완료! 휴식 시작");
+        startPomoTitleBlink("✓ 집중 완료! 휴식 시작", false);
       } else {
         pomoEndedAsBreak = true;
         pomoMode = "work";
         pomoPhaseTotalSec = (state.pomodoro.workMin || 25) * 60;
         pomoRemainingSec = pomoPhaseTotalSec;
         toast("휴식 끝 — 다음 집중 가자!");
-        startPomoTitleBlink("휴식 끝! 다시 집중");
+        startPomoTitleBlink("휴식 끝! 다시 집중", true);
       }
       pomoEndAt = null;
       pomoRunning = false;
