@@ -12,7 +12,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"tc-rmi5051", name:"RMI 5051 Managing Risk", credits:3, group:"Core · 2027 Spring", soa:"—" },
       { id:"tc-sel-2", name:"AS 5118 Advanced Actuarial Analytics", credits:3, group:"Selective (2/3) · 2027 Spring", soa:"SRM UEC (2/2)" },
       { id:"tc-sel-1", name:"AS 5114 Advanced Short-Term Modeling", credits:3, group:"Selective (3/3) · 2027 Fall", soa:"ASTAM UEC" },
-      { id:"tc-hcm5101", name:"HCM 5101 Health Systems (Elective 1)", credits:3, group:"Elective (1/2) · Fall 드랍 · 이후 수강", soa:"Non-Fox elective" },
+      { id:"tc-hcm5101", name:"Elective (3 cr)", credits:3, group:"Elective (1/2) · 이후 수강", soa:"—" },
       { id:"tc-elec-2", name:"Elective (추가 1과목)", credits:3, group:"Elective (2/2) · 3 cr · 2027 Fall", soa:"—" },
       { id:"tc-elec-waiver", name:"추가 3cr (5101 면제 대체)", credits:3, group:"Elective/Selective · 2027 Fall · Advisor 확인", soa:"30cr 맞춤" }
     ];
@@ -410,7 +410,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"proj-health", text:"Health rate memo (SAS) start", meta:"after P (9/22~) · same work as Oct hackathon", highlight:true },
         { id:"sas-hackathon", text:"SAS Student Hackathon", meta:"10/1 시작 · 10/30 마감 · Health rate memo와 동일 작업", highlight:true },
         { id:"proj-life", text:"Life term memo (assumption memo)", meta:"with FM 독학 · after hackathon deadline 10/30", highlight:true },
-        { id:"shi-research", text:"Dr. Shi research track", meta:"disability/equity · Research 탭 · P 이후 미팅", highlight:true },
+        { id:"shi-research", text:"Health policy research track", meta:"disability/equity · Research 탭 · P 이후 미팅", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 바로 지원", meta:"입학 즉시" },
         { id:"vee-stats-check", text:"VEE Math Statistics — Purdue 학점 Temple 면제 확인", meta:"입학 직후!", highlight:true },
         { id:"intern-fall", text:"가을 계리사 인턴 지원", meta:"커리어" }
@@ -442,7 +442,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"sem3", name:"3학기 (Fall Y2)", period:"2027년 8/24 ~ 12/15", start:"2027-08-24", end:"2027-12-15", tasks:[
         { id:"as-5114", text:"AS 5114 → ASTAM UEC", meta:"Selective 3 · Fall 2027", highlight:true },
         { id:"exam-pa", text:"Exam PA 응시 (10/12–15)", meta:"등록 마감 9/14 11:59 PM · 성적 ~11월 말", highlight:true },
-        { id:"hcm-5101", text:"Elective 1 (HCM 5101 또는 대안)", meta:"Fall 드랍분 · 이후 수강 · Advisor 확인", highlight:true },
+        { id:"hcm-5101", text:"Elective (3 cr)", meta:"이후 수강 · Advisor 확인", highlight:true },
         { id:"elective-2", text:"Elective 2 (추가 1과목)", meta:"Elective 2/2 · Fall 2027" },
         { id:"elec-waiver", text:"추가 3cr (5101 FM 면제 대체)", meta:"30cr · Advisor 확인", highlight:true },
         { id:"fap-final", text:"FAP 최종 평가", meta:"모듈 완료 후", highlight:true },
@@ -478,7 +478,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"fap-final", cat:"module", name:"FAP 최종 평가", method:"e-Learning · 모듈 완료 후", when:"Fall Y2", order:15 },
       { id:"atpa", cat:"module", name:"ATPA Assessment", method:"SOA", when:"여름", order:9 },
       { id:"apc", cat:"module", name:"APC", method:"Professionalism · 나머지 요건 전부 후 초대", when:"2028년 1–3월", order:16 },
-      { id:"shi-research", cat:"career", name:"Dr. Shi research track", method:"disability / equity · Life or Health · see Research tab · meet after Exam P", when:"Fall Y1 (after P)", order:20 },
+      { id:"shi-research", cat:"career", name:"Health policy research track", method:"disability / equity · Life or Health · see Research tab · meet after Exam P", when:"Fall Y1 (after P)", order:20 },
       { id:"oncampus-job", cat:"career", name:"온캠퍼스 잡", method:"입학 즉시 지원", when:"1학기", order:21 },
       { id:"intern-fall", cat:"career", name:"가을 인턴 지원", method:"계리사 인턴 채용", when:"1학기", order:22 },
       { id:"intern-confirm", cat:"career", name:"인턴 확정", method:"겨울방학 전", when:"겨울", order:23 },
@@ -834,7 +834,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     // Separate from portfolio: research track (disability · equity · SOA Life/Health)
     const RESEARCH_TRACK = {
-      title: "Research track (separate from portfolio)",
+      title: "Health policy research track (separate from portfolio)",
       intro: "Portfolio = interview artifacts. This tab = possible Dr. Shi / paper-shaped work. Theme: disability, equity, fairer access — still SOA Life/Health (not CAS). Start after Exam P; bring a 1-page question to Shi, not a finished Kaggle notebook.",
       vsPortfolio: [
         "Projects tab = Health rate memo + Life assumption memo (hackathon OK).",
