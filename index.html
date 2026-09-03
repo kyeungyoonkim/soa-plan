@@ -126,6 +126,14 @@
     .phase-block.done::before { background: var(--accent); border-color: var(--accent); opacity: 0.45; }
     .phase-head { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.35rem; }
     .phase-head h3 { font-family: "Instrument Serif", Georgia, serif; font-size: 1.25rem; font-weight: 400; }
+    .phase-hide-btn {
+      margin-left: auto; border: 1px solid var(--border); background: var(--surface);
+      color: var(--muted); font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem;
+      border-radius: 999px; cursor: pointer;
+    }
+    .phase-hide-btn:hover { color: var(--text); border-color: var(--muted); }
+    .phase-block.collapsed .phase-head { margin-bottom: 0; }
+    .phase-block.collapsed .phase-body { display: none; }
     .phase-period { font-size: 0.76rem; color: var(--muted); margin-bottom: 0.5rem; }
     .phase-progress { font-size: 0.72rem; color: var(--accent); margin-bottom: 0.45rem; }
 
@@ -922,7 +930,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="js/data.js?v=20260902c"></script>
-  <script defer src="js/app.js?v=20260902c"></script>
+  <script src="js/data.js?v=20260902d"></script>
+  <script defer src="js/app.js?v=20260902d"></script>
 </body>
 </html>

@@ -34,7 +34,7 @@ let state;
         weeklyTodoWeek: "", weeklyTodoChecked: {},
         budgetSpent:0, pomoLogRange:"week",
         pomodoro:{ workMin:25, breakMin:5, dailyGoal:4, todayCount:0, lastDate:"", topic:"" },
-        careerPipeline:[]
+        careerPipeline:[], timelineCollapsed:{}
       };
     }
 
@@ -481,6 +481,7 @@ let state;
       if (!next.timelineChecked["sas-cert"]) {
         next = { ...next, timelineChecked: { ...next.timelineChecked, "sas-cert": true } };
       }
+      if (!next.timelineCollapsed) next.timelineCollapsed = {};
       return ensureStudyLogIds(next);
     }
 
@@ -1094,6 +1095,16 @@ let state;
       }
     }
 
+    function isTimelineCollapsed(id) {
+      return !!(state.timelineCollapsed && state.timelineCollapsed[id]);
+    }
+
+    function toggleTimelineCollapsed(id) {
+      if (!state.timelineCollapsed) state.timelineCollapsed = {};
+      state.timelineCollapsed[id] = !state.timelineCollapsed[id];
+      saveState(true);
+    }
+
     function renderTimeline() {
       const cur = getCurrentPhase();
       const tlAll = getTimelineProgress(getAllTimelineIds());
@@ -1101,13 +1112,28 @@ let state;
       document.getElementById("timeline").innerHTML = PHASES.map(p => {
         const pp = getTimelineProgress(p.tasks.map(t => t.id));
         const allDone = pp.pct === 100;
-        return `<div class="phase-block ${p.id===cur.id?"current":""}${allDone?" done":""}">
-          <div class="phase-head"><h3>${p.name}</h3>${p.id===cur.id?'<span class="badge badge-now">NOW</span>':""}${allDone?'<span class="badge badge-done">DONE</span>':""}</div>
-          <div class="phase-period">${p.period}</div>
-          <div class="phase-progress">타임라인 ${pp.done}/${pp.total} · ${100-pp.pct}% 남음</div>
-          <ul class="task-list">${p.tasks.map(timelineTaskLi).join("")}</ul></div>`;
+        const collapsed = isTimelineCollapsed(p.id);
+        return `<div class="phase-block ${p.id===cur.id?"current":""}${allDone?" done":""}${collapsed?" collapsed":""}" data-phase="${p.id}">
+          <div class="phase-head">
+            <h3>${p.name}</h3>
+            ${p.id===cur.id?'<span class="badge badge-now">NOW</span>':""}${allDone?'<span class="badge badge-done">DONE</span>':""}
+            <button type="button" class="phase-hide-btn" data-phase-toggle="${p.id}">${collapsed ? "보기" : "숨기기"}</button>
+          </div>
+          <div class="phase-body">
+            <div class="phase-period">${p.period}</div>
+            <div class="phase-progress">타임라인 ${pp.done}/${pp.total} · ${100-pp.pct}% 남음</div>
+            <ul class="task-list">${p.tasks.map(timelineTaskLi).join("")}</ul>
+          </div>
+        </div>`;
       }).join("");
       bindTaskList(document.getElementById("timeline"), "timeline");
+      document.getElementById("timeline").querySelectorAll("[data-phase-toggle]").forEach(btn => {
+        btn.onclick = e => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleTimelineCollapsed(btn.dataset.phaseToggle);
+        };
+      });
     }
 
     function examStatusCell(id) {
