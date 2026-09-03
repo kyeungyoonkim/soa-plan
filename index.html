@@ -714,17 +714,17 @@
         <div class="card">
           <div class="card-title">이번 주 공부 목표</div>
           <div class="stat-num" id="studyGoalPct" style="font-size:1.35rem">0%</div>
-          <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">900</span>분 · 전체</div>
+          <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">20</span>시간 · 전체</div>
           <div class="progress-wrap"><div class="progress-bar" id="studyGoalBar" style="width:0%"></div></div>
-          <input type="number" id="studyGoalInput" min="60" max="3000" value="900" style="margin-top:0.35rem" />
-          <div class="stat-sub">기본 1200분 = 20시간/주 (P+수업+리뷰 합산)</div>
+          <input type="number" id="studyGoalInput" min="1" max="50" step="0.5" value="20" style="margin-top:0.35rem" />
+          <div class="stat-sub">기본 20시간/주 (P+수업+리뷰 합산)</div>
           <div style="margin-top:0.85rem;padding-top:0.75rem;border-top:1px solid var(--border)">
             <div class="card-title" style="font-size:0.82rem;margin-bottom:0.35rem">Exam P 순공 · 이번 주</div>
             <div class="stat-num" id="examPGoalPct" style="font-size:1.15rem">0%</div>
-            <div class="stat-sub"><span id="examPWeekMin">0</span> / <span id="examPGoalMin">1320</span>분 · TIA P만</div>
+            <div class="stat-sub"><span id="examPWeekMin">0</span> / <span id="examPGoalMin">22</span>시간 · TIA P만</div>
             <div class="progress-wrap"><div class="progress-bar" id="examPGoalBar" style="width:0%;background:var(--accent2)"></div></div>
-            <input type="number" id="examPGoalInput" min="60" max="3000" value="1320" style="margin-top:0.35rem" />
-            <div class="stat-sub" style="margin-top:0.35rem">9/21까지 누적 <strong id="examPTotalMin" style="color:var(--accent2)">0</strong> / <span id="examPTotalGoalMin">6600</span>분 (~110h)</div>
+            <input type="number" id="examPGoalInput" min="1" max="50" step="0.5" value="22" style="margin-top:0.35rem" />
+            <div class="stat-sub" style="margin-top:0.35rem">9/21까지 누적 <strong id="examPTotalMin" style="color:var(--accent2)">0</strong> / <span id="examPTotalGoalMin">110</span>시간</div>
           </div>
         </div>
         <div class="card">
@@ -922,7 +922,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="js/data.js?v=20260828c"></script>
-  <script defer src="js/app.js?v=20260828c"></script>
+  <script src="js/data.js?v=20260902a"></script>
+  <script defer src="js/app.js?v=20260902a"></script>
 </body>
 </html>

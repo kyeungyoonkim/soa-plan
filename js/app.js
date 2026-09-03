@@ -2080,16 +2080,29 @@ let state;
       }
     }
 
+    function minutesToHoursLabel(min) {
+      const h = (+min || 0) / 60;
+      if (Math.abs(h - Math.round(h)) < 0.05) return String(Math.round(h));
+      return (Math.round(h * 10) / 10).toFixed(1);
+    }
+
+    function hoursInputToMinutes(value, fallbackMin) {
+      const hours = +value;
+      if (!Number.isFinite(hours) || hours <= 0) return fallbackMin;
+      return Math.max(60, Math.round(hours * 60));
+    }
+
     function renderStudyGoal() {
       const goal = state.weeklyStudyGoal || DEFAULT_WEEKLY_STUDY_GOAL;
       const done = getWeekStudyMinutes();
       const pct = Math.min(100, Math.round(done / goal * 100));
-      document.getElementById("studyGoalMin").textContent = goal;
-      document.getElementById("studyWeekMin").textContent = done;
+      document.getElementById("studyGoalMin").textContent = minutesToHoursLabel(goal);
+      document.getElementById("studyWeekMin").textContent = minutesToHoursLabel(done);
       document.getElementById("studyGoalPct").textContent = pct + "%";
       document.getElementById("studyGoalBar").style.width = pct + "%";
-      if (document.getElementById("studyGoalInput")) {
-        document.getElementById("studyGoalInput").value = goal;
+      const studyGoalInput = document.getElementById("studyGoalInput");
+      if (studyGoalInput && document.activeElement !== studyGoalInput) {
+        studyGoalInput.value = minutesToHoursLabel(goal);
       }
 
       const pGoal = state.weeklyExamPGoal || DEFAULT_WEEKLY_EXAM_P_GOAL;
@@ -2101,15 +2114,16 @@ let state;
       const examPPctEl = document.getElementById("examPGoalPct");
       if (examPPctEl) {
         examPPctEl.textContent = pPct + "%";
-        document.getElementById("examPGoalMin").textContent = pGoal;
-        document.getElementById("examPWeekMin").textContent = pDone;
+        document.getElementById("examPGoalMin").textContent = minutesToHoursLabel(pGoal);
+        document.getElementById("examPWeekMin").textContent = minutesToHoursLabel(pDone);
         document.getElementById("examPGoalBar").style.width = pPct + "%";
-        document.getElementById("examPTotalMin").textContent = pTotalDone;
-        document.getElementById("examPTotalGoalMin").textContent = pTotalGoal;
-        if (document.getElementById("examPGoalInput") && document.activeElement !== document.getElementById("examPGoalInput")) {
-          document.getElementById("examPGoalInput").value = pGoal;
+        document.getElementById("examPTotalMin").textContent = minutesToHoursLabel(pTotalDone);
+        document.getElementById("examPTotalGoalMin").textContent = minutesToHoursLabel(pTotalGoal);
+        const examPGoalInput = document.getElementById("examPGoalInput");
+        if (examPGoalInput && document.activeElement !== examPGoalInput) {
+          examPGoalInput.value = minutesToHoursLabel(pGoal);
         }
-        examPPctEl.title = `9/21까지 ${pTotalPct}% (${Math.round(pTotalDone / 60)}h / ${Math.round(pTotalGoal / 60)}h)`;
+        examPPctEl.title = `9/21까지 ${pTotalPct}% (${minutesToHoursLabel(pTotalDone)}h / ${minutesToHoursLabel(pTotalGoal)}h)`;
       }
       const weekExamPEl = document.getElementById("weekExamPTotal");
       if (weekExamPEl) weekExamPEl.textContent = pDone;
@@ -2321,14 +2335,14 @@ let state;
       bindCareerForm();
 
       document.getElementById("studyGoalInput").addEventListener("change", e => {
-        state.weeklyStudyGoal = Math.max(60, +e.target.value || DEFAULT_WEEKLY_STUDY_GOAL);
+        state.weeklyStudyGoal = hoursInputToMinutes(e.target.value, DEFAULT_WEEKLY_STUDY_GOAL);
         saveState(true);
       });
 
       const examPGoalInput = document.getElementById("examPGoalInput");
       if (examPGoalInput) {
         examPGoalInput.addEventListener("change", e => {
-          state.weeklyExamPGoal = Math.max(60, +e.target.value || DEFAULT_WEEKLY_EXAM_P_GOAL);
+          state.weeklyExamPGoal = hoursInputToMinutes(e.target.value, DEFAULT_WEEKLY_EXAM_P_GOAL);
           saveState(true);
         });
       }
