@@ -1443,9 +1443,9 @@ let state;
       const totalMin = rows.reduce((s, [, v]) => s + v.minutes, 0);
       const totalSes = rows.reduce((s, [, v]) => s + v.sessions, 0);
       el.innerHTML =
-        `<div class="pomo-log-row"><span class="pomo-log-topic">합계</span><span class="pomo-log-meta">${totalSes}회 · ${totalMin}분</span></div>` +
+        `<div class="pomo-log-row"><span class="pomo-log-topic">합계</span><span class="pomo-log-meta">${totalSes}회 · ${minutesToHoursLabel(totalMin)}시간</span></div>` +
         rows.map(([topic, v]) =>
-          `<div class="pomo-log-row"><span class="pomo-log-topic">${escapeHtml(topic)}</span><span class="pomo-log-meta">${v.sessions}회 · ${v.minutes}분</span></div>`
+          `<div class="pomo-log-row"><span class="pomo-log-topic">${escapeHtml(topic)}</span><span class="pomo-log-meta">${v.sessions}회 · ${minutesToHoursLabel(v.minutes)}시간</span></div>`
         ).join("");
     }
 
