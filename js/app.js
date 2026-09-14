@@ -382,8 +382,8 @@ let state;
             <ul class="tip-list" style="margin:0">${(g.vsPortfolio || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
           </div>
           <div class="project-section">
-            <div class="sec-label">${escapeHtml(g.howToPitchShi.title)}</div>
-            <ul class="tip-list" style="margin:0">${(g.howToPitchShi.bullets || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
+            <div class="sec-label">${escapeHtml((g.howToPitchAdvisors || g.howToPitchShi || {}).title || "Advisors")}</div>
+            <ul class="tip-list" style="margin:0">${((g.howToPitchAdvisors || g.howToPitchShi || {}).bullets || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
           </div>
           <div class="project-section">
             <div class="sec-label">Timeline</div>
@@ -394,7 +394,7 @@ let state;
             ${researchStepsHtml("process", g.processSteps)}
           </div>
         </div>
-        <div class="card-title" style="margin:0.4rem 0 0.65rem">Topic shortlist (pick 1 with Shi)</div>
+        <div class="card-title" style="margin:0.4rem 0 0.65rem">Active lab projects</div>
         ${topicsHtml}`;
 
       root.querySelectorAll("input[data-rscope]").forEach(inp => {
@@ -461,11 +461,9 @@ let state;
       }
       const goalVer = next.studyGoalVersion || 0;
       if (goalVer < STUDY_GOAL_VERSION) {
-        const g = next.weeklyStudyGoal;
-        const bumped = (!g || g === 600 || g === 900) ? DEFAULT_WEEKLY_STUDY_GOAL : g;
         next = {
           ...next,
-          weeklyStudyGoal: bumped,
+          weeklyStudyGoal: DEFAULT_WEEKLY_STUDY_GOAL,
           weeklyExamPGoal: next.weeklyExamPGoal || DEFAULT_WEEKLY_EXAM_P_GOAL,
           examPTotalGoal: next.examPTotalGoal || EXAM_P_TOTAL_GOAL,
           studyGoalVersion: STUDY_GOAL_VERSION
@@ -1399,6 +1397,9 @@ let state;
     function getPomoLogsInRange(range) {
       const weekStart = getWeekStart();
       const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
       const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
       const lastWeekStart = new Date(weekStart);
       lastWeekStart.setDate(lastWeekStart.getDate() - 7);
@@ -1406,6 +1407,8 @@ let state;
       return (state.studyLogs || []).filter(l => {
         if (!(l.topic || "").includes("Pomodoro")) return false;
         const d = new Date(l.date + "T00:00:00");
+        if (range === "today") return d.getTime() === today.getTime();
+        if (range === "yesterday") return d.getTime() === yesterday.getTime();
         if (range === "last-week") return d >= lastWeekStart && d < weekStart;
         if (range === "last-month") return d >= lastMonthStart && d < monthStart;
         if (range === "month") return d >= monthStart;
@@ -1414,7 +1417,7 @@ let state;
     }
 
     function normalizePomoLogRange(range) {
-      const allowed = ["last-week", "last-month", "week", "month"];
+      const allowed = ["today", "yesterday", "last-week", "last-month", "week", "month"];
       return allowed.includes(range) ? range : "week";
     }
 

@@ -675,7 +675,7 @@
           </div>
         </div>
         <div class="pomo-bar-wrap"><div class="pomo-bar-fill" id="pomoProgressBar"></div></div>
-        <input type="text" id="pomoTopic" class="pomo-topic" placeholder="지금 할 일 (예: TIA P · ch3)" />
+        <input type="text" id="pomoTopic" class="pomo-topic" placeholder="지금 할 일" />
         <div class="pomo-actions">
           <button type="button" class="btn-pomo-go" id="btnPomoStart">▶ 시작</button>
           <button type="button" class="btn-action" id="btnPomoPause" hidden>일시정지</button>
@@ -703,6 +703,8 @@
         </div>
         <div class="pomo-cal-label" style="margin-top:0.55rem">공부 기록</div>
         <div class="filter-row" style="justify-content:center;margin-bottom:0.35rem;flex-wrap:wrap">
+          <button type="button" class="filter-btn" id="pomoLogTodayBtn" data-pomo-log="today">오늘</button>
+          <button type="button" class="filter-btn" id="pomoLogYesterdayBtn" data-pomo-log="yesterday">어제</button>
           <button type="button" class="filter-btn" id="pomoLogLastWeekBtn" data-pomo-log="last-week">지난 주</button>
           <button type="button" class="filter-btn" id="pomoLogLastMonthBtn" data-pomo-log="last-month">지난 달</button>
           <button type="button" class="filter-btn active" id="pomoLogWeekBtn" data-pomo-log="week">이번 주</button>
@@ -722,10 +724,10 @@
         <div class="card">
           <div class="card-title">이번 주 공부 목표</div>
           <div class="stat-num" id="studyGoalPct" style="font-size:1.35rem">0%</div>
-          <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">20</span>시간 · 전체</div>
+          <div class="stat-sub"><span id="studyWeekMin">0</span> / <span id="studyGoalMin">30</span>시간 · 전체</div>
           <div class="progress-wrap"><div class="progress-bar" id="studyGoalBar" style="width:0%"></div></div>
-          <input type="number" id="studyGoalInput" min="1" max="50" step="0.5" value="20" style="margin-top:0.35rem" />
-          <div class="stat-sub">기본 20시간/주 (P+수업+리뷰 합산)</div>
+          <input type="number" id="studyGoalInput" min="1" max="50" step="0.5" value="30" style="margin-top:0.35rem" />
+          <div class="stat-sub">기본 30시간/주</div>
           <div style="margin-top:0.85rem;padding-top:0.75rem;border-top:1px solid var(--border)">
             <div class="card-title" style="font-size:0.82rem;margin-bottom:0.35rem">Exam P 순공 · 이번 주</div>
             <div class="stat-num" id="examPGoalPct" style="font-size:1.15rem">0%</div>
@@ -738,7 +740,7 @@
         <div class="card">
           <div class="card-title">오늘 공부 기록</div>
           <input type="number" id="studyMin" placeholder="공부 시간 (분)" min="0" max="600" />
-          <input type="text" id="studyTopic" placeholder="내용 (예: TIA P · multivariate)" />
+          <input type="text" id="studyTopic" placeholder="내용" />
           <label style="font-size:0.75rem;display:flex;align-items:center;gap:0.35rem;margin-top:0.25rem;color:var(--muted)">
             <input type="checkbox" id="studyExamP" checked /> Exam P 순공으로 기록
           </label>
@@ -765,7 +767,7 @@
     <section class="panel" id="panel-research">
       <div class="card" style="margin-bottom:0.9rem">
         <div class="card-title">Health policy research track</div>
-        <p class="stat-sub" style="margin:0;line-height:1.5">Separate from <strong>Projects</strong> (portfolio / hackathon). Theme: <strong>disability · equity · fairer access</strong> in SOA Life/Health. Goal: Dr. Shi conversation → lit review → possible RA / working paper — not “publish the Kaggle GLM.”</p>
+        <p class="stat-sub" style="margin:0;line-height:1.5">Dr. <strong>Mullachery</strong> + Dr. <strong>Hollin</strong> lab projects. Target: <strong>PhD in Health Policy or Health Economics / Health Services</strong> (JHU 1순위). Separate from Portfolio projects.</p>
         <div class="stat-sub" style="margin-top:0.45rem">Process progress <strong id="researchProgressLabel" style="color:var(--accent2)">0%</strong></div>
         <div class="progress-wrap" style="margin-top:0.35rem"><div class="progress-bar" id="researchProgressBar" style="width:0%"></div></div>
       </div>
@@ -930,7 +932,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="js/data.js?v=20260904a"></script>
-  <script defer src="js/app.js?v=20260904a"></script>
+  <script src="js/data.js?v=20260914b"></script>
+  <script defer src="js/app.js?v=20260914b"></script>
 </body>
 </html>

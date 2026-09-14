@@ -32,19 +32,19 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     const CIRC = 2 * Math.PI * 30;
     const JOURNEY_START = "2026-01-01";
     const JOURNEY_END = "2028-03-01";
-    const DEFAULT_WEEKLY_STUDY_GOAL = 1200; // 20h/week · P 시즌
+    const DEFAULT_WEEKLY_STUDY_GOAL = 1800; // 30h/week
     const DEFAULT_WEEKLY_EXAM_P_GOAL = 1320; // ~22h/week · Exam P 블록 기준
     const EXAM_P_TOTAL_GOAL = 6600; // 110h · 9/21까지
     const EXAM_P_TRACK_FROM = "2026-08-24";
     const EXAM_P_TRACK_UNTIL = "2026-09-21";
-    const STUDY_GOAL_VERSION = 3;
+    const STUDY_GOAL_VERSION = 4;
 
     // Fixed weekly todos · shown on 시간표/캘린더 · checkbox resets each Monday
     const WEEKLY_FIXED_TODOS = {
       title: "매주 고정 할 일",
-      goalNote: "주간 공부 목표 1200분(20h). Exam P(9/21) · TIA only · ~110h 스프린트 · 저녁 P 2블록(1시 취침).",
+      goalNote: "주간 공부 목표 30h. Exam P(9/21) · TIA only · 저녁 P 블록(1시 취침).",
       items: [
-        { id: "minutes", text: "주간 공부 분 채우기 (공부모드 · 기본 1200분+ · P+수업 합산)", always: true },
+        { id: "minutes", text: "주간 공부 시간 채우기 (공부모드 · 기본 30h)", always: true },
         { id: "class-daily", text: "수업 있는 날: 과목별 당일 리뷰 (5108·5104 ★ 40분+ / RMI 20분)", from: "2026-08-24" },
         { id: "p-practice", text: "TIA P: 문제·퀴즈 블록 6회+ (~12–15h/주 · 영상보다 문제 우선)", until: "2026-09-21" },
         { id: "p-wrongs", text: "TIA P: 오답 노트 복습 30분 이상", until: "2026-09-21" },
@@ -62,7 +62,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
     // Things that need a real calendar time block (not “when I feel like it”)
     const TIME_BLOCK_GUIDE = {
       title: "캘린더에 막아둘 시간 블록 (매일 / 매주)",
-      intro: "Fall 2026 (8/24 개강) · 주 1200분 목표 · 취침 0–1시~7–8시. 블록 사이 10–15분 텀. ① 점심(12:15–13:30) ② 리뷰 ③ Exam P(저녁 2블록) ④ 숙제/운동.",
+      intro: "Fall 2026 (8/24 개강) · 주 30시간 목표 · 취침 0–1시~7–8시. 블록 사이 10–15분 텀. ① 점심(12:15–13:30) ② 리뷰 ③ Exam P(저녁 2블록) ④ 숙제/운동.",
       daily: [
         {
           name: "수업 당일 리뷰 (학교)",
@@ -386,7 +386,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       ],
       ruleOfThumb: [
         "Fall 수업표(5108 월수 9:30 임시 · 5104 화목 9:30 · RMI 월수 11:00–12:15 · HCM 드랍) 고정. 5108 시간은 등록표 확인. 점심 12:15–13:30 → 리뷰. · FM은 12월 독학.",
-        "주간 1200분 · P 저녁 2블록(월–목·일·토) · 금 1블록 · 일 클리닉 2h · 1시 취침.",
+        "주간 30시간 · P 저녁 2블록(월–목·일·토) · 금 1블록 · 일 클리닉 2h · 1시 취침.",
         "토: 롱셋 오전+저녁 P 2블록. 화·목 11:00 P 1h. 금: 20:00–21:00 OFF → 21:15 P 1블록. TIA only · 9/21까지 P ~110h.",
       ]
     };
@@ -410,7 +410,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         { id:"proj-health", text:"Health rate memo (SAS) start", meta:"after P (9/22~) · same work as Oct hackathon", highlight:true },
         { id:"sas-hackathon", text:"SAS Student Hackathon", meta:"10/1 시작 · 10/30 마감 · Health rate memo와 동일 작업", highlight:true },
         { id:"proj-life", text:"Life term memo (assumption memo)", meta:"with FM 독학 · after hackathon deadline 10/30", highlight:true },
-        { id:"shi-research", text:"Health policy research track", meta:"disability/equity · Research 탭 · P 이후 미팅", highlight:true },
+        { id:"shi-research", text:"Health policy research track", meta:"Mullachery · Hollin · Research 탭 · PhD 타깃", highlight:true },
         { id:"oncampus-job", text:"온캠퍼스 잡 바로 지원", meta:"입학 즉시" },
         { id:"vee-stats-check", text:"VEE Math Statistics — Purdue 학점 Temple 면제 확인", meta:"입학 직후!", highlight:true },
         { id:"intern-fall", text:"가을 계리사 인턴 지원", meta:"커리어" }
@@ -478,7 +478,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       { id:"fap-final", cat:"module", name:"FAP 최종 평가", method:"e-Learning · 모듈 완료 후", when:"Fall Y2", order:15 },
       { id:"atpa", cat:"module", name:"ATPA Assessment", method:"SOA", when:"여름", order:9 },
       { id:"apc", cat:"module", name:"APC", method:"Professionalism · 나머지 요건 전부 후 초대", when:"2028년 1–3월", order:16 },
-      { id:"shi-research", cat:"career", name:"Health policy research track", method:"disability / equity · Life or Health · see Research tab · meet after Exam P", when:"Fall Y1 (after P)", order:20 },
+      { id:"shi-research", cat:"career", name:"Health policy research track", method:"Dr. Mullachery · Dr. Hollin · PhD Health Policy / Health Econ·Services 타깃", when:"Fall Y1+", order:20 },
       { id:"oncampus-job", cat:"career", name:"온캠퍼스 잡", method:"입학 즉시 지원", when:"1학기", order:21 },
       { id:"intern-fall", cat:"career", name:"가을 인턴 지원", method:"계리사 인턴 채용", when:"1학기", order:22 },
       { id:"intern-confirm", cat:"career", name:"인턴 확정", method:"겨울방학 전", when:"겨울", order:23 },
@@ -689,6 +689,8 @@ const STORAGE_KEY = "soa-asa-plan-v6";
 
     const CONTACTS = [
       { role:"Actuarial Academic Director", name:"Dr. Tianxiang Shi", email:"tshi@temple.edu" },
+      { role:"Health Policy Research · Mullachery", name:"Dr. Pricila Mullachery", email:"pricila.mullachery@temple.edu", note:"HSAP · disparities · policy · causal inference" },
+      { role:"Health Policy Research · Hollin", name:"Dr. Ilene Hollin", email:"ilene.hollin@temple.edu", note:"HSAP · health econ · outcomes · JHU PhD" },
       { role:"Fox MS Programs", email:"FoxMS@temple.edu", note:"Path·VEE·UEC 문의" },
       { role:"My SOA", url:"https://engage.soa.org/login", note:"transcript·VEE·모듈·시험 등록" },
       { role:"Temple ISSS", url:"https://educationabroad.temple.edu/isss", note:"CPT·OPT·SSN" },
@@ -832,154 +834,94 @@ const STORAGE_KEY = "soa-asa-plan-v6";
       }
     ];
 
-    // Separate from portfolio: research track (disability · equity · SOA Life/Health)
+    // Health policy research · Mullachery + Hollin · PhD target
     const RESEARCH_TRACK = {
-      title: "Health policy research track (separate from portfolio)",
-      intro: "Portfolio = interview artifacts. This tab = possible Dr. Shi / paper-shaped work. Theme: disability, equity, fairer access — still SOA Life/Health (not CAS). Start after Exam P; bring a 1-page question to Shi, not a finished Kaggle notebook.",
+      title: "Health policy research track",
+      intro: "Active projects with Dr. Pricila Mullachery and Dr. Ilene Hollin (Temple CPH · Health Services Administration & Policy). Target: PhD in Health Policy or Health Economics / Health Services. Portfolio (Projects tab) stays separate — this tab is RA work + PhD signal.",
       vsPortfolio: [
-        "Projects tab = Health rate memo + Life assumption memo (hackathon OK).",
-        "Research tab = literature + real question + better data → possible RA / working paper.",
-        "Do not ask Shi to ‘turn the Kaggle GLM into a paper.’ Ask which equity/disability question is researchable with his lab."
+        "Projects tab = interview artifacts (Health rate memo · Life assumption memo).",
+        "Research tab = Mullachery + Hollin project work → letters, methods, paper-shaped deliverables.",
+        "PhD packet cares about research fit + letter writers from these labs — not Kaggle polish."
       ],
-      howToPitchShi: {
-        title: "How to ask Dr. Shi",
+      howToPitchAdvisors: {
+        title: "Working with advisors",
         bullets: [
-          "Timing: after Exam P (late Sep) · 20–30 min · bring 1-pager.",
-          "Say: interested in disability / equity in Life or Health actuarial work; want a research question, not portfolio polish.",
-          "Show: short list of 2–3 topics below · ask which fits his agenda / available data.",
-          "Offer: lit review + SAS/R coding help · F-1 / CPT later if RA exists.",
-          "Avoid: ‘I already have a paper idea on Kaggle medical cost.’"
+          "Dr. Mullachery — health disparities, policy effects, causal inference, disadvantaged populations.",
+          "Dr. Hollin — health economics & policy, outcomes research, value (JHU Health Econ PhD).",
+          "Deliverables: clear question · lit notes · clean code/tables · weekly updates · ask before expanding scope.",
+          "PhD angle: treat each project as a writing/letter sample for Health Policy / Health Econ / HSR (JHU top target)."
         ]
       },
       topics: [
         {
-          id: "res-di-equity",
-          title: "Disability insurance (DI / LTD): fairness, access, claim outcomes",
-          fit: "Life · group benefits · Pacific Life / Milliman / carrier DI teams",
-          paperPotential: "Medium–high if you get claim or public DI-related data + a sharp question",
-          question: "How do underwriting rules, occupation class, or benefit design affect access and claim duration for people with disabilities — and where does ‘risk’ vs unfair exclusion show up?",
-          whyYou: "Directly matches disability + equity interest; still classic actuarial (incidence, termination, RTW).",
+          id: "res-mullachery",
+          title: "Dr. Pricila Mullachery — health policy & disparities",
+          fit: "PhD Health Policy / Health Services · equity · causal policy evaluation",
+          paperPotential: "High for PhD apps if you own a clean empirical slice + write-up",
+          question: "How do laws/policies change health outcomes or access for disadvantaged groups — and through which mechanisms do they reduce or widen disparities?",
+          whyYou: "Matches Health Policy PhD target · quantitative policy evaluation language programs want.",
           approach: [
-            "Lit: SOA DI / group LTD papers · NAIC disability tables · RTW literature.",
-            "Methods: survival / multi-state (healthy–disabled–recovered) or GLM on incidence/duration.",
-            "Equity angle: which rating factors are predictive vs exclusionary; transparency of assumptions.",
-            "Data path: public summaries first; ask Shi / Temple about proprietary or partnership data."
+            "Follow Mullachery’s agenda: policy effects · disparities · causal inference.",
+            "Methods: difference-in-differences, event study, matching/weighting, careful confounders.",
+            "Outputs: replication or extension table · short memo · lab presentation slides.",
+            "Keep SAS/R skills as a plus — frame for policy/HSR audience."
           ],
           firstSteps: [
-            { id: "lit1", text: "Read 2–3 SOA DI/LTD overview papers · 10 bullet notes" },
-            { id: "q1", text: "Write 5 candidate research questions · pick top 2 with Shi" },
-            { id: "data1", text: "List feasible data (public vs need-intro) · one page" }
+            { id: "m1", text: "Confirm Mullachery project scope · deliverable · deadline" },
+            { id: "m2", text: "1-page lit notes on the policy + disparity outcome" },
+            { id: "m3", text: "Data dictionary / analysis plan · advisor OK before big coding" },
+            { id: "m4", text: "Draft results table + ½-page interpretation for lab meeting" }
           ],
           refs: [
-            { text: "SOA research (search disability / LTD)", url: "https://www.soa.org/" },
-            { text: "SOA PD Edge", url: "https://www.soa.org/prof-dev/pd-edge/" }
+            { text: "Dr. Mullachery · Temple CPH", url: "https://cph.temple.edu/directory/pricila-h-mullachery-tuq74333" },
+            { text: "Google Scholar · Mullachery", url: "https://scholar.google.com/citations?user=Vo2zPI0AAAAJ&hl=en" }
           ]
         },
         {
-          id: "res-health-disability",
-          title: "Health actuarial + disability / chronic conditions (access & benefit design)",
-          fit: "Health · Kaiser / Blues / Cigna",
-          paperPotential: "Medium · stronger with claims or MEPS/Medicare disability cohorts",
-          question: "How do plan design and risk adjustment treat members with disabilities or high chronic burden — and what are the equity tradeoffs in premiums, cost-sharing, or network access?",
-          whyYou: "Health path + fairness; can connect to disability status / functional limitation measures in survey data.",
+          id: "res-hollin",
+          title: "Dr. Ilene Hollin — health economics & outcomes",
+          fit: "PhD Health Economics / Health Services · outcomes · value",
+          paperPotential: "High · health econ framing travels well to JHU and peer programs",
+          question: "How should we measure value, outcomes, or economic tradeoffs in care/treatments — and what does that imply for patients, payers, or policy?",
+          whyYou: "Hollin’s JHU Health Econ path is a direct template for Plan B PhD target.",
           approach: [
-            "Start with public survey data (e.g. MEPS, BRFSS, ACS disability questions) — not Kaggle toy.",
-            "Focus: utilization, OOP, unmet need, or risk-score residuals by disability marker.",
-            "Actuarial hook: risk adjustment fairness, benefit design, high-cost prediction with fairness constraints.",
-            "Write as Health equity + pricing/risk memo that can grow into empirical paper."
+            "Follow Hollin’s project: health econ methods, outcomes research, decision-maker evidence.",
+            "Methods: cost/utilization outcomes, value frameworks, rigorous observational analysis.",
+            "Write like an HSR/econ paper: estimand · identification · limitations.",
+            "Ask early how this can become a conference abstract or coauthored note."
           ],
           firstSteps: [
-            { id: "data2", text: "Pick one public dataset (MEPS or similar) · document disability variables" },
-            { id: "eda2", text: "Descriptive equity gaps table (utilization / OOP / access) — no fancy ML yet" },
-            { id: "shi2", text: "Ask Shi if Health equity + actuarial framing fits his supervision" }
+            { id: "h1", text: "Confirm Hollin project scope · your role · meeting cadence" },
+            { id: "h2", text: "Skim 2–3 assigned papers · 10 bullet methods notes" },
+            { id: "h3", text: "Reproduce baseline descriptive / main table · document code" },
+            { id: "h4", text: "Ask about letter / PhD recommendation timeline (Fall Y2 apps)" }
           ],
           refs: [
-            { text: "MEPS (AHRQ)", url: "https://meps.ahrq.gov/mepsweb/" },
-            { text: "CDC disability & health", url: "https://www.cdc.gov/ncbddd/disabilityandhealth/index.html" }
-          ]
-        },
-        {
-          id: "res-ltc-aging",
-          title: "Long-term care / aging with disability",
-          fit: "Life · LTC · Health crossover",
-          paperPotential: "Medium · crowded field; need a narrow angle (e.g. underinsurance, informal care, Medicaid spend-down)",
-          question: "Who is left underinsured for LTC needs related to disability, and how do product / public program designs create unequal protection?",
-          whyYou: "Disability across the life course; strong social-impact story for SOA Life/Health.",
-          approach: [
-            "Lit: SOA LTC experience studies · Medicaid LTC · informal caregiving.",
-            "Possible angle: transition probabilities, product take-up by disability/income, or fairness of underwriting.",
-            "Only pursue if Shi has LTC interest or data path."
-          ],
-          firstSteps: [
-            { id: "lit3", text: "Skim 1 SOA LTC study + 1 Medicaid LTC explainer · notes" },
-            { id: "fit3", text: "Ask Shi: LTC in his lab? yes/no gate" }
-          ],
-          refs: [
-            { text: "SOA.org search: long-term care", url: "https://www.soa.org/" }
-          ]
-        },
-        {
-          id: "res-mh-parity",
-          title: "Mental health parity & actuarial costing (equity lens)",
-          fit: "Health · group benefits",
-          paperPotential: "Medium · policy-relevant; data access is the bottleneck",
-          question: "After parity rules, where do residual disparities remain in MH utilization or plan cost — and how should actuaries measure ‘parity’ beyond legal checklists?",
-          whyYou: "Equity / stigma / access; still Health actuarial language (utilization, unit cost, trend).",
-          approach: [
-            "Policy baseline: MHPAEA · then actuarial measurement gaps.",
-            "Empirical only if claims or strong public proxy available.",
-            "Otherwise: structured lit + measurement framework paper with Shi (methods contribution)."
-          ],
-          firstSteps: [
-            { id: "pol4", text: "One-page MHPAEA summary for actuaries" },
-            { id: "gap4", text: "List measurable parity metrics an actuary could track" }
-          ],
-          refs: [
-            { text: "DOL MHPAEA", url: "https://www.dol.gov/agencies/ebsa/laws-and-regulations/laws/mental-health-and-substance-use-disorder-parity" }
-          ]
-        },
-        {
-          id: "res-fair-rating",
-          title: "Fairness in actuarial rating (protected attributes vs risk)",
-          fit: "Cross Life/Health · interview + research",
-          paperPotential: "High interest area · hard to publish without careful ethics + data; good lit-review entry",
-          question: "When is a risk factor actuarially justified vs socially unacceptable for pricing or underwriting — especially for disability-related information?",
-          whyYou: "Ties portfolio language (fairness, causality) to a real research program.",
-          approach: [
-            "Lit: actuarial fairness, anti-discrimination insurance law, proxy discrimination.",
-            "Possible project: simulation / conceptual framework first; empirics later.",
-            "Portfolio Health memo can cite this lit; research goes deeper than the memo."
-          ],
-          firstSteps: [
-            { id: "lit5", text: "Collect 5 papers/notes on insurance fairness & disability" },
-            { id: "map5", text: "Map: rating · underwriting · claims · which stage equity bites" }
-          ],
-          refs: [
-            { text: "SOA Candidate Events / research culture", url: "https://www.soa.org/future-actuaries/candidate-events/" }
+            { text: "Dr. Hollin · Temple CPH", url: "https://cph.temple.edu/directory/ilene-l-hollin-tuk39939" }
           ]
         }
       ],
       timeline: [
-        { when: "Now → 9/21", what: "Exam P only · optional: skim 1 DI or health-equity article" },
-        { when: "9/22 → 10/30", what: "Portfolio Health + SAS hackathon · Research = only Shi 1-pager draft (don’t compete with hackathon)" },
-        { when: "Nov–Dec", what: "Meet Shi · pick 1 topic · start lit review · confirm data path" },
-        { when: "Spring 2027", what: "If matched: RA-style empirics with 5108/PA skills · draft working paper outline" }
+        { when: "Now", what: "Both lab projects active · weekly deliverables · protect exam/class blocks" },
+        { when: "Fall–Spring", what: "Own one empirical slice each · meeting notes · written feedback" },
+        { when: "Summer–Fall Y2", what: "Abstract/draft · PhD shortlist (JHU #1) · letter ask timeline" },
+        { when: "PhD apps", what: "SOP = Mullachery + Hollin story · Health Policy / Health Econ / HSR fit" }
       ],
       processSteps: [
-        { id: "sep", text: "Keep portfolio vs research mentally separate (this tab vs Projects)" },
-        { id: "onepager", text: "Write 1-pager: theme (disability/equity) + top 2 topics + what you can offer (SAS, hours/week)" },
-        { id: "email", text: "Email Dr. Shi for meeting (after P) · attach 1-pager" },
-        { id: "pick", text: "Leave meeting with ONE topic + next deliverable date" },
-        { id: "lit", text: "4–6 week lit review memo (not code-first)" },
-        { id: "data", text: "Data feasibility check with Shi before modeling" },
-        { id: "scope", text: "Only then: analysis plan → possible working paper" }
+        { id: "sep", text: "Keep Projects (portfolio) vs Research (labs) separate" },
+        { id: "scope-m", text: "Mullachery: written scope + next due date" },
+        { id: "scope-h", text: "Hollin: written scope + next due date" },
+        { id: "cadence", text: "Standing check-in rhythm with each advisor" },
+        { id: "write", text: "Every analysis ends in a short written interpretation" },
+        { id: "phd-map", text: "Map each project → PhD SOP bullet (Health Policy / Health Econ / HSR)" },
+        { id: "letters", text: "Calendar letter ask for Mullachery + Hollin before app season" }
       ]
     };
 
     // 커리어: SOA · Life/Health · 서부 · 스폰 위주
     const CAREER_EVENT_GUIDE = {
       title: "커리어 타깃 · 컨퍼런스 · 스폰 (내 기준)",
-      intro: "경로: SOA · Life/Health · CAS 안 함 · F-1 → CPT → OPT → H-1B → green card(EB) · 서부 정착. ‘유학생은 취업 불가’는 과장 — 어렵지만 Plan A/B/C로 관리. 이벤트 목표: 참석 → LinkedIn → 커피챗 1명.",
+      intro: "Plan A = SOA Health Track · Plan B = PhD Health Policy/quant (JHU 1순위) · Plan C = US 취업 폭 넓히기. F-1 → CPT → OPT → H-1B → GC. 이벤트 목표: 참석 → LinkedIn → 커피챗 1명.",
       channels: [
         {
           name: "SOA Professional Development (PD Edge)",
@@ -995,7 +937,7 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         },
         {
           name: "Temple / Fox · AS·RMI",
-          how: "Dr. Shi·FoxMS 메일, Canvas, Fox Career, insurance/actuarial club",
+          how: "FoxMS·Canvas·Fox Career · Mullachery/Hollin lab · insurance/actuarial club",
           url: "https://www.fox.temple.edu/",
           tips: "교내 guest speaker·alumni panel ROI 최고. Life/Health alumni 있으면 꼭 잡기."
         },
@@ -1045,75 +987,61 @@ const STORAGE_KEY = "soa-asa-plan-v6";
         ]
       },
       immigrationPlans: {
-        title: "US permanent residency · Plan A / B / C (내 기준)",
-        reality: "‘유학생은 취업 불가능’은 틀림. Actuarial + exams + sponsorship-aware targeting은 실제로 뽑힘. 다만 H-1B lottery·경기·회사 정책 때문에 한 줄 계획만으론 불안한 게 정상. 목표 = green card(영주권)까지 여러 레일.",
-        notLegalAdvice: "Not legal advice — ISSS + immigration attorney when filing. Rules change.",
+        title: "Plan A / B / C (내 기준)",
+        reality: "한 줄 계획만으론 불안한 게 정상. SOA Health · PhD · 넓은 US 취업을 동시에 레일로 둠.",
+        notLegalAdvice: "Not legal advice — ISSS + immigration attorney when filing.",
         plans: [
           {
             id: "A",
-            name: "Plan A — Stay on SOA Life/Health track (default)",
-            goal: "US job → H-1B → employer green card (EB-2/EB-3 PERM)",
+            name: "Plan A — SOA Health Track",
+            goal: "Health actuarial path · exams/UEC · CPT/OPT → H-1B → employer GC",
             steps: [
-              "Now–grad: Exam P + UEC + SAS + 1 Health portfolio + CPT/OPT-ready résumé",
-              "Internships: CPT PT → summer CPT FT at sponsorship-friendly Life/Health (Milliman, Pacific Life, health plans, WTW/Aon/Mercer Life/Health)",
-              "Post-grad: STEM OPT (MS) if eligible · work full-time · employer files H-1B (multiple years if needed)",
-              "After H-1B (or sometimes earlier): employer starts PERM → I-140 → green card (EB-2 common for master’s)",
-              "Mindset: apply where LCA/H-1B history exists · say visa need early but after showing exam/skill value"
+              "Exams/UEC: P · FM · SRM(5108+5118) · PA · FAM/ASTAM via Temple",
+              "Skills: SAS + Health portfolio · Research does not replace Plan A deliverables",
+              "Internships: Health-focused CPT PT → summer CPT FT (Milliman, health plans, consulting Health)",
+              "Post-grad: STEM OPT if eligible · H-1B at sponsorship-aware Health employers",
+              "Mindset: apply where Health practice + LCA/H-1B history exists"
             ],
-            greenCard: "Most actuaries: employer-sponsored EB-2/EB-3. Slow but standard."
+            greenCard: "Default: employer-sponsored EB-2/EB-3 after H-1B."
           },
           {
             id: "B",
-            name: "Plan B — Same US goal, wider rails (if Plan A stalls)",
-            goal: "Still US PR · reduce ‘pure actuarial analyst at one carrier’ bottleneck",
+            name: "Plan B — PhD in Health Policy or quantitative related (JHU 1순위)",
+            goal: "PhD Health Policy / Health Economics / Health Services · research runway + stronger letters",
             steps: [
-              "Widen roles: actuarial analyst + health analytics, pricing ops, risk, valuation support, consulting analyst (still Life/Health)",
-              "Cap-exempt H-1B try: university, some nonprofits / research / hospital systems (lottery-exempt) — keep SOA exams going",
-              "Temple/Fox: RA with Dr. Shi if paid/CPT-able · builds network + possible longer runway",
-              "Multi-year H-1B strategy: file each lottery year on OPT/STEM OPT/cap-gap · don’t freeze life for one lottery",
-              "Geography flexibility: still prefer West, but take sponsorship-strong offer elsewhere first → transfer west later",
-              "EB-2 NIW (self-petition) later only if research/impact case is real — disability/equity research can help long-term, not year-1"
+              "Now: deliver on Mullachery + Hollin projects · write every analysis",
+              "Build: lit + methods + 1–2 tangible outputs (tables, memo, abstract)",
+              "Target list: JHU #1 · peer Health Policy / Health Econ / HSR programs",
+              "Letters: Mullachery + Hollin (+ one quant/SOA if strong)",
+              "SOP story: Health Policy/Econ/Services fit from current RA work",
+              "Funding first: RA/TA · don’t self-pay PhD as immigration stall",
+              "Keep SOA Health exams warm so Plan A stays open during apps"
             ],
-            greenCard: "Still mostly employer PERM; NIW is Plan B+ after strong record — not a freshman backup fantasy."
+            greenCard: "PhD buys time + credentials; GC still usually employer PERM, cap-exempt, or later NIW."
           },
           {
             id: "C",
-            name: "Plan C — Keep US PR dream, change country timing (bridge)",
-            goal: "Don’t lose the end goal if US timing breaks · bridge then return or parallel PR",
+            name: "Plan C — US but wider job ranges",
+            goal: "Still US · widen beyond pure Health actuarial analyst title",
             steps: [
-              "Canada: actuarial jobs + clearer PR pathways (Express Entry / provincial) — SOA exams still travel; many return or dual-track US later",
-              "Extra US runway: another STEM master’s / PhD only if funding + clear visa math (don’t do degree just to stall) — full PhD path = Plan D",
-              "Korea bridge: work 1–2 yrs at global insurer/consulting that transfers to US later (intra-company) — rare but real",
-              "Maintain US-ready file always: exams, SAS, LinkedIn, US references, OPT unused carefully timed",
-              "Emotional rule: Plan C is a bridge, not ‘give up US.’ Re-enter when lottery/employer/market opens"
+              "Widen roles: health analytics, pricing ops, risk, valuation support, consulting analyst, payer analytics",
+              "Cap-exempt try: university / hospital / research if fits while keeping exams",
+              "Geography: prefer West but take sponsorship-strong US offer first → move later",
+              "Multi-year H-1B: file each lottery year on OPT/STEM OPT · don’t freeze on one shot",
+              "Use Research + SOA Health as differentiators in wider analytics roles"
             ],
-            greenCard: "Canada PR can be faster; US GC later via employer/transfer/marriage/NIW depending on life — pick with a lawyer when real."
-          },
-          {
-            id: "D",
-            name: "Plan D — PhD admission (US runway + research → stronger GC story)",
-            goal: "PhD (STEM) for longer F-1 runway, RA/TA funding, cap-exempt possible, then industry or academic hire → H-1B/EB or NIW",
-            steps: [
-              "When to flip: if OPT/H-1B math looks bad, or you love research (disability/equity + actuarial/stats) more than rushing industry",
-              "Target fields that keep SOA door open: actuarial science, statistics, biostatistics, risk/insurance economics, health services research — not random PhD",
-              "Funding first: RA/TA / fellowship · avoid self-pay PhD as immigration stall",
-              "Use Research tab + Dr. Shi: lit review, letter, methods — application packet needs research fit not just GPA",
-              "Timeline sketch: applications ~Fall Y2 / after MS momentum · start PhD ~2028+ if needed (don’t quit MS early without offer)",
-              "During PhD: keep 1–2 SOA exams/modules warm · summer industry or research internships when CPT allows",
-              "Exit: industry actuarial/analytics with PhD premium, university/nonprofit cap-exempt, or EB-2 NIW if publication/impact case is real"
-            ],
-            greenCard: "PhD is not automatic PR. It buys time + credentials. GC still usually employer PERM, cap-exempt job, or later NIW — lawyer when concrete."
+            greenCard: "Still mostly employer PERM; wider titles = more US entry doors."
           }
         ],
         nearTermActions: [
-          "This week feeling: anxiety ≠ signal that Plan A is dead — signal to build B/C/D rails on paper",
-          "Until 9/21: Exam P only (best immigration move right now = pass exams)",
-          "Fall: ISSS CPT/OPT info session · calendar STEM OPT eligibility",
-          "Applications: only sponsorship-aware list (Career tab companies) · track in pipeline",
-          "After P: Dr. Shi research talk (equity/disability) = Plan B skill + Plan D PhD letters later",
-          "Every Dec: update ‘visa runway’ note — OPT end date, H-1B attempts, Plan C country, Plan D apply-or-not decision date"
+          "Weekly: Mullachery + Hollin deliverables on calendar",
+          "Exam/class blocks protected · research after deep work, not instead",
+          "Fall: ISSS CPT/OPT session · STEM OPT eligibility note",
+          "Pipeline: Health sponsorship-aware companies only in Career board",
+          "PhD: draft JHU-first school list + letter ask months before apps"
         ]
       }
+
     };
 
 const CAREER_COLUMNS = [
