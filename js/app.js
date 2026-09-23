@@ -71,19 +71,19 @@ let state;
           const item = state.careerPipeline.find(x => x.id === btn.dataset.careerAdvance);
           if (!item) return;
           const next = CAREER_ADVANCE[item.status];
-          if (next) { item.status = next; item.updatedAt = new Date().toISOString().slice(0,10); saveState(); }
+          if (next) { item.status = next; item.updatedAt = localDateStr(); saveState(); }
         };
       });
       root.querySelectorAll("[data-career-reject]").forEach(btn => {
         btn.onclick = () => {
           const item = state.careerPipeline.find(x => x.id === btn.dataset.careerReject);
-          if (item) { item.status = "rejected"; item.updatedAt = new Date().toISOString().slice(0,10); saveState(); }
+          if (item) { item.status = "rejected"; item.updatedAt = localDateStr(); saveState(); }
         };
       });
       root.querySelectorAll("[data-career-withdraw]").forEach(btn => {
         btn.onclick = () => {
           const item = state.careerPipeline.find(x => x.id === btn.dataset.careerWithdraw);
-          if (item) { item.status = "withdrawn"; item.updatedAt = new Date().toISOString().slice(0,10); saveState(); }
+          if (item) { item.status = "withdrawn"; item.updatedAt = localDateStr(); saveState(); }
         };
       });
       root.querySelectorAll("[data-career-delete]").forEach(btn => {
@@ -425,8 +425,8 @@ let state;
           status: document.getElementById("careerStatus").value,
           contact: document.getElementById("careerContact").value.trim(),
           notes: document.getElementById("careerNotes").value.trim(),
-          createdAt: new Date().toISOString().slice(0,10),
-          updatedAt: new Date().toISOString().slice(0,10)
+          createdAt: localDateStr(),
+          updatedAt: localDateStr()
         });
         document.getElementById("careerCompany").value = "";
         document.getElementById("careerRole").value = "";
@@ -438,6 +438,43 @@ let state;
     }
 
     function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+    function pad2(n) {
+      return String(n).padStart(2, "0");
+    }
+
+    function localDateStr(d) {
+      const x = d instanceof Date ? d : new Date();
+      return `${x.getFullYear()}-${pad2(x.getMonth() + 1)}-${pad2(x.getDate())}`;
+    }
+
+    function parseLocalDate(iso) {
+      const [y, m, day] = String(iso || "").split("-").map(Number);
+      if (!y || !m || !day) return new Date(NaN);
+      return new Date(y, m - 1, day);
+    }
+
+    let lastLocalDate = localDateStr();
+
+    function startStudyDayWatch() {
+      if (startStudyDayWatch.done) return;
+      startStudyDayWatch.done = true;
+      const tick = () => {
+        const today = localDateStr();
+        if (today === lastLocalDate) return;
+        lastLocalDate = today;
+        if (!state) return;
+        ensurePomodoro();
+        syncPomoTodayCountFromLogs();
+        saveState(true);
+        render();
+      };
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") tick();
+      });
+      window.addEventListener("focus", tick);
+      setInterval(tick, 30000);
+    }
 
     function migrateExamStatus(reqChecked, existing) {
       const es = { ...(existing || {}) };
@@ -480,7 +517,7 @@ let state;
         next = { ...next, timelineChecked: { ...next.timelineChecked, "sas-cert": true } };
       }
       if (!next.timelineCollapsed) next.timelineCollapsed = {};
-      return ensureStudyLogIds(next);
+      return ensureStudyLogIds(migrateStudyLogLocalDates(next));
     }
 
     function loadState() {
@@ -814,7 +851,7 @@ let state;
     }
 
     function getCurrentPhase() {
-      const today = new Date().toISOString().slice(0,10);
+      const today = localDateStr();
       for (const p of PHASES) if (today >= p.start && today <= p.end) return p;
       return today < PHASES[0].start ? PHASES[0] : PHASES[PHASES.length-1];
     }
@@ -849,7 +886,7 @@ let state;
     }
 
     function getUpcomingMilestones(n) {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = localDateStr();
       const upcoming = MILESTONES.filter(m => m.date >= today && !isReqDone(m.taskId));
       if (upcoming.length) return upcoming.slice(0, n);
       return MILESTONES.slice(-n);
@@ -893,7 +930,7 @@ let state;
 
     function getWeekStudyMinutes() {
       const weekStart = getWeekStart();
-      return (state.studyLogs || []).filter(l => new Date(l.date + "T00:00:00") >= weekStart).reduce((s, l) => s + (+l.minutes || 0), 0);
+      return (state.studyLogs || []).filter(l => parseLocalDate(l.date) >= weekStart).reduce((s, l) => s + (+l.minutes || 0), 0);
     }
 
     function isExamPStudyLog(log) {
@@ -908,18 +945,13 @@ let state;
     function getWeekExamPMinutes() {
       const weekStart = getWeekStart();
       return (state.studyLogs || [])
-        .filter(l => new Date(l.date + "T00:00:00") >= weekStart && isExamPStudyLog(l))
+        .filter(l => parseLocalDate(l.date) >= weekStart && isExamPStudyLog(l))
         .reduce((s, l) => s + (+l.minutes || 0), 0);
     }
 
     function getTotalExamPMinutes() {
-      const from = new Date(EXAM_P_TRACK_FROM + "T00:00:00");
-      const until = new Date(EXAM_P_TRACK_UNTIL + "T23:59:59");
       return (state.studyLogs || [])
-        .filter(l => {
-          const d = new Date(l.date + "T00:00:00");
-          return d >= from && d <= until && isExamPStudyLog(l);
-        })
+        .filter(l => isExamPStudyLog(l))
         .reduce((s, l) => s + (+l.minutes || 0), 0);
     }
 
@@ -945,7 +977,7 @@ let state;
       const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = "my-asa-plan-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+      a.download = "my-asa-plan-backup-" + localDateStr() + ".json";
       a.click();
       URL.revokeObjectURL(a.href);
       toast("백업 파일 다운로드됨");
@@ -1336,9 +1368,28 @@ let state;
       return changed ? { ...st, studyLogs } : st;
     }
 
+    function migrateStudyLogLocalDates(st) {
+      if (!Array.isArray(st.studyLogs) || !st.studyLogs.length) return st;
+      let changed = false;
+      const studyLogs = st.studyLogs.map(l => {
+        const m = String(l.id || "").match(/^sl-(\d+)-/);
+        if (!m) return l;
+        const fromId = localDateStr(new Date(+m[1]));
+        if (!fromId || l.date === fromId) return l;
+        const stored = parseLocalDate(l.date);
+        const idDate = parseLocalDate(fromId);
+        if (Number.isNaN(stored.getTime()) || Number.isNaN(idDate.getTime())) return l;
+        const diffDays = Math.round((stored.getTime() - idDate.getTime()) / 86400000);
+        if (Math.abs(diffDays) !== 1) return l;
+        changed = true;
+        return { ...l, date: fromId };
+      });
+      return changed ? { ...st, studyLogs } : st;
+    }
+
     function syncPomoTodayCountFromLogs() {
       ensurePomodoro();
-      const today = new Date().toISOString().slice(0, 10);
+      const today = localDateStr();
       state.pomodoro.todayCount = (state.studyLogs || []).filter(l =>
         l.date === today && (l.topic || "").includes("Pomodoro")
       ).length;
@@ -1368,7 +1419,7 @@ let state;
     }
 
     function getPomoTodayMinutes() {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = localDateStr();
       return (state.studyLogs || [])
         .filter(l => l.date === today && (l.topic || "").includes("Pomodoro"))
         .reduce((s, l) => s + (+l.minutes || 0), 0);
@@ -1378,7 +1429,7 @@ let state;
       const el = document.getElementById("pomoDots");
       if (!el) return;
       ensurePomodoro();
-      const today = new Date().toISOString().slice(0, 10);
+      const today = localDateStr();
       const count = state.pomodoro.lastDate === today ? (state.pomodoro.todayCount || 0) : 0;
       const goal = getPomoDailyGoal();
       el.innerHTML = Array.from({ length: goal }, (_, i) => {
@@ -1387,32 +1438,53 @@ let state;
       }).join("");
     }
 
-    function getPomoTopicLabel(raw) {
-      const t = String(raw || "");
+    function getStudyLogTopicLabel(raw) {
+      const t = String(raw || "").trim();
       if (t.startsWith("Pomodoro: ")) return t.slice(10).trim() || "주제 없음";
-      if (t === "Pomodoro 집중") return "주제 없음";
+      if (t === "Pomodoro 집중") return "집중";
       return t || "주제 없음";
     }
 
-    function getPomoLogsInRange(range) {
+    function todayIso() { return localDateStr(); }
+
+    function yesterdayIso() {
+      const d = parseLocalDate(todayIso());
+      d.setDate(d.getDate() - 1);
+      return localDateStr(d);
+    }
+
+    function formatLogDate(iso) {
+      const d = parseLocalDate(iso);
+      if (Number.isNaN(d.getTime())) return iso || "";
+      return `${d.getMonth() + 1}/${d.getDate()}`;
+    }
+
+    function isPomoStudyLog(l) {
+      return (l.topic || "").includes("Pomodoro");
+    }
+
+    function getStudyLogsInRange(range) {
       const weekStart = getWeekStart();
-      const now = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+      const todayStr = todayIso();
+      const yesterdayStr = yesterdayIso();
+      const today = parseLocalDate(todayStr);
+      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
       const lastWeekStart = new Date(weekStart);
       lastWeekStart.setDate(lastWeekStart.getDate() - 7);
-      const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+      const weekStartStr = localDateStr(weekStart);
+      const monthStartStr = localDateStr(monthStart);
+      const lastWeekStartStr = localDateStr(lastWeekStart);
+      const lastMonthStartStr = localDateStr(lastMonthStart);
       return (state.studyLogs || []).filter(l => {
-        if (!(l.topic || "").includes("Pomodoro")) return false;
-        const d = new Date(l.date + "T00:00:00");
-        if (range === "today") return d.getTime() === today.getTime();
-        if (range === "yesterday") return d.getTime() === yesterday.getTime();
-        if (range === "last-week") return d >= lastWeekStart && d < weekStart;
-        if (range === "last-month") return d >= lastMonthStart && d < monthStart;
-        if (range === "month") return d >= monthStart;
-        return d >= weekStart;
+        const ds = l.date || "";
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(ds)) return false;
+        if (range === "today") return ds === todayStr;
+        if (range === "yesterday") return ds === yesterdayStr;
+        if (range === "last-week") return ds >= lastWeekStartStr && ds < weekStartStr;
+        if (range === "last-month") return ds >= lastMonthStartStr && ds < monthStartStr;
+        if (range === "month") return ds >= monthStartStr;
+        return ds >= weekStartStr;
       });
     }
 
@@ -1429,14 +1501,17 @@ let state;
       document.querySelectorAll("[data-pomo-log]").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.pomoLog === range);
       });
-      const logs = getPomoLogsInRange(range);
+      const logs = getStudyLogsInRange(range).slice().sort((a, b) => {
+        if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+        return String(b.id || "").localeCompare(String(a.id || ""));
+      });
       if (!logs.length) {
-        el.innerHTML = `<p class="stat-sub" style="text-align:center;margin:0.35rem 0">아직 기록이 없어요. 주제를 적고 집중을 완료하면 여기에 쌓입니다.</p>`;
+        el.innerHTML = `<p class="stat-sub" style="text-align:center;margin:0.35rem 0">아직 기록이 없어요. 포모도로를 끝내거나 아래에서 수동으로 넣으면 여기에 쌓입니다.</p>`;
         return;
       }
       const byTopic = {};
       logs.forEach(l => {
-        const key = getPomoTopicLabel(l.topic);
+        const key = getStudyLogTopicLabel(l.topic);
         if (!byTopic[key]) byTopic[key] = { sessions: 0, minutes: 0 };
         byTopic[key].sessions += 1;
         byTopic[key].minutes += (+l.minutes || 0);
@@ -1449,7 +1524,13 @@ let state;
         `<div class="pomo-log-row"><span class="pomo-log-topic">합계</span><span class="pomo-log-meta">${totalSes}회 · ${minutesToHoursLabel(totalMin)}시간</span></div>` +
         rows.map(([topic, v]) =>
           `<div class="pomo-log-row"><span class="pomo-log-topic">${escapeHtml(topic)}</span><span class="pomo-log-meta">${v.sessions}회 · ${minutesToHoursLabel(v.minutes)}시간</span></div>`
-        ).join("");
+        ).join("") +
+        `<div class="stat-sub" style="margin:0.55rem 0 0.2rem">건별 기록</div>` +
+        logs.map(l => {
+          const kind = isPomoStudyLog(l) ? "포모" : "수동";
+          const pTag = isExamPStudyLog(l) ? " · P" : "";
+          return `<div class="pomo-log-row"><span class="pomo-log-topic">${formatLogDate(l.date)} · ${escapeHtml(getStudyLogTopicLabel(l.topic))} <span style="color:var(--muted)">${kind}${pTag}</span></span><span class="pomo-log-meta">${l.minutes || 0}분</span></div>`;
+        }).join("");
     }
 
     function getPomoCountsByDate() {
@@ -1466,12 +1547,12 @@ let state;
       if (!el) return;
       const counts = getPomoCountsByDate();
       const weekStart = getWeekStart();
-      const today = new Date().toISOString().slice(0, 10);
+      const today = localDateStr();
       const dayLabels = ["월", "화", "수", "목", "금", "토", "일"];
       el.innerHTML = dayLabels.map((label, i) => {
         const d = new Date(weekStart);
         d.setDate(d.getDate() + i);
-        const ds = d.toISOString().slice(0, 10);
+        const ds = localDateStr(d);
         const n = counts[ds] || 0;
         return `<div class="pomo-week-cell${ds === today ? " today" : ""}${n ? " has-sessions" : ""}">
           <div class="pomo-week-day">${label}</div>
@@ -1487,7 +1568,7 @@ let state;
       const now = new Date();
       const y = now.getFullYear();
       const m = now.getMonth();
-      const today = now.toISOString().slice(0, 10);
+      const today = localDateStr(now);
       const last = new Date(y, m + 1, 0).getDate();
       const startPad = (new Date(y, m, 1).getDay() + 6) % 7;
       let monthTotal = 0;
@@ -1614,7 +1695,7 @@ let state;
 
     function completePomoWork() {
       ensurePomodoro();
-      const today = new Date().toISOString().slice(0, 10);
+      const today = localDateStr();
       if (state.pomodoro.lastDate !== today) state.pomodoro.todayCount = 0;
       state.pomodoro.todayCount = (state.pomodoro.todayCount || 0) + 1;
       state.pomodoro.lastDate = today;
@@ -1639,7 +1720,7 @@ let state;
 
     function renderPomodoroStats() {
       ensurePomodoro();
-      const today = new Date().toISOString().slice(0, 10);
+      const today = localDateStr();
       if (state.pomodoro.lastDate !== today) state.pomodoro.todayCount = 0;
       const count = state.pomodoro.todayCount || 0;
       const goal = getPomoDailyGoal();
@@ -1653,7 +1734,7 @@ let state;
       const weekStart = getWeekStart();
       const weekCount = (state.studyLogs || []).filter(l => {
         if (!(l.topic || "").includes("Pomodoro")) return false;
-        const d = new Date(l.date + "T00:00:00");
+        const d = parseLocalDate(l.date);
         return d >= weekStart;
       }).length;
       document.getElementById("pomoWeekCount").textContent = weekCount;
@@ -1808,11 +1889,11 @@ let state;
       const goal = state.weeklyStudyGoal || DEFAULT_WEEKLY_STUDY_GOAL;
 
       if (getExamStatus("exam-p") === "failed") {
-        el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 11월 또는 다음 window</span></div>
-        <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. FM은 2026.12 독학.</p>`;
+        el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 다음 window</span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. FM은 2027.2 독학.</p>`;
       } else if (getExamStatus("exam-p") !== "passed") {
-        el.innerHTML = `<div><span class="hours-big">110h</span> <span class="stat-sub">Exam P · <strong>TIA only</strong> · 목표 <strong>9/21</strong></span></div>
-        <p class="stat-sub" style="margin-top:0.5rem">통계전공 · TIA practice exam <strong>70%+</strong>면 GO · 부족하면 11월 backup.</p>`;
+        el.innerHTML = `<div><span class="hours-big">110h</span> <span class="stat-sub">Exam P · <strong>TIA only</strong> · 목표 <strong>11/4–15</strong></span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">통계전공 · TIA practice exam <strong>70%+</strong>면 GO · 등록 마감 9/30 10AM CT.</p>`;
       } else if (getExamStatus("exam-pa") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108+5118) 기반 복습</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;
@@ -1836,7 +1917,7 @@ let state;
       const x = new Date(d);
       x.setHours(0, 0, 0, 0);
       x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
-      return x.toISOString().slice(0, 10);
+      return localDateStr(x);
     }
 
     function ensureWeeklyTodoWeek() {
@@ -1852,7 +1933,7 @@ let state;
 
     function activeWeeklyTodos() {
       if (typeof WEEKLY_FIXED_TODOS === "undefined") return [];
-      const today = new Date().toISOString().slice(0, 10);
+      const today = localDateStr();
       return (WEEKLY_FIXED_TODOS.items || []).filter(it => {
         if (it.always) return true;
         if (it.from && today < it.from) return false;
@@ -1862,7 +1943,7 @@ let state;
     }
 
     function isTimeWindowActive(it) {
-      const today = new Date().toISOString().slice(0, 10);
+      const today = localDateStr();
       if (it.always) return true;
       if (it.from && today < it.from) return false;
       if (it.until && today > it.until) return false;
@@ -1871,14 +1952,16 @@ let state;
     }
 
     function getActiveTimetablePhase(phases) {
-      const today = new Date().toISOString().slice(0, 10);
-      let active = phases[0];
-      for (const p of phases) {
-        if (p.from && today < p.from) continue;
-        if (p.until && today > p.until) continue;
-        active = p;
-      }
-      return active;
+      const today = localDateStr();
+      const matches = (phases || []).filter(p => {
+        if (p.from && today < p.from) return false;
+        if (p.until && today > p.until) return false;
+        return true;
+      });
+      if (!matches.length) return phases[0];
+      const pSeason = matches.find(p => p.id === "exam-p-season");
+      if (pSeason) return pSeason;
+      return matches[matches.length - 1];
     }
 
     function shortClassLabel(name) {
@@ -2134,28 +2217,19 @@ let state;
         studyGoalInput.value = minutesToHoursLabel(goal);
       }
 
-      const pGoal = state.weeklyExamPGoal || DEFAULT_WEEKLY_EXAM_P_GOAL;
-      const pDone = getWeekExamPMinutes();
-      const pPct = Math.min(100, Math.round(pDone / pGoal * 100));
       const pTotalGoal = state.examPTotalGoal || EXAM_P_TOTAL_GOAL;
       const pTotalDone = getTotalExamPMinutes();
       const pTotalPct = Math.min(100, Math.round(pTotalDone / pTotalGoal * 100));
       const examPPctEl = document.getElementById("examPGoalPct");
       if (examPPctEl) {
-        examPPctEl.textContent = pPct + "%";
-        document.getElementById("examPGoalMin").textContent = minutesToHoursLabel(pGoal);
-        document.getElementById("examPWeekMin").textContent = minutesToHoursLabel(pDone);
-        document.getElementById("examPGoalBar").style.width = pPct + "%";
+        examPPctEl.textContent = pTotalPct + "%";
+        document.getElementById("examPGoalBar").style.width = pTotalPct + "%";
         document.getElementById("examPTotalMin").textContent = minutesToHoursLabel(pTotalDone);
         document.getElementById("examPTotalGoalMin").textContent = minutesToHoursLabel(pTotalGoal);
-        const examPGoalInput = document.getElementById("examPGoalInput");
-        if (examPGoalInput && document.activeElement !== examPGoalInput) {
-          examPGoalInput.value = minutesToHoursLabel(pGoal);
-        }
-        examPPctEl.title = `9/21까지 ${pTotalPct}% (${minutesToHoursLabel(pTotalDone)}h / ${minutesToHoursLabel(pTotalGoal)}h)`;
+        examPPctEl.title = `누적 ${pTotalPct}% (${minutesToHoursLabel(pTotalDone)}h / ${minutesToHoursLabel(pTotalGoal)}h)`;
       }
       const weekExamPEl = document.getElementById("weekExamPTotal");
-      if (weekExamPEl) weekExamPEl.textContent = pDone;
+      if (weekExamPEl) weekExamPEl.textContent = getWeekExamPMinutes();
     }
 
     function renderStudyRecommendations() {
@@ -2249,7 +2323,7 @@ let state;
         bindTaskList(adminTasksEl, "req");
       }
 
-      const today = new Date().toISOString().slice(0, 10);
+      const today = localDateStr();
       const logs = (state.studyLogs || []).filter(l => l.date === today).slice().reverse();
       document.getElementById("studyLogs").innerHTML = logs.length
         ? logs.map((l) => {
@@ -2290,6 +2364,7 @@ let state;
       checklistFilter = state.checklistFilter || "all";
       // Persist auto-migrated Fall 2026 schedule version
       saveState(true);
+      startStudyDayWatch();
 
       document.getElementById("nav").addEventListener("click", e => {
         if (e.target.tagName === "BUTTON" && e.target.dataset.tab) switchTab(e.target.dataset.tab);
@@ -2313,7 +2388,7 @@ let state;
         if (!minutes && !topic) { toast("시간 또는 내용 입력"); return; }
         const examP = document.getElementById("studyExamP")?.checked ?? true;
         if (!state.studyLogs) state.studyLogs = [];
-        state.studyLogs.push({ id: newStudyLogId(), date: new Date().toISOString().slice(0,10), minutes, topic, examP });
+        state.studyLogs.push({ id: newStudyLogId(), date: localDateStr(), minutes, topic, examP });
         document.getElementById("studyMin").value = "";
         document.getElementById("studyTopic").value = "";
         saveState();

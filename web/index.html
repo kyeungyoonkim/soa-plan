@@ -729,12 +729,11 @@
           <input type="number" id="studyGoalInput" min="1" max="50" step="0.5" value="30" style="margin-top:0.35rem" />
           <div class="stat-sub">기본 30시간/주</div>
           <div style="margin-top:0.85rem;padding-top:0.75rem;border-top:1px solid var(--border)">
-            <div class="card-title" style="font-size:0.82rem;margin-bottom:0.35rem">Exam P 순공 · 이번 주</div>
+            <div class="card-title" style="font-size:0.82rem;margin-bottom:0.35rem">Exam P 순공 · 누적</div>
             <div class="stat-num" id="examPGoalPct" style="font-size:1.15rem">0%</div>
-            <div class="stat-sub"><span id="examPWeekMin">0</span> / <span id="examPGoalMin">22</span>시간 · TIA P만</div>
+            <div class="stat-sub"><span id="examPTotalMin" style="color:var(--accent2)">0</span> / <span id="examPTotalGoalMin">110</span>시간 · TIA P만</div>
             <div class="progress-wrap"><div class="progress-bar" id="examPGoalBar" style="width:0%;background:var(--accent2)"></div></div>
-            <input type="number" id="examPGoalInput" min="1" max="50" step="0.5" value="22" style="margin-top:0.35rem" />
-            <div class="stat-sub" style="margin-top:0.35rem">9/21까지 누적 <strong id="examPTotalMin" style="color:var(--accent2)">0</strong> / <span id="examPTotalGoalMin">110</span>시간</div>
+            <div class="stat-sub" style="margin-top:0.35rem">11/15까지 누적만 표시</div>
           </div>
         </div>
         <div class="card">
@@ -865,7 +864,7 @@
         <table class="guide-table">
           <thead><tr><th>Temple 과목</th><th>SOA</th><th>비고</th></tr></thead>
           <tbody>
-            <tr><td>Exam FM (SOA)</td><td class="cat-exam">시험</td><td><strong>독학 · 2026.12/3–14</strong> · 등록 11/4 · 합격 시 AS 5101 면제</td></tr>
+            <tr><td>Exam FM (SOA)</td><td class="cat-exam">시험</td><td><strong>독학 · 2027.2/4–15</strong> · 등록 1/5 · 합격 시 AS 5101 면제</td></tr>
             <tr><td>AS 5102 + 5104</td><td class="cat-uec">FAM UEC</td><td>5104(2026 Fall) + 5102(2027 Spring)</td></tr>
             <tr><td>AS 5108 + 5118</td><td class="cat-uec">SRM UEC</td><td><strong>둘 다 필요</strong> · 5108 Fall + 5118 Spring · → <strong>PA 10/2027</strong> 기반</td></tr>
             <tr><td>AS 5114</td><td class="cat-uec">ASTAM UEC</td><td>Selective 3 · 2027 Fall</td></tr>
@@ -932,7 +931,7 @@
   </div>
   <div class="toast" id="toast">저장됨</div>
 
-  <script src="../js/data.js?v=20260914b"></script>
-  <script defer src="../js/app.js?v=20260914b"></script>
+  <script src="../js/data.js?v=20260922a"></script>
+  <script defer src="../js/app.js?v=20260922a"></script>
 </body>
 </html>
