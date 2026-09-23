@@ -1391,7 +1391,7 @@ let state;
       ensurePomodoro();
       const today = localDateStr();
       state.pomodoro.todayCount = (state.studyLogs || []).filter(l =>
-        l.date === today && (l.topic || "").includes("Pomodoro")
+        l.date === today && /pomodoro/i.test(l.topic || "")
       ).length;
       state.pomodoro.lastDate = today;
     }
@@ -1401,7 +1401,7 @@ let state;
       const removed = state.studyLogs.find(l => l.id === id);
       if (!removed) return;
       state.studyLogs = state.studyLogs.filter(l => l.id !== id);
-      if ((removed.topic || "").includes("Pomodoro")) syncPomoTodayCountFromLogs();
+      if (/pomodoro/i.test(removed.topic || "")) syncPomoTodayCountFromLogs();
       saveState(true);
       toast("기록 삭제됨");
     }
@@ -1421,7 +1421,7 @@ let state;
     function getPomoTodayMinutes() {
       const today = localDateStr();
       return (state.studyLogs || [])
-        .filter(l => l.date === today && (l.topic || "").includes("Pomodoro"))
+        .filter(l => l.date === today && /pomodoro/i.test(l.topic || ""))
         .reduce((s, l) => s + (+l.minutes || 0), 0);
     }
 
@@ -1439,10 +1439,15 @@ let state;
     }
 
     function getStudyLogTopicLabel(raw) {
-      const t = String(raw || "").trim();
-      if (t.startsWith("Pomodoro: ")) return t.slice(10).trim() || "주제 없음";
-      if (t === "Pomodoro 집중") return "집중";
+      const t = String(raw || "").trim().replace(/\s+/g, " ");
+      const pomo = t.match(/^pomodoro:\s*(.*)$/i);
+      if (pomo) return (pomo[1] || "").trim() || "주제 없음";
+      if (/^pomodoro\s*집중$/i.test(t)) return "집중";
       return t || "주제 없음";
+    }
+
+    function studyTopicKey(raw) {
+      return getStudyLogTopicLabel(raw).toLocaleLowerCase("en");
     }
 
     function todayIso() { return localDateStr(); }
@@ -1460,7 +1465,7 @@ let state;
     }
 
     function isPomoStudyLog(l) {
-      return (l.topic || "").includes("Pomodoro");
+      return /pomodoro/i.test(l.topic || "");
     }
 
     function getStudyLogsInRange(range) {
@@ -1511,19 +1516,20 @@ let state;
       }
       const byTopic = {};
       logs.forEach(l => {
-        const key = getStudyLogTopicLabel(l.topic);
-        if (!byTopic[key]) byTopic[key] = { sessions: 0, minutes: 0 };
+        const key = studyTopicKey(l.topic);
+        const label = getStudyLogTopicLabel(l.topic);
+        if (!byTopic[key]) byTopic[key] = { label, sessions: 0, minutes: 0 };
         byTopic[key].sessions += 1;
         byTopic[key].minutes += (+l.minutes || 0);
       });
-      const rows = Object.entries(byTopic)
-        .sort((a, b) => b[1].minutes - a[1].minutes || b[1].sessions - a[1].sessions);
-      const totalMin = rows.reduce((s, [, v]) => s + v.minutes, 0);
-      const totalSes = rows.reduce((s, [, v]) => s + v.sessions, 0);
+      const rows = Object.values(byTopic)
+        .sort((a, b) => b.minutes - a.minutes || b.sessions - a.sessions);
+      const totalMin = rows.reduce((s, v) => s + v.minutes, 0);
+      const totalSes = rows.reduce((s, v) => s + v.sessions, 0);
       el.innerHTML =
         `<div class="pomo-log-row"><span class="pomo-log-topic">합계</span><span class="pomo-log-meta">${totalSes}회 · ${minutesToHoursLabel(totalMin)}시간</span></div>` +
-        rows.map(([topic, v]) =>
-          `<div class="pomo-log-row"><span class="pomo-log-topic">${escapeHtml(topic)}</span><span class="pomo-log-meta">${v.sessions}회 · ${minutesToHoursLabel(v.minutes)}시간</span></div>`
+        rows.map(v =>
+          `<div class="pomo-log-row"><span class="pomo-log-topic">${escapeHtml(v.label)}</span><span class="pomo-log-meta">${v.sessions}회 · ${minutesToHoursLabel(v.minutes)}시간</span></div>`
         ).join("") +
         `<div class="stat-sub" style="margin:0.55rem 0 0.2rem">건별 기록</div>` +
         logs.map(l => {
@@ -1536,7 +1542,7 @@ let state;
     function getPomoCountsByDate() {
       const counts = {};
       (state.studyLogs || []).forEach(l => {
-        if (!(l.topic || "").includes("Pomodoro")) return;
+        if (!isPomoStudyLog(l)) return;
         counts[l.date] = (counts[l.date] || 0) + 1;
       });
       return counts;
@@ -1733,7 +1739,7 @@ let state;
       if (minEl) minEl.textContent = getPomoTodayMinutes();
       const weekStart = getWeekStart();
       const weekCount = (state.studyLogs || []).filter(l => {
-        if (!(l.topic || "").includes("Pomodoro")) return false;
+        if (!isPomoStudyLog(l)) return false;
         const d = parseLocalDate(l.date);
         return d >= weekStart;
       }).length;
