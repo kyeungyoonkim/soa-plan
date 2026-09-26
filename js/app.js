@@ -1224,7 +1224,6 @@ let state;
     let pomoRunning = false;
     let pomoAwaitingAck = false;
     let pomoEndedAsBreak = false;
-    let pomoBreakBonusSec = 0;
     let pomoAudioCtx = null;
     const POMO_RING_CIRC = 2 * Math.PI * 54;
     const POMO_DAILY_GOAL = 4;
@@ -1719,8 +1718,7 @@ let state;
         const count = completePomoWork();
         pomoEndedAsBreak = false;
         pomoMode = "break";
-        pomoPhaseTotalSec = (state.pomodoro.breakMin || 5) * 60 + pomoBreakBonusSec;
-        pomoBreakBonusSec = 0;
+        pomoPhaseTotalSec = (state.pomodoro.breakMin || 5) * 60;
         pomoRemainingSec = pomoPhaseTotalSec;
         toast(POMO_WIN_MSGS[(count - 1) % POMO_WIN_MSGS.length] + ` · 오늘 ${count}회`);
         playPomoChime("work-end");
@@ -1750,42 +1748,24 @@ let state;
       setPomoUi(left);
     }
 
-    function addPomoBreakMinutes(mins) {
+    function switchToPomoBreak() {
       ensurePomodoro();
-      const extra = Math.max(1, mins || 5) * 60;
-      const restartEndedBreak = !!(pomoAwaitingAck && pomoEndedAsBreak);
-      if (pomoMode === "work" && !restartEndedBreak) {
-        pomoBreakBonusSec += extra;
-        toast(`다음 휴식 +${mins}분`);
-        return;
-      }
-      if (pomoAwaitingAck) acknowledgePomoEnd();
-      if (pomoMode !== "break") {
-        pomoMode = "break";
-        pomoPhaseTotalSec = extra;
-        pomoRemainingSec = extra;
-      } else {
-        const left = getPomoRemainingSec();
-        pomoRemainingSec = left + extra;
-        pomoPhaseTotalSec = Math.max(pomoPhaseTotalSec || left, left) + extra;
-      }
-      if (pomoRunning || restartEndedBreak) {
-        pomoEndAt = Date.now() + pomoRemainingSec * 1000;
-        if (!pomoRunning) {
-          pomoRunning = true;
-          startPomoTicker();
-          startPomoTitleRun();
-        }
-      }
+      pomoAwaitingAck = false;
+      pomoEndedAsBreak = false;
+      stopAllPomoTitles();
+      pomoMode = "break";
+      pomoPhaseTotalSec = (state.pomodoro.breakMin || 5) * 60;
+      pomoRemainingSec = pomoPhaseTotalSec;
+      pomoRunning = false;
+      pomoEndAt = null;
+      stopPomoTicker();
       setPomoUi(pomoRemainingSec);
-      toast(`휴식 +${mins}분`);
     }
 
     function resetPomoDisplay() {
       ensurePomodoro();
       pomoAwaitingAck = false;
       pomoEndedAsBreak = false;
-      pomoBreakBonusSec = 0;
       stopAllPomoTitles();
       pomoPhaseTotalSec = (state.pomodoro.workMin || 25) * 60;
       pomoRemainingSec = pomoPhaseTotalSec;
@@ -1872,7 +1852,10 @@ let state;
         unlockPomoAudio();
         if (!pomoRunning) {
           stopAllPomoTitles();
-          if (pomoRemainingSec === 0 && !pomoEndAt) resetPomoDisplay();
+          if (pomoRemainingSec === 0 && !pomoEndAt) {
+            if (pomoMode === "break") switchToPomoBreak();
+            else resetPomoDisplay();
+          }
           if (!pomoPhaseTotalSec) pomoPhaseTotalSec = getPomoPhaseTotalSec();
           const left = getPomoRemainingSec() || pomoRemainingSec;
           pomoEndAt = Date.now() + left * 1000;
@@ -1892,7 +1875,7 @@ let state;
         setPomoUi(pomoRemainingSec);
       };
       document.getElementById("btnPomoReset").onclick = () => resetPomoDisplay();
-      document.getElementById("btnPomoAddBreak").onclick = () => addPomoBreakMinutes(5);
+      document.getElementById("btnPomoBreak").onclick = () => switchToPomoBreak();
       document.getElementById("btnPomoMute").onclick = () => {
         ensurePomodoro();
         state.pomodoro.muted = !state.pomodoro.muted;
