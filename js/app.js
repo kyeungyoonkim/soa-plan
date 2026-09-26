@@ -1224,6 +1224,8 @@ let state;
     let pomoRunning = false;
     let pomoAwaitingAck = false;
     let pomoEndedAsBreak = false;
+    let pomoBreakBonusSec = 0;
+    let pomoAudioCtx = null;
     const POMO_RING_CIRC = 2 * Math.PI * 54;
     const POMO_DAILY_GOAL = 4;
     const POMO_WIN_MSGS = ["하나 끝! 🎯", "굿! 또 해냈어", "집중력 레벨업 ✓", "완료! momentum ↑", "잘했어 — 이 속도 유지"];
@@ -1234,6 +1236,49 @@ let state;
     let pomoTitleBlinkInterval = null;
     let pomoTitleRunInterval = null;
     let pomoDefaultFaviconHref = null;
+
+    function unlockPomoAudio() {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      if (!pomoAudioCtx) pomoAudioCtx = new Ctx();
+      if (pomoAudioCtx.state === "suspended") pomoAudioCtx.resume();
+      return pomoAudioCtx;
+    }
+
+    function playPomoTone(ctx, freq, start, dur, type, gain) {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = type || "sine";
+      osc.frequency.setValueAtTime(freq, start);
+      g.gain.setValueAtTime(0.0001, start);
+      g.gain.exponentialRampToValueAtTime(gain, start + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+      osc.connect(g);
+      g.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + dur + 0.05);
+    }
+
+    function playPomoChime(kind) {
+      try {
+        const ctx = unlockPomoAudio();
+        if (!ctx) return;
+        const t = ctx.currentTime + 0.01;
+        if (kind === "start") {
+          playPomoTone(ctx, 880, t, 0.12, "sine", 0.09);
+          playPomoTone(ctx, 1175, t + 0.11, 0.2, "sine", 0.08);
+        } else if (kind === "work-end") {
+          playPomoTone(ctx, 659, t, 0.22, "triangle", 0.1);
+          playPomoTone(ctx, 784, t + 0.18, 0.32, "triangle", 0.09);
+        } else {
+          playPomoTone(ctx, 523, t, 0.38, "sine", 0.11);
+          playPomoTone(ctx, 784, t + 0.14, 0.42, "triangle", 0.09);
+          playPomoTone(ctx, 1046, t + 0.3, 0.5, "sine", 0.08);
+        }
+      } catch {
+        /* autoplay blocked until a click */
+      }
+    }
 
     function getFaviconLink() {
       let link = document.querySelector('link[rel~="icon"]');
@@ -1657,9 +1702,11 @@ let state;
         const count = completePomoWork();
         pomoEndedAsBreak = false;
         pomoMode = "break";
-        pomoPhaseTotalSec = (state.pomodoro.breakMin || 5) * 60;
+        pomoPhaseTotalSec = (state.pomodoro.breakMin || 5) * 60 + pomoBreakBonusSec;
+        pomoBreakBonusSec = 0;
         pomoRemainingSec = pomoPhaseTotalSec;
         toast(POMO_WIN_MSGS[(count - 1) % POMO_WIN_MSGS.length] + ` · 오늘 ${count}회`);
+        playPomoChime("work-end");
         startPomoTitleBlink("✓ 집중 완료! 휴식 시작", false);
       } else {
         pomoEndedAsBreak = true;
@@ -1667,6 +1714,7 @@ let state;
         pomoPhaseTotalSec = (state.pomodoro.workMin || 25) * 60;
         pomoRemainingSec = pomoPhaseTotalSec;
         toast("휴식 끝 — 다음 집중 가자!");
+        playPomoChime("break-end");
         startPomoTitleBlink("휴식 끝! 다시 집중", true);
       }
       pomoEndAt = null;
@@ -1685,10 +1733,42 @@ let state;
       setPomoUi(left);
     }
 
+    function addPomoBreakMinutes(mins) {
+      ensurePomodoro();
+      const extra = Math.max(1, mins || 5) * 60;
+      const restartEndedBreak = !!(pomoAwaitingAck && pomoEndedAsBreak);
+      if (pomoMode === "work" && !restartEndedBreak) {
+        pomoBreakBonusSec += extra;
+        toast(`다음 휴식 +${mins}분`);
+        return;
+      }
+      if (pomoAwaitingAck) acknowledgePomoEnd();
+      if (pomoMode !== "break") {
+        pomoMode = "break";
+        pomoPhaseTotalSec = extra;
+        pomoRemainingSec = extra;
+      } else {
+        const left = getPomoRemainingSec();
+        pomoRemainingSec = left + extra;
+        pomoPhaseTotalSec = Math.max(pomoPhaseTotalSec || left, left) + extra;
+      }
+      if (pomoRunning || restartEndedBreak) {
+        pomoEndAt = Date.now() + pomoRemainingSec * 1000;
+        if (!pomoRunning) {
+          pomoRunning = true;
+          startPomoTicker();
+          startPomoTitleRun();
+        }
+      }
+      setPomoUi(pomoRemainingSec);
+      toast(`휴식 +${mins}분`);
+    }
+
     function resetPomoDisplay() {
       ensurePomodoro();
       pomoAwaitingAck = false;
       pomoEndedAsBreak = false;
+      pomoBreakBonusSec = 0;
       stopAllPomoTitles();
       pomoPhaseTotalSec = (state.pomodoro.workMin || 25) * 60;
       pomoRemainingSec = pomoPhaseTotalSec;
@@ -1772,6 +1852,7 @@ let state;
           return;
         }
         ensurePomodoro();
+        unlockPomoAudio();
         if (!pomoRunning) {
           stopAllPomoTitles();
           if (pomoRemainingSec === 0 && !pomoEndAt) resetPomoDisplay();
@@ -1779,6 +1860,7 @@ let state;
           const left = getPomoRemainingSec() || pomoRemainingSec;
           pomoEndAt = Date.now() + left * 1000;
           pomoRunning = true;
+          playPomoChime("start");
           startPomoTicker();
           startPomoTitleRun();
         }
@@ -1793,6 +1875,7 @@ let state;
         setPomoUi(pomoRemainingSec);
       };
       document.getElementById("btnPomoReset").onclick = () => resetPomoDisplay();
+      document.getElementById("btnPomoAddBreak").onclick = () => addPomoBreakMinutes(5);
       document.getElementById("pomoWorkMin").onchange = e => {
         state.pomodoro.workMin = Math.max(5, +e.target.value || 25);
         if (!pomoRunning && pomoMode === "work") resetPomoDisplay();
