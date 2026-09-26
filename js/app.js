@@ -33,7 +33,7 @@ let state;
         weeklyExamPGoal: DEFAULT_WEEKLY_EXAM_P_GOAL, examPTotalGoal: EXAM_P_TOTAL_GOAL,
         weeklyTodoWeek: "", weeklyTodoChecked: {},
         budgetSpent:0, pomoLogRange:"week",
-        pomodoro:{ workMin:25, breakMin:5, dailyGoal:4, todayCount:0, lastDate:"", topic:"" },
+        pomodoro:{ workMin:25, breakMin:5, dailyGoal:4, todayCount:0, lastDate:"", topic:"", muted:false },
         careerPipeline:[], timelineCollapsed:{}
       };
     }
@@ -1259,7 +1259,22 @@ let state;
       osc.stop(start + dur + 0.05);
     }
 
+    function isPomoMuted() {
+      ensurePomodoro();
+      return !!state.pomodoro.muted;
+    }
+
+    function syncPomoMuteBtn() {
+      const btn = document.getElementById("btnPomoMute");
+      if (!btn) return;
+      const muted = isPomoMuted();
+      btn.textContent = muted ? "소리 켜기" : "무음";
+      btn.setAttribute("aria-pressed", muted ? "true" : "false");
+      btn.title = muted ? "알림음 켜기" : "알림음 끄기";
+    }
+
     function playPomoChime(kind) {
+      if (isPomoMuted()) return;
       try {
         const ctx = unlockPomoAudio();
         if (!ctx) return;
@@ -1386,8 +1401,9 @@ let state;
     }
 
     function ensurePomodoro() {
-      if (!state.pomodoro) state.pomodoro = { workMin:25, breakMin:5, dailyGoal:4, todayCount:0, lastDate:"", topic:"" };
+      if (!state.pomodoro) state.pomodoro = { workMin:25, breakMin:5, dailyGoal:4, todayCount:0, lastDate:"", topic:"", muted:false };
       if (state.pomodoro.dailyGoal == null) state.pomodoro.dailyGoal = 4;
+      if (state.pomodoro.muted == null) state.pomodoro.muted = false;
     }
 
     function escapeHtml(text) {
@@ -1694,6 +1710,7 @@ let state;
       }
       const startBtn = document.getElementById("btnPomoStart");
       if (startBtn) startBtn.textContent = pomoRunning ? "진행 중…" : (pomoAwaitingAck ? "▶ 탭해서 확인" : "▶ 시작");
+      syncPomoMuteBtn();
       if (!pomoAwaitingAck) syncPomoTitle(left);
     }
 
@@ -1876,6 +1893,13 @@ let state;
       };
       document.getElementById("btnPomoReset").onclick = () => resetPomoDisplay();
       document.getElementById("btnPomoAddBreak").onclick = () => addPomoBreakMinutes(5);
+      document.getElementById("btnPomoMute").onclick = () => {
+        ensurePomodoro();
+        state.pomodoro.muted = !state.pomodoro.muted;
+        syncPomoMuteBtn();
+        saveState(true);
+        toast(state.pomodoro.muted ? "무음" : "소리 켜짐");
+      };
       document.getElementById("pomoWorkMin").onchange = e => {
         state.pomodoro.workMin = Math.max(5, +e.target.value || 25);
         if (!pomoRunning && pomoMode === "work") resetPomoDisplay();
