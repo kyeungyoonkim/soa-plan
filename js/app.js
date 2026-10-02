@@ -1116,7 +1116,10 @@ let state;
       const pSt = getExamStatus("exam-p");
       if (pSt === "failed") {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>Exam P 불합격</strong> — 11월 fallback (등록 9/30) 또는 다음 window 준비.`;
+        alert.innerHTML = `<strong>Exam P 불합격</strong> — 다음 window 준비.`;
+      } else if (getExamStatus("exam-fm") !== "passed" && getExamStatus("exam-fm") !== "failed") {
+        alert.style.display = "block";
+        alert.innerHTML = `<strong>Exam FM</strong> — 등록 마감 11/4 10AM CT · 목표 12/11 또는 12/14. P는 미룸.`;
       } else if (!isReqChecked("vee-stats-check") && phase.id === "sem1") {
         alert.style.display = "block";
         alert.innerHTML = `<strong>VEE Math Statistics</strong> — Temple 담당자에게 Purdue 학점 면제 확인!`;
@@ -1984,12 +1987,18 @@ let state;
       const logged = getWeekStudyMinutes();
       const goal = state.weeklyStudyGoal || DEFAULT_WEEKLY_STUDY_GOAL;
 
-      if (getExamStatus("exam-p") === "failed") {
+      if (getExamStatus("exam-fm") === "failed") {
+        el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam FM 불합격 · 다음 window</span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">약점 복습 후 재응시. P는 미룸.</p>`;
+      } else if (getExamStatus("exam-fm") !== "passed") {
+        el.innerHTML = `<div><span class="hours-big">FM</span> <span class="stat-sub">Exam FM · <strong>TIA 독학</strong> · 목표 <strong>12/11 또는 12/14</strong></span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">window 12/3–14 · 등록 마감 <strong>11/4 10AM CT</strong> · P는 미룸 (겨울에 GRE / Micro / P 결정).</p>`;
+      } else if (getExamStatus("exam-p") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 다음 window</span></div>
-        <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시. FM은 2027.2 독학.</p>`;
+        <p class="stat-sub" style="margin-top:0.5rem">약점 파트 복습 후 재응시.</p>`;
       } else if (getExamStatus("exam-p") !== "passed") {
-        el.innerHTML = `<div><span class="hours-big">110h</span> <span class="stat-sub">Exam P · <strong>TIA only</strong> · 목표 <strong>11/4–15</strong></span></div>
-        <p class="stat-sub" style="margin-top:0.5rem">통계전공 · TIA practice exam <strong>70%+</strong>면 GO · 등록 마감 9/30 10AM CT.</p>`;
+        el.innerHTML = `<div><span class="hours-big">미룸</span> <span class="stat-sub">Exam P · 겨울에 <strong>GRE / Micro / P</strong> 결정</span></div>
+        <p class="stat-sub" style="margin-top:0.5rem">치면 Jan 14–25 · 등록 12/15. 세 개 동시에 하지 말기.</p>`;
       } else if (getExamStatus("exam-pa") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam PA 불합격 · SRM(5108+5118) 기반 복습</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">predictive modeling · R/Python 연습 강화 후 재응시.</p>`;
@@ -2055,8 +2064,8 @@ let state;
         return true;
       });
       if (!matches.length) return phases[0];
-      const pSeason = matches.find(p => p.id === "exam-p-season");
-      if (pSeason) return pSeason;
+      const fmSeason = matches.find(p => p.id === "exam-fm-season" || p.id === "exam-p-season");
+      if (fmSeason) return fmSeason;
       return matches[matches.length - 1];
     }
 
