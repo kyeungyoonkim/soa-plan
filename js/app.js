@@ -1119,7 +1119,7 @@ let state;
         alert.innerHTML = `<strong>Exam P 불합격</strong> — 다음 window 준비.`;
       } else if (getExamStatus("exam-fm") !== "passed" && getExamStatus("exam-fm") !== "failed") {
         alert.style.display = "block";
-        alert.innerHTML = `<strong>Exam FM</strong> — 등록 마감 11/4 10AM CT · 목표 12/11 또는 12/14. P는 미룸.`;
+        alert.innerHTML = `<strong>Exam FM</strong> — 등록 마감 11/4 10AM CT · 목표 12/14. P는 미룸.`;
       } else if (!isReqChecked("vee-stats-check") && phase.id === "sem1") {
         alert.style.display = "block";
         alert.innerHTML = `<strong>VEE Math Statistics</strong> — Temple 담당자에게 Purdue 학점 면제 확인!`;
@@ -1991,7 +1991,7 @@ let state;
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam FM 불합격 · 다음 window</span></div>
         <p class="stat-sub" style="margin-top:0.5rem">약점 복습 후 재응시. P는 미룸.</p>`;
       } else if (getExamStatus("exam-fm") !== "passed") {
-        el.innerHTML = `<div><span class="hours-big">FM</span> <span class="stat-sub">Exam FM · <strong>TIA 독학</strong> · 목표 <strong>12/11 또는 12/14</strong></span></div>
+        el.innerHTML = `<div><span class="hours-big">FM</span> <span class="stat-sub">Exam FM · <strong>TIA 독학</strong> · 목표 <strong>12/14</strong></span></div>
         <p class="stat-sub" style="margin-top:0.5rem">window 12/3–14 · 등록 마감 <strong>11/4 10AM CT</strong> · P는 미룸 (겨울에 GRE / Micro / P 결정).</p>`;
       } else if (getExamStatus("exam-p") === "failed") {
         el.innerHTML = `<div><span class="hours-big">재응시</span> <span class="stat-sub">Exam P 불합격 · 다음 window</span></div>
@@ -2299,8 +2299,8 @@ let state;
 
     function minutesToHoursLabel(min) {
       const h = (+min || 0) / 60;
-      if (Math.abs(h - Math.round(h)) < 0.05) return String(Math.round(h));
-      return (Math.round(h * 10) / 10).toFixed(1);
+      if (!Number.isFinite(h) || h === 0) return "0";
+      return String(Number(h.toFixed(4)));
     }
 
     function hoursInputToMinutes(value, fallbackMin) {
